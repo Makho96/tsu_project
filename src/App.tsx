@@ -1,8 +1,7 @@
-import "./App.css";
-import Routing from "./routing/Routing";
+import Layout from "./components/Layout/Layout";
 
 function App() {
-  return <Routing />;
+  return <Layout />;
 }
 
 export default App;

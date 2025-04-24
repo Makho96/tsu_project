@@ -1,0 +1,10 @@
+.sidebar {
+  width: 50px;
+  transition: all 250ms;
+  border-right: 1px solid black;
+  height: 100%;
+
+  &.open {
+    width: 300px;
+  }
+}
