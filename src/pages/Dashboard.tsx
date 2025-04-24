@@ -1,8 +1,11 @@
 import { logout } from "../store/auth/auth.slice";
-import { useAppDispatch, useAppSelector } from "../store/hooks/useTypedSelector";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../store/hooks/useTypedSelector";
 
 const Dashboard = () => {
-  const { user } = useAppSelector(state => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   return (

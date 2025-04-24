@@ -1,40 +1,45 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { store } from '../store';
-import { setToken, logout } from '../store/auth/auth.slice';
+import axios from "axios";
+import Cookies from "js-cookie";
+import { store } from "../store";
+import { setToken, logout } from "../store/auth/auth.slice";
 
 const api = axios.create({
-  baseURL: 'https://your-api.com/api',
+  baseURL: "https://your-api.com/api",
   withCredentials: true,
 });
 
 let isRefreshing = false;
-let queue: { resolve: (value?: unknown) => void; reject: (reason?: unknown) => void }[] = [];
+let queue: {
+  // eslint-disable-next-line no-unused-vars
+  resolve: (value?: unknown) => void;
+  // eslint-disable-next-line no-unused-vars
+  reject: (reason?: unknown) => void;
+}[] = [];
 
 const processQueue = (error: unknown, token: string | null = null) => {
-  queue.forEach(p => (error ? p.reject(error) : p.resolve(token)));
+  queue.forEach((p) => (error ? p.reject(error) : p.resolve(token)));
   queue = [];
 };
 
-api.interceptors.request.use(config => {
-  const token = Cookies.get('token');
+api.interceptors.request.use((config) => {
+  const token = Cookies.get("token");
   if (token && config.headers) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 });
 
 api.interceptors.response.use(
-  res => res,
-  async err => {
+  (res) => res,
+  async (err) => {
     const original = err.config;
     if (err.response?.status === 401 && !original._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           queue.push({ resolve, reject });
-        }).then(token => {
+        }).then((token) => {
           if (original.headers) {
-            original.headers['Authorization'] = `Bearer ${token}`;
+            original.headers["Authorization"] = `Bearer ${token}`;
           }
           return api(original);
         });
@@ -44,9 +49,13 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await axios.post('https://your-api.com/api/refresh', {}, { withCredentials: true });
+        const res = await axios.post(
+          "https://your-api.com/api/refresh",
+          {},
+          { withCredentials: true }
+        );
         const newToken = res.data.token;
-        Cookies.set('token', newToken);
+        Cookies.set("token", newToken);
         store.dispatch(setToken(newToken));
         processQueue(null, newToken);
         return api(original);
