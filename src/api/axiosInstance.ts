@@ -1,20 +1,20 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { store } from "../store";
-import { setToken, logout } from "../store/auth/auth.slice";
+// import { store } from "../store";
+// import { setToken, logout } from "../store/auth/auth.slice";
 
 const api = axios.create({
   baseURL: "https://your-api.com/api",
   withCredentials: true,
 });
 
-let isRefreshing = false;
-let queue: {
-  // eslint-disable-next-line no-unused-vars
+type QueueEntry = {
   resolve: (value?: unknown) => void;
-  // eslint-disable-next-line no-unused-vars
   reject: (reason?: unknown) => void;
-}[] = [];
+};
+
+let isRefreshing = false;
+let queue: QueueEntry[] = [];
 
 const processQueue = (error: unknown, token: string | null = null) => {
   queue.forEach((p) => (error ? p.reject(error) : p.resolve(token)));
@@ -56,11 +56,11 @@ api.interceptors.response.use(
         );
         const newToken = res.data.token;
         Cookies.set("token", newToken);
-        store.dispatch(setToken(newToken));
+        // store.dispatch(setToken(newToken));
         processQueue(null, newToken);
         return api(original);
       } catch (err) {
-        store.dispatch(logout());
+        // store.dispatch(logout());
         processQueue(err, null);
         return Promise.reject(err);
       } finally {

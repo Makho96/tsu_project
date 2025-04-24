@@ -8,6 +8,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 import importPlugin from 'eslint-plugin-import'
 import tseslint from 'typescript-eslint'
 import tsPlugin from '@typescript-eslint/eslint-plugin'
+import eslintPluginTs from '@typescript-eslint/eslint-plugin';
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -38,6 +39,7 @@ export default tseslint.config(
       'jsx-a11y': jsxA11y,
       import: importPlugin,
       typescript: tsPlugin,
+      '@typescript-eslint': eslintPluginTs,
     },
     rules: {
       // Core
@@ -73,7 +75,18 @@ export default tseslint.config(
       ],
 
       // TypeScript tweaks
-      'typescript/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+          caughtErrors: 'none',
+          caughtErrorsIgnorePattern: '^_',
+          checkNames: false, // <--- This is the key!
+        },
+      ],
 
       'semi': ['error', 'always'],
     },
