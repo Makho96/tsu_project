@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 // import { setToken, logout } from "../store/auth/auth.slice";
 
 const api = axios.create({
-  baseURL: "https://your-api.com/api",
+  baseURL: "http://ropaprivacy.tsu.ge:8087/api",
   withCredentials: true,
 });
 
@@ -26,6 +26,8 @@ api.interceptors.request.use((config) => {
   if (token && config.headers) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
+  config.headers["Content-Type"] = "application/json";
+  config.headers["Accept"] = "application/json";
   return config;
 });
 
