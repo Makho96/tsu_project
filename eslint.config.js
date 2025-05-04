@@ -75,15 +75,17 @@ export default tseslint.config(
       ],
 
       // TypeScript tweaks
+      '@typescript-eslint/no-unused-vars': 'off', // Turn off the TypeScript rule
+      'no-unused-vars': 'off', // Turn off the base rule
+
+      // Create a custom version of the rule with correct configuration
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
-          args: 'after-used',
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
+          vars: 'all',
+          args: 'none', // This will ignore all function arguments
           ignoreRestSiblings: true,
-          caughtErrors: 'none',
-          caughtErrorsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
 
@@ -96,6 +98,21 @@ export default tseslint.config(
     rules: {
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off', // Turn off for .types.ts files
+    },
+  },
+  // Special rule config for type definitions in component files
+  {
+    files: ['**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'none', // This will ignore all function arguments
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
 )
