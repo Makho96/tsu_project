@@ -1,7 +1,7 @@
 import axios from "axios";
+import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import showApiError from "../utils/showApiError";
-import { AxiosError } from "axios";
 
 const api = axios.create({
   baseURL: "http://ropaprivacy.tsu.ge:8087/api",

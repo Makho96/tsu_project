@@ -84,11 +84,18 @@ export default tseslint.config(
           ignoreRestSiblings: true,
           caughtErrors: 'none',
           caughtErrorsIgnorePattern: '^_',
-          checkNames: "false", // <--- This is the key!
         },
       ],
 
       'semi': ['error', 'always'],
+    },
+  },
+  // Special rule configuration for enum files to prevent false positives
+  {
+    files: ['**/*.types.ts'],
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off', // Turn off for .types.ts files
     },
   },
 )

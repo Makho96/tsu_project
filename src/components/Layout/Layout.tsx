@@ -1,9 +1,9 @@
-import Routing from "../../routing/Routing";
-import Sidebar from "../Sidebar/SIdebar";
+import { Box } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Box } from "@mui/material";
+import Routing from "../../routing/Routing";
 import Header from "../shared/Header/Header";
+import Sidebar from "../Sidebar/SIdebar";
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

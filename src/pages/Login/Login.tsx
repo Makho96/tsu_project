@@ -1,18 +1,18 @@
+import { Box, Typography, Button } from "@mui/material";
+import { Formik, Form } from "formik";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { MdOutlineShield } from "react-icons/md";
 import { Navigate, useNavigate } from "react-router-dom";
+import { initialValues, validationSchema } from "./Login.consts";
+import { FormFields, FormValues } from "./Login.types";
+import FormInput from "../../components/shared/FormInput/FormInput";
+import Translator from "../../components/shared/Translator";
 import { loginThunk } from "../../store/auth/auth.thunks";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../store/hooks/useTypedSelector";
-import { Box, Typography, Button } from "@mui/material";
-import { Formik, Form } from "formik";
-import FormInput from "../../components/shared/FormInput/FormInput";
-import { initialValues, validationSchema } from "./Login.consts";
-import { FormFields, FormValues } from "./Login.types";
-import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { MdOutlineShield } from "react-icons/md";
-import Translator from "../../components/shared/Translator";
 
 const Login = () => {
   const dispatch = useAppDispatch();

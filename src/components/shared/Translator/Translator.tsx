@@ -1,19 +1,18 @@
-import { useTranslation } from "react-i18next";
-import { Languages } from "./Translator.types";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { LuGlobe } from "react-icons/lu";
+import { Languages } from "./Translator.types";
 
 const Translator = () => {
   const { i18n } = useTranslation();
 
-  const switchLang = (lng: string) => i18n.changeLanguage(lng);
-
   const handleChange = useCallback(
     (event: SelectChangeEvent<Languages>) => {
+      const switchLang = (lng: string) => i18n.changeLanguage(lng);
       switchLang(event.target.value);
     },
-    [switchLang]
+    [i18n]
   );
 
   return (

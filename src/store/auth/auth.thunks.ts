@@ -1,9 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import api from "../../api/axiosInstance";
-import { User } from "./auth.types";
 import showApiError from "../../utils/showApiError";
-import { AxiosError } from "axios";
 
 export const loginThunk = createAsyncThunk(
   "auth/login",
@@ -11,7 +10,6 @@ export const loginThunk = createAsyncThunk(
     try {
       const { data } = await api.post<{
         token: string;
-        user: User;
         message?: string;
       }>("/auth/login", {
         username,

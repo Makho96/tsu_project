@@ -1,5 +1,5 @@
-import { FormValues } from "./Login.types";
 import { string, object } from "yup";
+import { FormValues } from "./Login.types";
 
 const initialValues: FormValues = {
   username: "",
