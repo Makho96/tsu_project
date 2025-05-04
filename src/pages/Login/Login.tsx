@@ -1,16 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { loginThunk } from "../../store/auth/auth.thunks";
-import { useAppDispatch } from "../../store/hooks/useTypedSelector";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../store/hooks/useTypedSelector";
 import { Box, Typography, Button } from "@mui/material";
 import { Formik, Form } from "formik";
 import FormInput from "../../components/shared/FormInput/FormInput";
 import { initialValues, validationSchema } from "./Login.consts";
 import { FormFields, FormValues } from "./Login.types";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { MdOutlineShield } from "react-icons/md";
+import Translator from "../../components/shared/Translator";
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { token } = useAppSelector((state) => state.auth);
+
+  const { t } = useTranslation();
 
   const handleSubmit = useCallback(
     async ({
@@ -18,7 +27,6 @@ const Login = () => {
       [FormFields.Password]: password,
     }: FormValues) => {
       try {
-        debugger;
         const result = await dispatch(loginThunk({ username, password }));
         if (loginThunk.fulfilled.match(result)) {
           navigate("/");
@@ -30,48 +38,89 @@ const Login = () => {
     [dispatch, navigate]
   );
 
+  if (token) return <Navigate to="/" />;
+
   return (
-    <Box sx={{ maxWidth: 500, mx: "auto", p: 2 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Login
-      </Typography>
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height="100vh"
+      bgcolor="blue.1000"
+      position="relative"
+    >
+      <Box position="absolute" top={10} right={10}>
+        <Translator />
+      </Box>
+      <Box
+        margin="auto"
+        width="500px"
+        bgcolor="common.white"
+        padding={4}
+        borderRadius={1}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <Box sx={{ mb: 1 }}>
-              <FormInput
-                name={FormFields.Username}
-                label="Username"
-                helperText="Username must be at least 3 characters"
-              />
-            </Box>
+        <Box
+          width={64}
+          height={64}
+          bgcolor="blue.1000"
+          borderRadius="50%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <MdOutlineShield size={40} color="white" />
+        </Box>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          textAlign="center"
+          marginBlock={4}
+        >
+          {t("login.title")}
+        </Typography>
 
-            <Box sx={{ mb: 1 }}>
-              <FormInput
-                name={FormFields.Password}
-                label="Password"
-                type="password"
-                helperText="Password must be at least 8 characters"
-              />
-            </Box>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form style={{ width: "100%" }}>
+              <Box sx={{ mb: 3 }}>
+                <FormInput
+                  name={FormFields.Username}
+                  label={t("login.username")}
+                  helperText={t("login.usernameHelperText")}
+                />
+              </Box>
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              fullWidth
-            >
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </Button>
-          </Form>
-        )}
-      </Formik>
+              <Box sx={{ mb: 3 }}>
+                <FormInput
+                  name={FormFields.Password}
+                  label={t("login.password")}
+                  type="password"
+                  helperText={t("login.passwordHelperText")}
+                />
+              </Box>
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting}
+                fullWidth
+              >
+                {t("login.login")}
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </Box>
     </Box>
   );
 };

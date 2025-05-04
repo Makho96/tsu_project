@@ -1,0 +1,13 @@
+{
+  "welcome": "Welcome",
+  "login": {
+    "title": "Login",
+    "username": "Username",
+    "usernameHelperText": "Username must be at least 3 characters",
+    "password": "Password",
+    "passwordHelperText": "Password must be at least 8 characters",
+    "login": "Login",
+    "forgotPassword": "Forgot Password?"
+  },
+  "description": "This is a description in English."
+}

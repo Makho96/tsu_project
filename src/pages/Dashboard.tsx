@@ -1,18 +1,23 @@
-import { logout } from "../store/auth/auth.slice";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../store/hooks/useTypedSelector";
+import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "../store/hooks/useTypedSelector";
+import api from "../api/axiosInstance";
 
 const Dashboard = () => {
-  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+
+  const { t, i18n } = useTranslation();
+
+  console.log(t);
+
+  const switchLang = (lng: string) => i18n.changeLanguage(lng);
 
   return (
     <div>
-      <h1>Welcome {user?.email}</h1>
-      <p>Role: {user?.role}</p>
-      <button onClick={() => dispatch(logout())}>Logout</button>
+      <h1>{t("login.title")}</h1>
+      <p>{t("description")}</p>
+      <button onClick={() => switchLang("en")}>English</button>
+      <button onClick={() => switchLang("ka")}>Georgian</button>
+      <button onClick={() => api.post("/auth/logout")}>Logout</button>
     </div>
   );
 };

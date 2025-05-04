@@ -1,5 +1,10 @@
 import "./index.css";
-import { createTheme } from "@mui/material";
+import {
+  createTheme,
+  ThemeOptions,
+  TypographyVariantsOptions,
+} from "@mui/material";
+import i18n from "./i18n";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -15,52 +20,14 @@ declare module "@mui/material/styles" {
   }
 }
 
-export const theme = createTheme({
+// Base theme options shared across all languages
+const baseThemeOptions: ThemeOptions = {
   palette: {
     common: {
       white: "rgb(229, 231, 235)",
     },
     blue: {
       1000: "rgb(11, 26, 44)",
-    },
-  },
-  typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      fontSize: "2.5rem",
-      fontWeight: 500,
-    },
-    h2: {
-      fontSize: "2rem",
-      fontWeight: 500,
-    },
-    h3: {
-      fontSize: "1.75rem",
-      fontWeight: 500,
-    },
-    h4: {
-      fontSize: "1.5rem",
-      fontWeight: 500,
-    },
-    h5: {
-      fontSize: "1.25rem",
-      fontWeight: 500,
-    },
-    h6: {
-      fontSize: "1rem",
-      fontWeight: 500,
-    },
-    body1: {
-      fontSize: "1rem",
-      lineHeight: 1.5,
-    },
-    body2: {
-      fontSize: "0.875rem",
-      lineHeight: 1.43,
-    },
-    button: {
-      textTransform: "none",
-      fontWeight: 500,
     },
   },
   shape: {
@@ -137,5 +104,92 @@ export const theme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused": {
+            boxShadow: "none",
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "inherit",
+              borderWidth: "1px",
+            },
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "inherit",
+          },
+        },
+      },
+    },
   },
-});
+};
+
+const typographyOptionsBasic: Omit<TypographyVariantsOptions, "fontFamily"> = {
+  h1: {
+    fontSize: "2.5rem",
+    fontWeight: 500,
+  },
+  h2: {
+    fontSize: "2rem",
+    fontWeight: 500,
+  },
+  h3: {
+    fontSize: "1.75rem",
+    fontWeight: 500,
+  },
+  h4: {
+    fontSize: "1.5rem",
+    fontWeight: 500,
+  },
+  h5: {
+    fontSize: "1.25rem",
+    fontWeight: 500,
+  },
+  h6: {
+    fontSize: "1rem",
+    fontWeight: 500,
+  },
+  body1: {
+    fontSize: "1rem",
+    lineHeight: 1.5,
+  },
+  body2: {
+    fontSize: "0.875rem",
+    lineHeight: 1.43,
+  },
+  button: {
+    textTransform: "none" as const,
+    fontWeight: 500,
+  },
+};
+
+// Typography settings for different languages
+const typographyOptions: Record<string, TypographyVariantsOptions> = {
+  en: {
+    fontFamily: '"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif',
+    ...typographyOptionsBasic,
+  },
+  ka: {
+    fontFamily: '"Noto Sans Georgian", "Noto Sans", "Roboto", sans-serif',
+    ...typographyOptionsBasic,
+  },
+};
+
+// Function to create theme based on current language
+const getThemeForLanguage = () => {
+  const currentLanguage = i18n.language || "en";
+  const language = currentLanguage.split("-")[0]; // Handle regional variants like 'en-US'
+
+  const typography =
+    typographyOptions[language as keyof typeof typographyOptions] ||
+    typographyOptions.en;
+
+  return createTheme({
+    ...baseThemeOptions,
+    typography,
+  });
+};
+
+export const theme = getThemeForLanguage();
+
+// Re-export a function to update theme when language changes
+export const getUpdatedTheme = getThemeForLanguage;

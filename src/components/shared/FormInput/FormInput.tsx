@@ -12,12 +12,14 @@ type FormInputProps = {
   name: string;
   label: string;
   helperText?: string;
+  style?: React.CSSProperties;
 } & Omit<InputProps, "name">;
 
 const FormInput: React.FC<FormInputProps> = ({
   name,
   label,
   helperText,
+  style,
   ...props
 }) => {
   const [field, meta] = useField(name);
@@ -44,6 +46,10 @@ const FormInput: React.FC<FormInputProps> = ({
         name={name}
         value={inputValue}
         placeholder=""
+        sx={{
+          width: "100%",
+          ...style,
+        }}
       />
       {(errorMessage || helperText) && (
         <FormHelperText>{errorMessage || helperText}</FormHelperText>
