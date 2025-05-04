@@ -26,3 +26,13 @@ export const loginThunk = createAsyncThunk(
     }
   }
 );
+
+export const logoutThunk = createAsyncThunk("auth/logout", async () => {
+  try {
+    await api.post("/auth/logout");
+    Cookies.remove("token");
+  } catch (error) {
+    showApiError(error as AxiosError);
+    throw error;
+  }
+});

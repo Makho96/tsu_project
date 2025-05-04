@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next";
-import api from "../api/axiosInstance";
+import { logoutThunk } from "../store/auth/auth.thunks";
+import { useAppDispatch } from "../store/hooks/useTypedSelector";
 
 const Dashboard = () => {
   const { t, i18n } = useTranslation();
+  const dispatch = useAppDispatch();
 
   console.log(t);
 
@@ -14,7 +16,7 @@ const Dashboard = () => {
       <p>{t("description")}</p>
       <button onClick={() => switchLang("en")}>English</button>
       <button onClick={() => switchLang("ka")}>Georgian</button>
-      <button onClick={() => api.post("/auth/logout")}>Logout</button>
+      <button onClick={() => dispatch(logoutThunk())}>Logout</button>
     </div>
   );
 };

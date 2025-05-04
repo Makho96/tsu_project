@@ -8,7 +8,7 @@ import Sidebar from "../Sidebar/SIdebar";
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
-  const showSidebar = useMemo(
+  const showFullContent = useMemo(
     () => !location.pathname.includes("login"),
     [location]
   );
@@ -28,7 +28,7 @@ const Layout = () => {
       alignItems="center"
       bgcolor="blue.1000"
     >
-      <Header />
+      {showFullContent && <Header />}
       <Box
         display="flex"
         justifyContent="flex-start"
@@ -38,7 +38,7 @@ const Layout = () => {
           height: "calc(100% - 64px)",
         }}
       >
-        {showSidebar && (
+        {showFullContent && (
           <Box flexShrink={0} height="100%">
             <Sidebar isOpen={isSidebarOpen} onToggle={onSidebarToggle} />
           </Box>
