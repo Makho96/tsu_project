@@ -84,7 +84,7 @@ export default tseslint.config(
           ignoreRestSiblings: true,
           caughtErrors: 'none',
           caughtErrorsIgnorePattern: '^_',
-          checkNames: false, // <--- This is the key!
+          checkNames: "false", // <--- This is the key!
         },
       ],
 

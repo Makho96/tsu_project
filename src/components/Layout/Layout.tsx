@@ -1,8 +1,9 @@
 import Routing from "../../routing/Routing";
-import styles from "./Layout.module.scss";
 import Sidebar from "../Sidebar/SIdebar";
 import { useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { Box } from "@mui/material";
+import Header from "../shared/Header/Header";
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -17,16 +18,36 @@ const Layout = () => {
   }, [setIsSidebarOpen]);
 
   return (
-    <div className={styles.container}>
-      {showSidebar && (
-        <div className={styles.sidebar_container}>
-          <Sidebar isOpen={isSidebarOpen} onToggle={onSidebarToggle} />
-        </div>
-      )}
-      <div className={styles.main_container}>
-        <Routing />
-      </div>
-    </div>
+    <Box
+      width="100%"
+      height="100vh"
+      minHeight="100vh"
+      display="flex"
+      justifyContent="flex-start"
+      flexDirection="column"
+      alignItems="center"
+      bgcolor="blue.1000"
+    >
+      <Header />
+      <Box
+        display="flex"
+        justifyContent="flex-start"
+        alignItems="center"
+        width="100%"
+        sx={{
+          height: "calc(100% - 64px)",
+        }}
+      >
+        {showSidebar && (
+          <Box flexShrink={0} height="100%">
+            <Sidebar isOpen={isSidebarOpen} onToggle={onSidebarToggle} />
+          </Box>
+        )}
+        <Box width="100%" height="100%">
+          <Routing />
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

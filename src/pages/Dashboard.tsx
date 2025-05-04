@@ -1,10 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "../store/hooks/useTypedSelector";
 import api from "../api/axiosInstance";
 
 const Dashboard = () => {
-  const dispatch = useAppDispatch();
-
   const { t, i18n } = useTranslation();
 
   console.log(t);

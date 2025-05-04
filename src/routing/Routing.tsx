@@ -11,7 +11,7 @@ const Routing = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Dashboard />} />
       </Route>
-      <Route element={<ProtectedRoute roles={["admin"]} />}>
+      <Route element={<ProtectedRoute />}>
         <Route path="/admin" element={<AdminPage />} />
       </Route>
     </Routes>

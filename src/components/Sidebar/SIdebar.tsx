@@ -1,5 +1,4 @@
-import styles from "./Sidebar.module.scss";
-import classNames from "classnames";
+import { Box } from "@mui/material";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -10,9 +9,18 @@ const Sidebar = (props: SidebarProps) => {
   const { isOpen, onToggle } = props;
 
   return (
-    <div className={classNames(styles.sidebar, { [styles.open]: isOpen })}>
+    <Box
+      width={isOpen ? 300 : 50}
+      sx={{
+        transition: "all 250ms",
+      }}
+      borderRight="1px solid"
+      borderColor="rgb(255 255 255 / 0.1)"
+      height="100%"
+      bgcolor="blue.800"
+    >
       <button onClick={onToggle}>{isOpen ? "close" : "open"}</button>
-    </div>
+    </Box>
   );
 };
 

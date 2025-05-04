@@ -80,6 +80,7 @@ const Login = () => {
           gutterBottom
           textAlign="center"
           marginBlock={4}
+          color="blue.900"
         >
           {t("login.title")}
         </Typography>
@@ -96,6 +97,9 @@ const Login = () => {
                   name={FormFields.Username}
                   label={t("login.username")}
                   helperText={t("login.usernameHelperText")}
+                  style={{
+                    color: "blue.900",
+                  }}
                 />
               </Box>
 
@@ -105,6 +109,11 @@ const Login = () => {
                   label={t("login.password")}
                   type="password"
                   helperText={t("login.passwordHelperText")}
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "blue.900",
+                    },
+                  }}
                 />
               </Box>
 

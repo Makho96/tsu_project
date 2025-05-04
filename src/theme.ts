@@ -9,12 +9,16 @@ import i18n from "./i18n";
 declare module "@mui/material/styles" {
   interface Palette {
     blue: {
+      800: string;
+      900: string;
       1000: string;
     };
   }
 
   interface PaletteOptions {
     blue?: {
+      800?: string;
+      900?: string;
       1000?: string;
     };
   }
@@ -27,6 +31,8 @@ const baseThemeOptions: ThemeOptions = {
       white: "rgb(229, 231, 235)",
     },
     blue: {
+      800: "rgb(19, 40, 66)",
+      900: "rgb(17, 24, 39)",
       1000: "rgb(11, 26, 44)",
     },
   },
@@ -183,10 +189,22 @@ const getThemeForLanguage = () => {
     typographyOptions[language as keyof typeof typographyOptions] ||
     typographyOptions.en;
 
-  return createTheme({
+  // Create initial theme
+  let theme = createTheme({
     ...baseThemeOptions,
     typography,
   });
+
+  // Update theme to use references
+  theme = createTheme(theme, {
+    palette: {
+      text: {
+        primary: theme.palette.common.white,
+      },
+    },
+  });
+
+  return theme;
 };
 
 export const theme = getThemeForLanguage();
