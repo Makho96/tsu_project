@@ -24,14 +24,27 @@ const FormInput: React.FC<FormInputProps> = ({
 
   const isError = meta.touched && Boolean(meta.error);
   const errorMessage = isError ? meta.error : undefined;
-  const hasValue = Boolean(field.value) || field.value === 0;
+
+  // Always treat the input as controlled by ensuring value is always a string
+  const inputValue = field.value ?? "";
+  const hasValue = inputValue !== "";
 
   return (
     <FormControl fullWidth error={isError}>
-      <InputLabel htmlFor={name} shrink={hasValue}>
-        {label}
+      <InputLabel
+        htmlFor={name}
+        shrink={hasValue || props.placeholder !== undefined}
+      >
+        {label || props.placeholder}
       </InputLabel>
-      <Input {...field} {...props} id={name} name={name} />
+      <Input
+        {...field}
+        {...props}
+        id={name}
+        name={name}
+        value={inputValue}
+        placeholder=""
+      />
       {(errorMessage || helperText) && (
         <FormHelperText>{errorMessage || helperText}</FormHelperText>
       )}

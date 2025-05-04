@@ -6,12 +6,9 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ roles = [] }: ProtectedRouteProps) => {
-  const { token, user } = useAppSelector((state) => state.auth);
+  const { token } = useAppSelector((state) => state.auth);
 
   if (!token) return <Navigate to="/login" />;
-
-  if (roles.length && !roles.includes(user?.role ?? ""))
-    return <div>Access Denied</div>;
 
   return <Outlet />;
 };

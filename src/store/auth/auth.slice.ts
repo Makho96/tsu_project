@@ -1,54 +1,44 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
-import { loginThunk } from './auth.thunks';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
+import { loginThunk } from "./auth.thunks";
+import { AuthState } from "./auth.types";
 
-interface User {
-  id: string;
-  email: string;
-  role: string;
-}
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
-}
+console.log(Cookies.get("user"));
 
 const initialState: AuthState = {
-  user: Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null,
-  token: Cookies.get('token') || null,
-  status: 'idle',
+  token: Cookies.get("token") || null,
+  status: "idle",
   error: null,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
-    logout: state => {
-      Cookies.remove('token');
-      Cookies.remove('user');
-      state.user = null;
+    logout: (state) => {
+      Cookies.remove("token");
+      Cookies.remove("user");
       state.token = null;
     },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(loginThunk.pending, state => {
-        state.status = 'loading';
+      .addCase(loginThunk.pending, (state) => {
+        state.status = "loading";
       })
-      .addCase(loginThunk.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-      })
+      .addCase(
+        loginThunk.fulfilled,
+        (state, action: PayloadAction<{ token: string }>) => {
+          state.status = "succeeded";
+          state.token = action.payload.token;
+        }
+      )
       .addCase(loginThunk.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message ?? 'Login failed';
+        state.status = "failed";
+        state.error = action.error.message ?? "Login failed";
       });
   },
 });

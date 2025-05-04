@@ -1,13 +1,30 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import api from "../../api/axiosInstance";
+import { User } from "./auth.types";
+import showApiError from "../../utils/showApiError";
+import { AxiosError } from "axios";
 
 export const loginThunk = createAsyncThunk(
   "auth/login",
-  async ({ email, password }: { email: string; password: string }) => {
-    const res = await api.post("/login", { email, password });
-    Cookies.set("token", res.data.token);
-    Cookies.set("user", JSON.stringify(res.data.user));
-    return { token: res.data.token, user: res.data.user };
+  async ({ username, password }: { username: string; password: string }) => {
+    try {
+      const { data } = await api.post<{
+        token: string;
+        user: User;
+        message?: string;
+      }>("/auth/login", {
+        username,
+        password,
+      });
+      if (!data.token) {
+        throw new Error(data.message);
+      }
+      Cookies.set("token", data.token);
+      return { token: data.token };
+    } catch (error) {
+      showApiError(error as AxiosError);
+      throw error;
+    }
   }
 );

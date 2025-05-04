@@ -115,7 +115,7 @@ export const theme = createTheme({
         root: {
           transform: "translate(12px, 30px) scale(1)",
           "&.Mui-focused, &.MuiFormLabel-filled": {
-            transform: "translate(12px, 0px) scale(0.75)",
+            transform: "translate(12px, -5px) scale(0.75)",
           },
         },
       },

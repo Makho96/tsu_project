@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-// import { store } from "../store";
-// import { setToken, logout } from "../store/auth/auth.slice";
+import showApiError from "../utils/showApiError";
+import { AxiosError } from "axios";
 
 const api = axios.create({
   baseURL: "http://ropaprivacy.tsu.ge:8087/api",
@@ -21,6 +21,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
+    showApiError(err as AxiosError);
     return Promise.reject(err);
   }
 );
