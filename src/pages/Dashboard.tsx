@@ -6,8 +6,6 @@ const Dashboard = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
 
-  console.log(t);
-
   const switchLang = (lng: string) => i18n.changeLanguage(lng);
 
   return (

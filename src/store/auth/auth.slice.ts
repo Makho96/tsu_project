@@ -1,14 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { loginThunk, logoutThunk } from "./auth.thunks";
-import { AuthState } from "./auth.types";
-
-console.log(Cookies.get("user"));
+import { AuthState, User } from "./auth.types";
 
 const initialState: AuthState = {
   token: Cookies.get("token") || null,
   status: "idle",
   error: null,
+  user: Cookies.get("user") ? JSON.parse(Cookies.get("user")!) : null,
 };
 
 const authSlice = createSlice({
@@ -26,9 +25,10 @@ const authSlice = createSlice({
       })
       .addCase(
         loginThunk.fulfilled,
-        (state, action: PayloadAction<{ token: string }>) => {
+        (state, action: PayloadAction<{ token: string; user: User }>) => {
           state.status = "succeeded";
           state.token = action.payload.token;
+          state.user = action.payload.user;
         }
       )
       .addCase(loginThunk.rejected, (state, action) => {

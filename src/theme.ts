@@ -13,12 +13,18 @@ declare module "@mui/material/styles" {
       900: string;
       1000: string;
     };
+    white: {
+      1000: string;
+    };
   }
 
   interface PaletteOptions {
     blue?: {
       800?: string;
       900?: string;
+      1000?: string;
+    };
+    white?: {
       1000?: string;
     };
   }
@@ -34,6 +40,9 @@ const baseThemeOptions: ThemeOptions = {
       800: "rgb(19, 40, 66)",
       900: "rgb(17, 24, 39)",
       1000: "rgb(11, 26, 44)",
+    },
+    white: {
+      1000: "rgba(255, 255, 255, 0.7)",
     },
   },
   shape: {
@@ -155,12 +164,12 @@ const typographyOptionsBasic: Omit<TypographyVariantsOptions, "fontFamily"> = {
     fontWeight: 500,
   },
   body1: {
-    fontSize: "1rem",
-    lineHeight: 1.5,
+    fontSize: "0.875rem",
+    lineHeight: 1.2,
   },
   body2: {
-    fontSize: "0.875rem",
-    lineHeight: 1.43,
+    fontSize: "0.625rem",
+    lineHeight: 1.1,
   },
   button: {
     textTransform: "none" as const,
@@ -200,6 +209,7 @@ const getThemeForLanguage = () => {
     palette: {
       text: {
         primary: theme.palette.common.white,
+        secondary: theme.palette.white[1000],
       },
     },
   });
