@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import Navigation from "../Navigation/Navigation";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -17,7 +18,10 @@ const Sidebar = (props: SidebarProps) => {
       borderColor="rgb(255 255 255 / 0.1)"
       height="100%"
       bgcolor="blue.800"
-    ></Box>
+      overflow="hidden"
+    >
+      <Navigation />
+    </Box>
   );
 };
 

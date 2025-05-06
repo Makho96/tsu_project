@@ -10,5 +10,11 @@
     "forgotPassword": "Forgot Password?"
   },
   "logout": "Logout",
-  "description": "This is a description in English."
+  "description": "This is a description in English.",
+  "menu": {
+    "companies": "Company Management",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "settings": "Settings"
+  }
 }

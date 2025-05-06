@@ -3,8 +3,9 @@ import { useAppSelector } from "../store/hooks/useTypedSelector";
 
 const ProtectedRoute = () => {
   const { token } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
 
-  if (!token) return <Navigate to="/login" />;
+  if (!token || !user) return <Navigate to="/login" />;
 
   return <Outlet />;
 };

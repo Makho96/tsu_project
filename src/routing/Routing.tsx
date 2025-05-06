@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminPage from "../pages/Admin";
+import Companies from "../pages/Companies/Companies";
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 
@@ -13,6 +14,9 @@ const Routing = () => {
       </Route>
       <Route element={<ProtectedRoute />}>
         <Route path="/admin" element={<AdminPage />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path="/companies" element={<Companies />} />
       </Route>
     </Routes>
   );
