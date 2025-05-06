@@ -13,6 +13,8 @@ type FormInputProps = {
   label: string;
   helperText?: string;
   style?: React.CSSProperties;
+  inputLabelStyle?: React.CSSProperties;
+  helperTextStyle?: React.CSSProperties;
 } & Omit<InputProps, "name">;
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -20,6 +22,8 @@ const FormInput: React.FC<FormInputProps> = ({
   label,
   helperText,
   style,
+  inputLabelStyle,
+  helperTextStyle,
   ...props
 }) => {
   const [field, meta] = useField(name);
@@ -36,6 +40,7 @@ const FormInput: React.FC<FormInputProps> = ({
       <InputLabel
         htmlFor={name}
         shrink={hasValue || props.placeholder !== undefined}
+        sx={inputLabelStyle}
       >
         {label || props.placeholder}
       </InputLabel>
@@ -52,7 +57,9 @@ const FormInput: React.FC<FormInputProps> = ({
         }}
       />
       {(errorMessage || helperText) && (
-        <FormHelperText>{errorMessage || helperText}</FormHelperText>
+        <FormHelperText sx={helperTextStyle}>
+          {errorMessage || helperText}
+        </FormHelperText>
       )}
     </FormControl>
   );

@@ -9,5 +9,6 @@
     "login": "Login",
     "forgotPassword": "Forgot Password?"
   },
+  "logout": "Logout",
   "description": "This is a description in English."
 }

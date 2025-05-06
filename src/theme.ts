@@ -14,7 +14,8 @@ declare module "@mui/material/styles" {
       1000: string;
     };
     white: {
-      1000: string;
+      100: string;
+      700: string;
     };
   }
 
@@ -25,7 +26,8 @@ declare module "@mui/material/styles" {
       1000?: string;
     };
     white?: {
-      1000?: string;
+      100?: string;
+      700?: string;
     };
   }
 }
@@ -42,7 +44,8 @@ const baseThemeOptions: ThemeOptions = {
       1000: "rgb(11, 26, 44)",
     },
     white: {
-      1000: "rgba(255, 255, 255, 0.7)",
+      100: "rgb(255 255 255 / 0.1)",
+      700: "rgba(255, 255, 255, 0.7)",
     },
   },
   shape: {
@@ -135,6 +138,21 @@ const baseThemeOptions: ThemeOptions = {
         },
       },
     },
+    MuiMenu: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.blue[800],
+          color: theme.palette.common.white,
+        }),
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.blue[800],
+        }),
+      },
+    },
   },
 };
 
@@ -209,7 +227,7 @@ const getThemeForLanguage = () => {
     palette: {
       text: {
         primary: theme.palette.common.white,
-        secondary: theme.palette.white[1000],
+        secondary: theme.palette.white[700],
       },
     },
   });

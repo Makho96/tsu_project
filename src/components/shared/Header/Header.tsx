@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import AuthUser from "../AuthUser";
 import BurgerMenu from "../BurgerMenu";
+import Translator from "../Translator";
 
 type HeaderProps = {
   isOpen: boolean;
@@ -22,7 +23,8 @@ const Header = ({ isOpen, handleToggle }: HeaderProps) => {
       <Box>
         <BurgerMenu isOpen={isOpen} onClick={handleToggle} size={30} />
       </Box>
-      <Box>
+      <Box display="flex" alignItems="center" gap={2}>
+        <Translator />
         <AuthUser />
       </Box>
     </Box>

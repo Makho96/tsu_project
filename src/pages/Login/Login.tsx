@@ -97,7 +97,13 @@ const Login = () => {
                   name={FormFields.Username}
                   label={t("login.username")}
                   helperText={t("login.usernameHelperText")}
+                  inputLabelStyle={{
+                    color: "blue.900",
+                  }}
                   style={{
+                    color: "blue.900",
+                  }}
+                  helperTextStyle={{
                     color: "blue.900",
                   }}
                 />
@@ -109,10 +115,14 @@ const Login = () => {
                   label={t("login.password")}
                   type="password"
                   helperText={t("login.passwordHelperText")}
-                  sx={{
-                    "& .MuiInputLabel-root": {
-                      color: "blue.900",
-                    },
+                  helperTextStyle={{
+                    color: "blue.900",
+                  }}
+                  inputLabelStyle={{
+                    color: "blue.900",
+                  }}
+                  style={{
+                    color: "blue.900",
                   }}
                 />
               </Box>
