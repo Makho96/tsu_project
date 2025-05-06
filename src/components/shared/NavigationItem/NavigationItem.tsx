@@ -25,6 +25,7 @@ const NavigationItem = (props: NavigationItemProps) => {
               "&:hover": {
                 backgroundColor: "green.500",
               },
+              paddingInline: "20px",
             }}
           >
             {icon && (
