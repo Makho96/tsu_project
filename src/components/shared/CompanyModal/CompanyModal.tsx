@@ -32,11 +32,8 @@ const CompanyModal = ({ setIsOpen, companyId }: CompanyModalProps) => {
     [dispatch, closeModal]
   );
 
-  console.log(companyId);
-
   return (
     <ConfirmModal
-      isOpen={true}
       onClose={closeModal}
       title={
         companyId

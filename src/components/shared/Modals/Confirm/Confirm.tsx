@@ -14,7 +14,6 @@ const PaperComponent = (props: PaperProps) => {
 };
 
 type ConfirmModalProps = {
-  isOpen: boolean;
   title: string;
   modalBody?: React.ReactNode;
   onConfirm?: () => void | Promise<void>;
@@ -33,7 +32,6 @@ const ConfirmModal = ({
   onConfirm,
   onCancel,
   onClose,
-  isOpen,
   confirmButtonText,
   cancelButtonText,
   closeOnConfirm = true,
@@ -71,7 +69,7 @@ const ConfirmModal = ({
   }, [onCancel, closeOnCancel, onClose]);
 
   return (
-    <Dialog open={isOpen} onClose={onClose} PaperComponent={PaperComponent}>
+    <Dialog open onClose={onClose} PaperComponent={PaperComponent}>
       <DialogTitle
         sx={{
           borderBottom: "1px solid",

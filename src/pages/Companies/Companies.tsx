@@ -85,15 +85,16 @@ const Companies = () => {
           companyId={selectedCompanyId}
         />
       )}
-      <ConfirmModal
-        title={t("pages.companies.deleteCompany")}
-        modalBody={t("pages.companies.deleteCompanyConfirmation")}
-        confirmButtonText={t("pages.companies.delete")}
-        cancelButtonText={t("pages.companies.cancel")}
-        isOpen={!!selectedCompanyId && modalType === ModalTypes.Delete}
-        onClose={() => setSelectedCompanyId(null)}
-        onConfirm={handleDeleteCompany}
-      />
+      {selectedCompanyId && modalType === ModalTypes.Delete && (
+        <ConfirmModal
+          title={t("pages.companies.deleteCompany")}
+          modalBody={t("pages.companies.deleteCompanyConfirmation")}
+          confirmButtonText={t("pages.companies.delete")}
+          cancelButtonText={t("pages.companies.cancel")}
+          onClose={() => setSelectedCompanyId(null)}
+          onConfirm={handleDeleteCompany}
+        />
+      )}
     </Box>
   );
 };
