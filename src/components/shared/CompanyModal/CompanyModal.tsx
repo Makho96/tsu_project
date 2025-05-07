@@ -14,7 +14,7 @@ import { CompanyModalProps, FormFields, FormValues } from "./company.types";
 import { createCompany } from "../../../store/companies/companies.thunks";
 import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
 
-const CompanyModal = ({ isOpen, setIsOpen, companyId }: CompanyModalProps) => {
+const CompanyModal = ({ setIsOpen, companyId }: CompanyModalProps) => {
   const { t } = useTranslation();
   const closeModal = useCallback(() => setIsOpen(false), [setIsOpen]);
   const dispatch = useAppDispatch();
@@ -32,9 +32,11 @@ const CompanyModal = ({ isOpen, setIsOpen, companyId }: CompanyModalProps) => {
     [dispatch, closeModal]
   );
 
+  console.log(companyId);
+
   return (
     <ConfirmModal
-      isOpen={isOpen}
+      isOpen={true}
       onClose={closeModal}
       title={
         companyId

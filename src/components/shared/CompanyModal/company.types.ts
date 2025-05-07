@@ -11,7 +11,6 @@ type FormValues = {
 };
 
 type CompanyModalProps = {
-  isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   companyId: number | null;
 };

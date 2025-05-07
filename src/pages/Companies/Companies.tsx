@@ -79,11 +79,12 @@ const Companies = () => {
       <Box>
         <CompaniesList onEdit={onCompanyEdit} onDelete={onCompanyDelete} />
       </Box>
-      <CompanyModal
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        companyId={selectedCompanyId}
-      />
+      {isModalOpen && (
+        <CompanyModal
+          setIsOpen={setIsModalOpen}
+          companyId={selectedCompanyId}
+        />
+      )}
       <ConfirmModal
         title={t("pages.companies.deleteCompany")}
         modalBody={t("pages.companies.deleteCompanyConfirmation")}
