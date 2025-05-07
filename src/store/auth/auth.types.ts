@@ -1,3 +1,5 @@
+import { SliceStatuses } from "../types";
+
 type User = {
   id: string;
   role: Roles;
@@ -19,7 +21,7 @@ enum Status {
 
 type AuthState = {
   token: string | null;
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: SliceStatuses;
   error: string | null;
   user: User | null;
 };

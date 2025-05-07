@@ -16,5 +16,20 @@
     "dashboard": "Dashboard",
     "admin": "Admin",
     "settings": "Settings"
+  },
+
+  "pages": {
+    "companies": {
+      "title": "Company Management",
+      "subTitle": "Manage your organization's companies",
+      "create": "Create",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "addCompany": "Add Company",
+      "editCompany": "Edit Company",
+      "name": "Company Name",
+      "phone": "Phone Number",
+      "email": "Email Address"
+    }
   }
 }

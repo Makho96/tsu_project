@@ -6,6 +6,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper, { PaperProps } from "@mui/material/Paper";
 import { useCallback, useState } from "react";
+import { IoCheckmark } from "react-icons/io5";
+import { RxCross1 } from "react-icons/rx";
 
 const PaperComponent = (props: PaperProps) => {
   return <Paper {...props} sx={{ bgColor: "blue.800" }} />;
@@ -15,13 +17,14 @@ type ConfirmModalProps = {
   isOpen: boolean;
   title: string;
   modalBody?: React.ReactNode;
-  onConfirm: () => void | Promise<void>;
-  onCancel: () => void | Promise<void>;
+  onConfirm?: () => void | Promise<void>;
+  onCancel?: () => void | Promise<void>;
   onClose: () => void;
-  confirmButtonText: string;
-  cancelButtonText: string;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
   closeOnConfirm?: boolean;
   closeOnCancel?: boolean;
+  showButtons?: boolean;
 };
 
 const ConfirmModal = ({
@@ -35,13 +38,14 @@ const ConfirmModal = ({
   cancelButtonText,
   closeOnConfirm = true,
   closeOnCancel = true,
+  showButtons = true,
 }: ConfirmModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleConfirm = useCallback(async () => {
     try {
       setIsLoading(true);
-      await onConfirm();
+      await onConfirm?.();
       if (closeOnConfirm) {
         onClose();
       }
@@ -55,7 +59,7 @@ const ConfirmModal = ({
   const handleCancel = useCallback(async () => {
     try {
       setIsLoading(true);
-      await onCancel();
+      await onCancel?.();
       if (closeOnCancel) {
         onClose();
       }
@@ -68,28 +72,47 @@ const ConfirmModal = ({
 
   return (
     <Dialog open={isOpen} onClose={onClose} PaperComponent={PaperComponent}>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle
+        sx={{
+          borderBottom: "1px solid",
+          borderColor: "white.100",
+          textAlign: "left",
+        }}
+      >
+        {title}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText>{modalBody}</DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleCancel}
-          disabled={isLoading}
-          loading={isLoading}
-          loadingPosition="start"
-        >
-          {cancelButtonText}
-        </Button>
-        <Button
-          onClick={handleConfirm}
-          disabled={isLoading}
-          loading={isLoading}
-          loadingPosition="start"
-        >
-          {confirmButtonText}
-        </Button>
-      </DialogActions>
+      {showButtons && (
+        <DialogActions>
+          <Button
+            onClick={handleCancel}
+            disabled={isLoading}
+            loading={isLoading}
+            loadingPosition="start"
+            sx={{ padding: "8px 12px", minWidth: "110px" }}
+            variant="outlined"
+            startIcon={<RxCross1 size={16} />}
+          >
+            {cancelButtonText}
+          </Button>
+          <Button
+            onClick={handleConfirm}
+            disabled={isLoading}
+            loading={isLoading}
+            loadingPosition="start"
+            sx={{
+              bgcolor: "green.500",
+              padding: "8px 12px",
+              minWidth: "110px",
+            }}
+            startIcon={<IoCheckmark size={20} />}
+          >
+            {confirmButtonText}
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };
