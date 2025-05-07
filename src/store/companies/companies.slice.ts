@@ -24,24 +24,24 @@ const companiesSlice = createSlice({
       .addCase(getCompany.pending, (state) => {
         state.status = SliceStatuses.LOADING;
       })
-      .addCase(getCompany.fulfilled, (state, action) => {
+      .addCase(getCompany.fulfilled, (state) => {
         state.status = SliceStatuses.SUCCEEDED;
-        state.currentCompany = action.payload;
+      })
+      .addCase(getCompany.rejected, (state, action) => {
+        state.status = SliceStatuses.FAILED;
+        state.error = action.error.message ?? "Failed to get company";
       });
-    builder.addCase(getCompany.rejected, (state, action) => {
-      state.status = SliceStatuses.FAILED;
-      state.error = action.error.message ?? "Failed to get company";
-    });
-    builder.addCase(createCompany.pending, (state) => {
-      state.status = SliceStatuses.LOADING;
-    });
-    builder.addCase(createCompany.fulfilled, (state) => {
-      state.status = SliceStatuses.SUCCEEDED;
-    });
-    builder.addCase(createCompany.rejected, (state, action) => {
-      state.status = SliceStatuses.FAILED;
-      state.error = action.error.message ?? "Failed to create company";
-    });
+    builder
+      .addCase(createCompany.pending, (state) => {
+        state.status = SliceStatuses.LOADING;
+      })
+      .addCase(createCompany.fulfilled, (state) => {
+        state.status = SliceStatuses.SUCCEEDED;
+      })
+      .addCase(createCompany.rejected, (state, action) => {
+        state.status = SliceStatuses.FAILED;
+        state.error = action.error.message ?? "Failed to create company";
+      });
   },
 });
 

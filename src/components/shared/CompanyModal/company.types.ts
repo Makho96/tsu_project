@@ -10,5 +10,11 @@ type FormValues = {
   [FormFields.Phone]: string;
 };
 
+type CompanyModalProps = {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  companyId: number | null;
+};
+
 export { FormFields };
-export type { FormValues };
+export type { FormValues, CompanyModalProps };

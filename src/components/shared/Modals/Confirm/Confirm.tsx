@@ -1,8 +1,8 @@
+import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper, { PaperProps } from "@mui/material/Paper";
 import { useCallback, useState } from "react";
@@ -82,7 +82,7 @@ const ConfirmModal = ({
         {title}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>{modalBody}</DialogContentText>
+        <Box paddingBlock={2}>{modalBody}</Box>
       </DialogContent>
       {showButtons && (
         <DialogActions>

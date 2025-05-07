@@ -20,6 +20,9 @@ declare module "@mui/material/styles" {
     green: {
       500: string;
     };
+    red: {
+      500: string;
+    };
   }
 
   interface PaletteOptions {
@@ -33,6 +36,9 @@ declare module "@mui/material/styles" {
       700?: string;
     };
     green?: {
+      500?: string;
+    };
+    red?: {
       500?: string;
     };
   }
@@ -55,6 +61,9 @@ const baseThemeOptions: ThemeOptions = {
     },
     green: {
       500: "rgb(26, 125, 120)",
+    },
+    red: {
+      500: "rgb(239, 68, 68)",
     },
   },
   shape: {

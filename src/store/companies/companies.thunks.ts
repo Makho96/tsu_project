@@ -43,3 +43,16 @@ export const getCompany = createAsyncThunk(
     }
   }
 );
+
+export const deleteCompany = createAsyncThunk(
+  "companies/deleteCompany",
+  async (id: number, { dispatch }) => {
+    try {
+      await api.delete(`/company/${id}`);
+      dispatch(getCompanies());
+    } catch (error) {
+      showApiError(error as AxiosError);
+      throw error;
+    }
+  }
+);

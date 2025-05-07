@@ -46,7 +46,7 @@ const FormInput: React.FC<FormInputProps> = ({
         htmlFor={name}
         shrink={hasValue || props.placeholder !== undefined}
         sx={{
-          ...(startIcon ? { marginLeft: "24px" } : {}),
+          ...(startIcon ? { marginLeft: "30px" } : {}),
           ...inputLabelStyle,
         }}
       >

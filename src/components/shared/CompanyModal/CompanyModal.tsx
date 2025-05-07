@@ -1,25 +1,34 @@
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
+import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import { Box, Button } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoCheckmark } from "react-icons/io5";
-import { MdOutlineEmail, MdOutlinePhone } from "react-icons/md";
-import { RiBuilding2Line } from "react-icons/ri";
 import { RxCross1 } from "react-icons/rx";
 import FormInput from "../FormInput/FormInput";
 import { ConfirmModal } from "../Modals";
 import { initialValues, validationSchema } from "./company.config";
-import { FormFields, FormValues } from "./company.types";
-import { createCompany } from "../../../store/companies/companies.thunks";
-import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
-
-type CompanyModalProps = {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  companyId?: string;
-};
+import { CompanyModalProps, FormFields, FormValues } from "./company.types";
+import {
+  createCompany,
+  getCompany,
+} from "../../../store/companies/companies.thunks";
+import { Company } from "../../../store/companies/companies.types";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../store/hooks/useTypedSelector";
+import { SliceStatuses } from "../../../store/types";
+import Loader from "../Loader/Loader";
 
 const CompanyModal = ({ isOpen, setIsOpen, companyId }: CompanyModalProps) => {
+  const isCompanyLoading = useAppSelector(
+    (state) => state.companies.status === SliceStatuses.LOADING
+  );
+  const [company, setCompany] = useState<Company | null>(null);
+
   const { t } = useTranslation();
   const closeModal = useCallback(() => setIsOpen(false), [setIsOpen]);
   const dispatch = useAppDispatch();
@@ -37,6 +46,33 @@ const CompanyModal = ({ isOpen, setIsOpen, companyId }: CompanyModalProps) => {
     [dispatch, closeModal]
   );
 
+  const handleGetCompany = useCallback(async () => {
+    if (companyId) {
+      const company = await dispatch(getCompany(companyId)).unwrap();
+      console.log(company);
+      setCompany(company);
+    }
+  }, [dispatch, companyId]);
+
+  useEffect(() => {
+    handleGetCompany();
+  }, [handleGetCompany]);
+
+  const formInitialValues = useMemo(() => {
+    if (company) {
+      return {
+        [FormFields.Name]: company.title,
+        [FormFields.Email]: company.eMail,
+        [FormFields.Phone]: company.tell,
+      };
+    }
+    return initialValues;
+  }, [company]);
+
+  if (isCompanyLoading) {
+    return <Loader />;
+  }
+
   return (
     <ConfirmModal
       isOpen={isOpen}
@@ -53,31 +89,37 @@ const CompanyModal = ({ isOpen, setIsOpen, companyId }: CompanyModalProps) => {
       showButtons={false}
       modalBody={
         <Formik
-          initialValues={initialValues}
+          initialValues={formInitialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form style={{ minWidth: "400px", paddingTop: "20px" }}>
+            <Form style={{ minWidth: "400px" }}>
               <Box>
                 <FormInput
                   name={FormFields.Name}
                   label={t("pages.companies.name")}
-                  startIcon={<RiBuilding2Line color="white" size={20} />}
+                  startIcon={
+                    <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />
+                  }
                 />
               </Box>
               <Box>
                 <FormInput
                   name={FormFields.Email}
                   label={t("pages.companies.email")}
-                  startIcon={<MdOutlineEmail color="white" size={20} />}
+                  startIcon={
+                    <EmailOutlinedIcon sx={{ color: "common.white" }} />
+                  }
                 />
               </Box>
               <Box>
                 <FormInput
                   name={FormFields.Phone}
                   label={t("pages.companies.phone")}
-                  startIcon={<MdOutlinePhone color="white" size={20} />}
+                  startIcon={
+                    <LocalPhoneOutlinedIcon sx={{ color: "common.white" }} />
+                  }
                 />
               </Box>
               <Box
