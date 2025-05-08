@@ -2,6 +2,7 @@ import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useTranslation } from "react-i18next";
+import Routes from "../../routing/Routing.types";
 import { Roles } from "../../store/auth/auth.types";
 import { useAppSelector } from "../../store/hooks/useTypedSelector";
 import NavigationItem from "../shared/NavigationItem/NavigationItem";
@@ -16,19 +17,19 @@ enum NavigationItems {
 const navigation = [
   {
     label: NavigationItems.Dashboard,
-    path: "/dashboard",
+    path: Routes.Dashboard,
     haveAccess: [Roles.ADMIN, Roles.USER],
     icon: <DashboardOutlinedIcon sx={{ color: "common.white" }} />,
   },
   {
     label: NavigationItems.Companies,
-    path: "/companies",
+    path: Routes.Companies,
     haveAccess: [Roles.ADMIN],
     icon: <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />,
   },
   {
     label: NavigationItems.Settings,
-    path: "/settings",
+    path: Routes.Settings,
     haveAccess: [Roles.ADMIN, Roles.USER],
     icon: <SettingsOutlinedIcon sx={{ color: "common.white" }} />,
   },
