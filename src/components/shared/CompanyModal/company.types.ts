@@ -13,6 +13,7 @@ type FormValues = {
 type CompanyModalProps = {
   setIsOpen: (isOpen: boolean) => void;
   companyId: number | null;
+  initialData?: FormValues;
 };
 
 export { FormFields };

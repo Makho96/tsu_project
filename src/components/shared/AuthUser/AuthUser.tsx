@@ -1,7 +1,8 @@
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { Avatar, Box, Menu, MenuItem, Typography } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IoChevronDown } from "react-icons/io5";
+
 import { RolesToNamesMapper } from "../../../store/auth/auth.consts";
 import { logoutThunk } from "../../../store/auth/auth.thunks";
 import {
@@ -78,7 +79,7 @@ const AuthUser = () => {
           </Box>
         </Box>
         <Box>
-          <IoChevronDown size={16} />
+          <KeyboardArrowDownOutlinedIcon sx={{ color: "common.white" }} />
         </Box>
       </Box>
       <Menu

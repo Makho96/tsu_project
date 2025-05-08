@@ -1,8 +1,8 @@
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import { Box, Button, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { GoPlus } from "react-icons/go";
-import { RiBuilding2Line } from "react-icons/ri";
 import CompaniesList from "../../components/shared/CompaniesList/CompaniesList";
 import CompanyModal from "../../components/shared/CompanyModal";
 import ConfirmModal from "../../components/shared/Modals/Confirm/Confirm";
@@ -61,7 +61,8 @@ const Companies = () => {
         margin="auto"
       >
         <Typography variant="h3" display="flex" alignItems="flex-end" gap={1}>
-          <RiBuilding2Line size={32} /> {t("pages.companies.title")}
+          <MeetingRoomOutlinedIcon sx={{ fontSize: 32 }} />{" "}
+          {t("pages.companies.title")}
         </Typography>
         <Typography variant="body1">{t("pages.companies.subTitle")}</Typography>
       </Box>
@@ -70,7 +71,7 @@ const Companies = () => {
           variant="contained"
           color="primary"
           sx={{ bgcolor: "green.500", padding: "8px 16px", fontSize: "12px" }}
-          startIcon={<GoPlus />}
+          startIcon={<AddOutlinedIcon />}
           onClick={() => setIsModalOpen(true)}
         >
           {t("pages.companies.addCompany")}

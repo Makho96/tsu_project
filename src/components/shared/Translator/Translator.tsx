@@ -1,7 +1,7 @@
+import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { LuGlobe } from "react-icons/lu";
 import { Languages } from "./Translator.types";
 
 const Translator = () => {
@@ -34,7 +34,9 @@ const Translator = () => {
         },
         fontSize: "12px",
       }}
-      startAdornment={<LuGlobe size={20} style={{ marginRight: "8px" }} />}
+      startAdornment={
+        <LanguageOutlinedIcon sx={{ marginRight: "8px", fontSize: 16 }} />
+      }
     >
       <MenuItem value={Languages.EN}>English</MenuItem>
       <MenuItem value={Languages.KA}>ქართული</MenuItem>

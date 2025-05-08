@@ -1,6 +1,7 @@
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useTranslation } from "react-i18next";
-import { CiSettings } from "react-icons/ci";
-import { RiDashboardHorizontalLine, RiBuilding2Line } from "react-icons/ri";
 import { Roles } from "../../store/auth/auth.types";
 import { useAppSelector } from "../../store/hooks/useTypedSelector";
 import NavigationItem from "../shared/NavigationItem/NavigationItem";
@@ -17,19 +18,19 @@ const navigation = [
     label: NavigationItems.Dashboard,
     path: "/dashboard",
     haveAccess: [Roles.ADMIN, Roles.USER],
-    icon: <RiDashboardHorizontalLine size={24} color="white" />,
+    icon: <DashboardOutlinedIcon sx={{ color: "common.white" }} />,
   },
   {
     label: NavigationItems.Companies,
     path: "/companies",
     haveAccess: [Roles.ADMIN],
-    icon: <RiBuilding2Line size={24} color="white" />,
+    icon: <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />,
   },
   {
     label: NavigationItems.Settings,
     path: "/settings",
     haveAccess: [Roles.ADMIN, Roles.USER],
-    icon: <CiSettings size={24} color="white" />,
+    icon: <SettingsOutlinedIcon sx={{ color: "common.white" }} />,
   },
 ];
 

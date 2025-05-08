@@ -1,3 +1,5 @@
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
@@ -5,8 +7,6 @@ import { Box, Button } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { IoCheckmark } from "react-icons/io5";
-import { RxCross1 } from "react-icons/rx";
 import FormInput from "../FormInput/FormInput";
 import { ConfirmModal } from "../Modals";
 import { initialValues, validationSchema } from "./company.config";
@@ -14,7 +14,11 @@ import { CompanyModalProps, FormFields, FormValues } from "./company.types";
 import { createCompany } from "../../../store/companies/companies.thunks";
 import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
 
-const CompanyModal = ({ setIsOpen, companyId }: CompanyModalProps) => {
+const CompanyModal = ({
+  setIsOpen,
+  companyId,
+  initialData,
+}: CompanyModalProps) => {
   const { t } = useTranslation();
   const closeModal = useCallback(() => setIsOpen(false), [setIsOpen]);
   const dispatch = useAppDispatch();
@@ -47,7 +51,7 @@ const CompanyModal = ({ setIsOpen, companyId }: CompanyModalProps) => {
       showButtons={false}
       modalBody={
         <Formik
-          initialValues={initialValues}
+          initialValues={initialData || initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -93,7 +97,9 @@ const CompanyModal = ({ setIsOpen, companyId }: CompanyModalProps) => {
                   loadingPosition="start"
                   sx={{ padding: "8px 12px", minWidth: "110px" }}
                   variant="outlined"
-                  startIcon={<RxCross1 size={16} />}
+                  startIcon={
+                    <ClearOutlinedIcon sx={{ color: "common.white" }} />
+                  }
                 >
                   {t("pages.companies.cancel")}
                 </Button>
@@ -107,7 +113,9 @@ const CompanyModal = ({ setIsOpen, companyId }: CompanyModalProps) => {
                     padding: "8px 12px",
                     minWidth: "110px",
                   }}
-                  startIcon={<IoCheckmark size={20} />}
+                  startIcon={
+                    <CheckOutlinedIcon sx={{ color: "common.white" }} />
+                  }
                 >
                   {companyId
                     ? t("pages.companies.edit")

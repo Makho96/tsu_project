@@ -1,3 +1,5 @@
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -6,8 +8,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper, { PaperProps } from "@mui/material/Paper";
 import { useCallback, useState } from "react";
-import { IoCheckmark } from "react-icons/io5";
-import { RxCross1 } from "react-icons/rx";
 
 const PaperComponent = (props: PaperProps) => {
   return <Paper {...props} sx={{ bgColor: "blue.800" }} />;
@@ -91,7 +91,7 @@ const ConfirmModal = ({
             loadingPosition="start"
             sx={{ padding: "8px 12px", minWidth: "110px" }}
             variant="outlined"
-            startIcon={<RxCross1 size={16} />}
+            startIcon={<ClearOutlinedIcon sx={{ color: "common.white" }} />}
           >
             {cancelButtonText}
           </Button>
@@ -105,7 +105,7 @@ const ConfirmModal = ({
               padding: "8px 12px",
               minWidth: "110px",
             }}
-            startIcon={<IoCheckmark size={20} />}
+            startIcon={<CheckOutlinedIcon sx={{ color: "common.white" }} />}
           >
             {confirmButtonText}
           </Button>
