@@ -35,7 +35,7 @@ export const getCompany = createAsyncThunk(
   "companies/getCompany",
   async (id: number) => {
     try {
-      const { data } = await api.get(`/company/${id}`);
+      const { data } = await api.get<Company>(`/company/${id}`);
       return data;
     } catch (error) {
       showApiError(error as AxiosError);
@@ -50,6 +50,20 @@ export const deleteCompany = createAsyncThunk(
     try {
       await api.delete(`/company/${id}`);
       dispatch(getCompanies());
+    } catch (error) {
+      showApiError(error as AxiosError);
+      throw error;
+    }
+  }
+);
+
+export const updateCompany = createAsyncThunk(
+  "companies/updateCompany",
+  async (company: Omit<Company, "user">, { dispatch }) => {
+    try {
+      const { data } = await api.put(`/company`, company);
+      dispatch(getCompanies());
+      return data;
     } catch (error) {
       showApiError(error as AxiosError);
       throw error;

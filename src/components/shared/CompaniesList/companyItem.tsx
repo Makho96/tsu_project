@@ -4,14 +4,56 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import { Box, Typography, IconButton } from "@mui/material";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  deleteCompany,
+  getCompany,
+} from "../../../store/companies/companies.thunks";
 import { Company } from "../../../store/companies/companies.types";
+import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
+import CompanyModal from "../CompanyModal";
+import Loader from "../Loader";
+import { ConfirmModal } from "../Modals";
+
 type CompanyItemProps = {
   companyData: Company;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
 };
 
-const CompanyItem = ({ companyData, onEdit, onDelete }: CompanyItemProps) => {
+enum ModalTypes {
+  Edit = "edit",
+  Delete = "delete",
+}
+
+const CompanyItem = ({ companyData }: CompanyItemProps) => {
+  const { t } = useTranslation();
+  const [modalType, setModalType] = useState<ModalTypes | null>(null);
+  const [companyLoading, setCompanyLoading] = useState(false);
+  const [company, setCompany] = useState<Company | null>(null);
+  const dispatch = useAppDispatch();
+
+  const handleEditCompany = useCallback(async () => {
+    try {
+      setCompanyLoading(true);
+      const company = await dispatch(getCompany(companyData.id)).unwrap();
+      setCompany(company);
+      setModalType(ModalTypes.Edit);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setCompanyLoading(false);
+    }
+  }, [companyData, dispatch]);
+
+  const handleDeleteCompany = useCallback(async () => {
+    await dispatch(deleteCompany(companyData.id));
+    setModalType(null);
+  }, [companyData.id, dispatch]);
+
+  if (companyLoading) {
+    return <Loader />;
+  }
+
   return (
     <Box
       display="flex"
@@ -60,13 +102,29 @@ const CompanyItem = ({ companyData, onEdit, onDelete }: CompanyItemProps) => {
         </Box>
       </Box>
       <Box>
-        <IconButton onClick={() => onEdit(companyData.id)}>
+        <IconButton onClick={handleEditCompany}>
           <EditOutlinedIcon sx={{ color: "common.white" }} />
         </IconButton>
-        <IconButton onClick={() => onDelete(companyData.id)}>
+        <IconButton onClick={() => setModalType(ModalTypes.Delete)}>
           <DeleteOutlineOutlinedIcon sx={{ color: "red.500" }} />
         </IconButton>
       </Box>
+      {modalType === ModalTypes.Delete && (
+        <ConfirmModal
+          title={t("pages.companies.deleteCompany")}
+          modalBody={t("pages.companies.deleteCompanyConfirmation")}
+          confirmButtonText={t("pages.companies.delete")}
+          cancelButtonText={t("pages.companies.cancel")}
+          onClose={() => setModalType(null)}
+          onConfirm={handleDeleteCompany}
+        />
+      )}
+      {modalType === ModalTypes.Edit && company && (
+        <CompanyModal
+          setIsOpen={() => setModalType(null)}
+          initialData={company}
+        />
+      )}
     </Box>
   );
 };

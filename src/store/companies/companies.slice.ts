@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./companies.consts";
-import { createCompany, getCompanies, getCompany } from "./companies.thunks";
+import {
+  createCompany,
+  getCompanies,
+  getCompany,
+  updateCompany,
+} from "./companies.thunks";
 import { SliceStatuses } from "../types";
 
 const companiesSlice = createSlice({
@@ -41,6 +46,17 @@ const companiesSlice = createSlice({
       .addCase(createCompany.rejected, (state, action) => {
         state.status = SliceStatuses.FAILED;
         state.error = action.error.message ?? "Failed to create company";
+      });
+    builder
+      .addCase(updateCompany.pending, (state) => {
+        state.status = SliceStatuses.LOADING;
+      })
+      .addCase(updateCompany.fulfilled, (state) => {
+        state.status = SliceStatuses.SUCCEEDED;
+      })
+      .addCase(updateCompany.rejected, (state, action) => {
+        state.status = SliceStatuses.FAILED;
+        state.error = action.error.message ?? "Failed to update company";
       });
   },
 });

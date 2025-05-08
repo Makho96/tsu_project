@@ -5,59 +5,77 @@ import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import { Box, Button } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import FormInput from "../FormInput/FormInput";
 import { ConfirmModal } from "../Modals";
 import { initialValues, validationSchema } from "./company.config";
 import { CompanyModalProps, FormFields, FormValues } from "./company.types";
-import { createCompany } from "../../../store/companies/companies.thunks";
+import {
+  createCompany,
+  updateCompany,
+} from "../../../store/companies/companies.thunks";
 import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
 
-const CompanyModal = ({
-  setIsOpen,
-  companyId,
-  initialData,
-}: CompanyModalProps) => {
+const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
   const { t } = useTranslation();
   const closeModal = useCallback(() => setIsOpen(false), [setIsOpen]);
+  const isEdit = useMemo(() => !!initialData, [initialData]);
   const dispatch = useAppDispatch();
+
+  const initialFormValues = useMemo(() => {
+    if (initialData) {
+      return {
+        [FormFields.Name]: initialData.title,
+        [FormFields.Email]: initialData.eMail,
+        [FormFields.Phone]: initialData.tell,
+      };
+    }
+    return initialValues;
+  }, [initialData]);
 
   const handleSubmit = useCallback(
     async (values: FormValues) => {
-      return await dispatch(
-        createCompany({
-          title: values[FormFields.Name],
-          eMail: values[FormFields.Email],
-          tell: values[FormFields.Phone],
-        })
-      ).then(closeModal);
+      const companyData = {
+        title: values[FormFields.Name],
+        eMail: values[FormFields.Email],
+        tell: values[FormFields.Phone],
+      };
+
+      const apiCall = initialData
+        ? updateCompany({
+            id: initialData.id,
+            ...companyData,
+          })
+        : createCompany(companyData);
+
+      return await dispatch(apiCall).then(closeModal);
     },
-    [dispatch, closeModal]
+    [dispatch, closeModal, initialData]
   );
 
   return (
     <ConfirmModal
       onClose={closeModal}
       title={
-        companyId
+        isEdit
           ? t("pages.companies.editCompany")
           : t("pages.companies.addCompany")
       }
       confirmButtonText={
-        companyId ? t("pages.companies.edit") : t("pages.companies.create")
+        isEdit ? t("pages.companies.edit") : t("pages.companies.create")
       }
       cancelButtonText={t("pages.companies.cancel")}
       showButtons={false}
       modalBody={
         <Formik
-          initialValues={initialData || initialValues}
+          initialValues={initialFormValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
             <Form style={{ minWidth: "400px" }}>
-              <Box>
+              <Box sx={{ marginBottom: 1 }}>
                 <FormInput
                   name={FormFields.Name}
                   label={t("pages.companies.name")}
@@ -66,7 +84,7 @@ const CompanyModal = ({
                   }
                 />
               </Box>
-              <Box>
+              <Box sx={{ marginBottom: 1 }}>
                 <FormInput
                   name={FormFields.Email}
                   label={t("pages.companies.email")}
@@ -75,7 +93,7 @@ const CompanyModal = ({
                   }
                 />
               </Box>
-              <Box>
+              <Box sx={{ marginBottom: 1 }}>
                 <FormInput
                   name={FormFields.Phone}
                   label={t("pages.companies.phone")}
@@ -117,7 +135,7 @@ const CompanyModal = ({
                     <CheckOutlinedIcon sx={{ color: "common.white" }} />
                   }
                 >
-                  {companyId
+                  {isEdit
                     ? t("pages.companies.edit")
                     : t("pages.companies.create")}
                 </Button>

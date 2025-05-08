@@ -1,55 +1,22 @@
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import { Box, Button, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CompaniesList from "../../components/shared/CompaniesList/CompaniesList";
 import CompanyModal from "../../components/shared/CompanyModal";
-import ConfirmModal from "../../components/shared/Modals/Confirm/Confirm";
-import {
-  getCompanies,
-  deleteCompany,
-} from "../../store/companies/companies.thunks";
+import { getCompanies } from "../../store/companies/companies.thunks";
 import { useAppDispatch } from "../../store/hooks/useTypedSelector";
-
-enum ModalTypes {
-  Edit = "edit",
-  Delete = "delete",
-}
 
 const Companies = () => {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(
-    null
-  );
-  const [modalType, setModalType] = useState<ModalTypes | null>(null);
 
   const dispatch = useAppDispatch();
-
-  const onCompanyEdit = useCallback((id: number) => {
-    setSelectedCompanyId(id);
-    setModalType(ModalTypes.Edit);
-    setIsModalOpen(true);
-  }, []);
-
-  const onCompanyDelete = useCallback((id: number) => {
-    setSelectedCompanyId(id);
-    setModalType(ModalTypes.Delete);
-  }, []);
 
   useEffect(() => {
     dispatch(getCompanies());
   }, [dispatch]);
-
-  const handleDeleteCompany = useCallback(async () => {
-    if (selectedCompanyId) {
-      await dispatch(deleteCompany(selectedCompanyId)).then(() => {
-        setSelectedCompanyId(null);
-        setModalType(null);
-      });
-    }
-  }, [dispatch, selectedCompanyId]);
 
   return (
     <Box>
@@ -78,24 +45,9 @@ const Companies = () => {
         </Button>
       </Box>
       <Box>
-        <CompaniesList onEdit={onCompanyEdit} onDelete={onCompanyDelete} />
+        <CompaniesList />
       </Box>
-      {isModalOpen && (
-        <CompanyModal
-          setIsOpen={setIsModalOpen}
-          companyId={selectedCompanyId}
-        />
-      )}
-      {selectedCompanyId && modalType === ModalTypes.Delete && (
-        <ConfirmModal
-          title={t("pages.companies.deleteCompany")}
-          modalBody={t("pages.companies.deleteCompanyConfirmation")}
-          confirmButtonText={t("pages.companies.delete")}
-          cancelButtonText={t("pages.companies.cancel")}
-          onClose={() => setSelectedCompanyId(null)}
-          onConfirm={handleDeleteCompany}
-        />
-      )}
+      {isModalOpen && <CompanyModal setIsOpen={setIsModalOpen} />}
     </Box>
   );
 };

@@ -1,3 +1,5 @@
+import { Company } from "../../../store/companies/companies.types";
+
 enum FormFields {
   Name = "name",
   Email = "email",
@@ -12,8 +14,7 @@ type FormValues = {
 
 type CompanyModalProps = {
   setIsOpen: (isOpen: boolean) => void;
-  companyId: number | null;
-  initialData?: FormValues;
+  initialData?: Company;
 };
 
 export { FormFields };
