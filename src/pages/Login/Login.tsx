@@ -1,8 +1,8 @@
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import { Box, Typography, Button } from "@mui/material";
 import { Formik, Form } from "formik";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MdOutlineShield } from "react-icons/md";
 import { Navigate, useNavigate } from "react-router-dom";
 import { initialValues, validationSchema } from "./Login.consts";
 import { FormFields, FormValues } from "./Login.types";
@@ -72,7 +72,7 @@ const Login = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <MdOutlineShield size={40} color="white" />
+          <ShieldOutlinedIcon sx={{ color: "common.white", fontSize: 40 }} />
         </Box>
         <Typography
           variant="h4"

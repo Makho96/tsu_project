@@ -1,8 +1,10 @@
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
+import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper, { PaperProps } from "@mui/material/Paper";
 import { useCallback, useState } from "react";
@@ -12,16 +14,16 @@ const PaperComponent = (props: PaperProps) => {
 };
 
 type ConfirmModalProps = {
-  isOpen: boolean;
   title: string;
   modalBody?: React.ReactNode;
-  onConfirm: () => void | Promise<void>;
-  onCancel: () => void | Promise<void>;
+  onConfirm?: () => void | Promise<void>;
+  onCancel?: () => void | Promise<void>;
   onClose: () => void;
-  confirmButtonText: string;
-  cancelButtonText: string;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
   closeOnConfirm?: boolean;
   closeOnCancel?: boolean;
+  showButtons?: boolean;
 };
 
 const ConfirmModal = ({
@@ -30,18 +32,18 @@ const ConfirmModal = ({
   onConfirm,
   onCancel,
   onClose,
-  isOpen,
   confirmButtonText,
   cancelButtonText,
   closeOnConfirm = true,
   closeOnCancel = true,
+  showButtons = true,
 }: ConfirmModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleConfirm = useCallback(async () => {
     try {
       setIsLoading(true);
-      await onConfirm();
+      await onConfirm?.();
       if (closeOnConfirm) {
         onClose();
       }
@@ -55,7 +57,7 @@ const ConfirmModal = ({
   const handleCancel = useCallback(async () => {
     try {
       setIsLoading(true);
-      await onCancel();
+      await onCancel?.();
       if (closeOnCancel) {
         onClose();
       }
@@ -67,29 +69,48 @@ const ConfirmModal = ({
   }, [onCancel, closeOnCancel, onClose]);
 
   return (
-    <Dialog open={isOpen} onClose={onClose} PaperComponent={PaperComponent}>
-      <DialogTitle>{title}</DialogTitle>
+    <Dialog open onClose={onClose} PaperComponent={PaperComponent}>
+      <DialogTitle
+        sx={{
+          borderBottom: "1px solid",
+          borderColor: "white.100",
+          textAlign: "left",
+        }}
+      >
+        {title}
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText>{modalBody}</DialogContentText>
+        <Box paddingBlock={2}>{modalBody}</Box>
       </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleCancel}
-          disabled={isLoading}
-          loading={isLoading}
-          loadingPosition="start"
-        >
-          {cancelButtonText}
-        </Button>
-        <Button
-          onClick={handleConfirm}
-          disabled={isLoading}
-          loading={isLoading}
-          loadingPosition="start"
-        >
-          {confirmButtonText}
-        </Button>
-      </DialogActions>
+      {showButtons && (
+        <DialogActions>
+          <Button
+            onClick={handleCancel}
+            disabled={isLoading}
+            loading={isLoading}
+            loadingPosition="start"
+            sx={{ padding: "8px 12px", minWidth: "110px" }}
+            variant="outlined"
+            startIcon={<ClearOutlinedIcon sx={{ color: "common.white" }} />}
+          >
+            {cancelButtonText}
+          </Button>
+          <Button
+            onClick={handleConfirm}
+            disabled={isLoading}
+            loading={isLoading}
+            loadingPosition="start"
+            sx={{
+              bgcolor: "green.500",
+              padding: "8px 12px",
+              minWidth: "110px",
+            }}
+            startIcon={<CheckOutlinedIcon sx={{ color: "common.white" }} />}
+          >
+            {confirmButtonText}
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

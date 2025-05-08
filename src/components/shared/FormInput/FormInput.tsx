@@ -4,6 +4,7 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
+  InputAdornment,
 } from "@mui/material";
 import { useField } from "formik";
 import React from "react";
@@ -15,6 +16,8 @@ type FormInputProps = {
   style?: React.CSSProperties;
   inputLabelStyle?: React.CSSProperties;
   helperTextStyle?: React.CSSProperties;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
 } & Omit<InputProps, "name">;
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -24,6 +27,8 @@ const FormInput: React.FC<FormInputProps> = ({
   style,
   inputLabelStyle,
   helperTextStyle,
+  startIcon,
+  endIcon,
   ...props
 }) => {
   const [field, meta] = useField(name);
@@ -40,7 +45,10 @@ const FormInput: React.FC<FormInputProps> = ({
       <InputLabel
         htmlFor={name}
         shrink={hasValue || props.placeholder !== undefined}
-        sx={inputLabelStyle}
+        sx={{
+          ...(startIcon ? { marginLeft: "30px" } : {}),
+          ...inputLabelStyle,
+        }}
       >
         {label || props.placeholder}
       </InputLabel>
@@ -51,6 +59,16 @@ const FormInput: React.FC<FormInputProps> = ({
         name={name}
         value={inputValue}
         placeholder=""
+        startAdornment={
+          startIcon ? (
+            <InputAdornment position="start">{startIcon}</InputAdornment>
+          ) : undefined
+        }
+        endAdornment={
+          endIcon ? (
+            <InputAdornment position="end">{endIcon}</InputAdornment>
+          ) : undefined
+        }
         sx={{
           width: "100%",
           ...style,

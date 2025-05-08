@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAppSelector } from "../store/hooks/useTypedSelector";
 
@@ -7,7 +8,11 @@ const ProtectedRoute = () => {
 
   if (!token || !user) return <Navigate to="/login" />;
 
-  return <Outlet />;
+  return (
+    <Box width="100%" height="100%" padding={2} overflow="auto">
+      <Outlet />
+    </Box>
+  );
 };
 
 export default ProtectedRoute;
