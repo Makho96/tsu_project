@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Routes from "../routing/Routing.types";
 import { logoutThunk } from "../store/auth/auth.thunks";
 import { useAppDispatch } from "../store/hooks/useTypedSelector";
 
@@ -14,7 +15,7 @@ export const useTokenExpiration = () => {
       setLoading(true);
       const token = Cookies.get("token");
       if (!token) {
-        navigate("/login");
+        navigate(Routes.Login);
         setLoading(false);
         return;
       }

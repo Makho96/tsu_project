@@ -8,6 +8,7 @@ import { initialValues, validationSchema } from "./Login.consts";
 import { FormFields, FormValues } from "./Login.types";
 import FormInput from "../../components/shared/FormInput/FormInput";
 import Translator from "../../components/shared/Translator";
+import Routes from "../../routing/Routing.types";
 import { loginThunk } from "../../store/auth/auth.thunks";
 import {
   useAppDispatch,
@@ -29,7 +30,7 @@ const Login = () => {
       try {
         const result = await dispatch(loginThunk({ username, password }));
         if (loginThunk.fulfilled.match(result)) {
-          navigate("/");
+          navigate(Routes.Dashboard);
         }
       } catch (error) {
         console.error(error);
@@ -38,7 +39,7 @@ const Login = () => {
     [dispatch, navigate]
   );
 
-  if (token) return <Navigate to="/" />;
+  if (token) return <Navigate to={Routes.Login} />;
 
   return (
     <Box
