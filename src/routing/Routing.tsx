@@ -1,22 +1,18 @@
 import { Route, Routes } from "react-router-dom";
+import CompanyRouting from "./CompanyRouting";
 import ProtectedRoute from "./ProtectedRoute";
-import AdminPage from "../pages/Admin";
+import NavigationRoutes from "./Routing.types";
 import Companies from "../pages/Companies/Companies";
-import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 
 const Routing = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/company/*" element={<CompanyRouting />} />
+
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Dashboard />} />
-      </Route>
-      <Route element={<ProtectedRoute />}>
-        <Route path="/admin" element={<AdminPage />} />
-      </Route>
-      <Route element={<ProtectedRoute />}>
-        <Route path="/companies" element={<Companies />} />
+        <Route path={NavigationRoutes.Companies} element={<Companies />} />
       </Route>
     </Routes>
   );

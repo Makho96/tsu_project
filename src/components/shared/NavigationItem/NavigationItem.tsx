@@ -10,13 +10,14 @@ type NavigationItemProps = {
   path: string;
   label: string;
   icon?: React.ReactNode;
+  onClick?: (e: React.MouseEvent) => void;
 };
 
 const NavigationItem = (props: NavigationItemProps) => {
-  const { path, label, icon } = props;
+  const { path, label, icon, onClick } = props;
 
   return (
-    <NavLink to={path}>
+    <NavLink to={path} end={false} onClick={onClick}>
       {({ isActive }) => (
         <ListItem disablePadding key={label}>
           <ListItemButton
