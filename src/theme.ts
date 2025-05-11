@@ -188,6 +188,29 @@ const baseThemeOptions: ThemeOptions = {
         }),
       },
     },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.common.white,
+        }),
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: ({ theme }) => ({
+          backgroundColor: theme.palette.blue[800],
+          color: theme.palette.common.white,
+          fontSize: "0.875rem",
+          padding: "8px 12px",
+          borderRadius: 4,
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          maxWidth: "400px",
+        }),
+        arrow: ({ theme }) => ({
+          color: theme.palette.blue[800],
+        }),
+      },
+    },
   },
 };
 
