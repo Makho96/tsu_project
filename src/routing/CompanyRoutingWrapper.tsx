@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Outlet } from "react-router-dom";
-import CompanySelectionModal from "../components/shared/CompanySelectionModal/CompanySelectionModal";
+import Loader from "../components/shared/Loader/Loader";
 import useEvent from "../hooks/useEvent";
 import { setSelectedCompany } from "../store/companies/companies.slice";
 import { getCompany } from "../store/companies/companies.thunks";
@@ -8,13 +8,15 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../store/hooks/useTypedSelector";
+import { SliceStatuses } from "../store/types";
 
 const CompanyRoutingWrapper = () => {
   const { id } = useParams();
-  const [isCompanySelectionModalOpen, setIsCompanySelectionModalOpen] =
-    useState<boolean>(!id);
   const currentCompany = useAppSelector(
     (state) => state.companies.currentCompany
+  );
+  const loading = useAppSelector((state) =>
+    [SliceStatuses.LOADING, SliceStatuses.IDLE].includes(state.companies.status)
   );
   const dispatch = useAppDispatch();
 
@@ -34,14 +36,11 @@ const CompanyRoutingWrapper = () => {
     fetchCompany();
   }, [fetchCompany]);
 
-  return isCompanySelectionModalOpen ? (
-    <CompanySelectionModal
-      open={isCompanySelectionModalOpen}
-      handleClose={() => setIsCompanySelectionModalOpen(false)}
-    />
-  ) : (
-    <Outlet />
-  );
+  if (loading) {
+    return <Loader />;
+  }
+
+  return <Outlet />;
 };
 
 export default CompanyRoutingWrapper;

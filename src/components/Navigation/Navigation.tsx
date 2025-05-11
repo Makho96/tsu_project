@@ -39,20 +39,20 @@ const Navigation = () => {
       {
         label: NavigationItems.Dashboard,
         path: Routes.Company,
-        haveAccess: [Roles.ADMIN, Roles.USER],
+        haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
         icon: <DashboardOutlinedIcon sx={{ color: "common.white" }} />,
         onClick: handleDashboardClick,
       },
       {
         label: NavigationItems.Companies,
         path: Routes.Companies,
-        haveAccess: [Roles.ADMIN],
+        haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
         icon: <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />,
       },
       {
         label: NavigationItems.Settings,
         path: Routes.Settings,
-        haveAccess: [Roles.ADMIN, Roles.USER],
+        haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
         icon: <SettingsOutlinedIcon sx={{ color: "common.white" }} />,
       },
     ],

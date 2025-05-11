@@ -10,8 +10,10 @@ type User = {
 };
 
 enum Roles {
+  SUPERADMIN = "SUPERADMIN",
   ADMIN = "ADMIN",
-  USER = "USER",
+  EDITOR = "EDITOR",
+  VIEWER = "VIEWER",
 }
 
 enum Status {
