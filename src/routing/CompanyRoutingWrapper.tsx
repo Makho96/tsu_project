@@ -4,17 +4,22 @@ import CompanySelectionModal from "../components/shared/CompanySelectionModal/Co
 import useEvent from "../hooks/useEvent";
 import { setSelectedCompany } from "../store/companies/companies.slice";
 import { getCompany } from "../store/companies/companies.thunks";
-import { useAppDispatch } from "../store/hooks/useTypedSelector";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../store/hooks/useTypedSelector";
 
 const CompanyRoutingWrapper = () => {
   const { id } = useParams();
   const [isCompanySelectionModalOpen, setIsCompanySelectionModalOpen] =
     useState<boolean>(!id);
-
+  const currentCompany = useAppSelector(
+    (state) => state.companies.currentCompany
+  );
   const dispatch = useAppDispatch();
 
   const fetchCompany = useEvent(async () => {
-    if (id) {
+    if (id && !currentCompany) {
       try {
         const company = await dispatch(getCompany(+id)).unwrap();
         console.log(company);
