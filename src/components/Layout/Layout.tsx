@@ -1,14 +1,29 @@
 import { Box } from "@mui/material";
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useTokenExpiration } from "../../hooks/useTokenExpuration";
+import useEvent from "../../hooks/useEvent";
+import { useTokenExpiration } from "../../hooks/useTokenExpiration";
 import Routing from "../../routing/Routing";
+import { getCompanies } from "../../store/companies/companies.thunks";
+import {
+  useAppSelector,
+  useAppDispatch,
+} from "../../store/hooks/useTypedSelector";
 import Header from "../shared/Header/Header";
 import Loader from "../shared/Loader";
 import Sidebar from "../Sidebar/SIdebar";
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { token } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
+
+  const onSidebarToggle = useEvent(() =>
+    setIsSidebarOpen((prevState) => !prevState)
+  );
+
+  const dispatch = useAppDispatch();
+
   const location = useLocation();
   const showFullContent = useMemo(
     () => !location.pathname.includes("login"),
@@ -16,9 +31,17 @@ const Layout = () => {
   );
   const { loading } = useTokenExpiration();
 
-  const onSidebarToggle = useCallback(() => {
-    setIsSidebarOpen((prevState) => !prevState);
-  }, [setIsSidebarOpen]);
+  useEffect(() => {
+    if (token && user) {
+      dispatch(getCompanies());
+    }
+  }, [token, user, dispatch]);
+
+  useEffect(() => {
+    if (!user || !token) {
+      return;
+    }
+  }, [user, token, dispatch]);
 
   if (loading) return <Loader />;
 

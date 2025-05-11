@@ -18,6 +18,7 @@ declare module "@mui/material/styles" {
       700: string;
     };
     green: {
+      100: string;
       500: string;
     };
     red: {
@@ -36,6 +37,7 @@ declare module "@mui/material/styles" {
       700?: string;
     };
     green?: {
+      100?: string;
       500?: string;
     };
     red?: {
@@ -60,6 +62,7 @@ const baseThemeOptions: ThemeOptions = {
       700: "rgba(255, 255, 255, 0.7)",
     },
     green: {
+      100: "rgba(26, 125, 120, 0.1)",
       500: "rgb(26, 125, 120)",
     },
     red: {
@@ -168,6 +171,20 @@ const baseThemeOptions: ThemeOptions = {
       styleOverrides: {
         paper: ({ theme }) => ({
           backgroundColor: theme.palette.blue[800],
+        }),
+      },
+    },
+    MuiModal: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          "& > .MuiBox-root": {
+            backgroundColor: theme.palette.blue[800],
+            color: theme.palette.common.white,
+            border: `1px solid ${theme.palette.white[100]}`,
+            borderRadius: 8,
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+            padding: 0,
+          },
         }),
       },
     },

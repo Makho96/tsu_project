@@ -30,7 +30,7 @@ const Login = () => {
       try {
         const result = await dispatch(loginThunk({ username, password }));
         if (loginThunk.fulfilled.match(result)) {
-          navigate(Routes.Dashboard);
+          navigate("/company");
         }
       } catch (error) {
         console.error(error);

@@ -1,5 +1,4 @@
 {
-  "welcome": "Welcome",
   "login": {
     "title": "Login",
     "username": "Username",
@@ -10,7 +9,6 @@
     "forgotPassword": "Forgot Password?"
   },
   "logout": "Logout",
-  "description": "This is a description in English.",
   "menu": {
     "companies": "Company Management",
     "dashboard": "Dashboard",
@@ -33,6 +31,11 @@
       "name": "Company Name",
       "phone": "Phone Number",
       "email": "Email Address"
+    }
+  },
+  "modals": {
+    "companySelection": {
+      "title": "Select Company"
     }
   }
 }

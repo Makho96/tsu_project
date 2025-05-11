@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialState } from "./companies.consts";
 import {
   createCompany,
@@ -7,11 +7,16 @@ import {
   updateCompany,
 } from "./companies.thunks";
 import { SliceStatuses } from "../types";
+import { Company } from "./companies.types";
 
 const companiesSlice = createSlice({
   name: "companies",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setSelectedCompany: (state, action: PayloadAction<Company>) => {
+      state.currentCompany = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCompanies.pending, (state) => {
@@ -60,5 +65,7 @@ const companiesSlice = createSlice({
       });
   },
 });
+
+export const { setSelectedCompany } = companiesSlice.actions;
 
 export default companiesSlice.reducer;

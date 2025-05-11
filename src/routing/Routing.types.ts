@@ -3,6 +3,7 @@ enum Routes {
   Dashboard = "/dashboard",
   Companies = "/companies",
   Settings = "/settings",
+  Company = "/company",
 }
 
 export default Routes;

@@ -3,6 +3,8 @@ import { Avatar, Box, Menu, MenuItem, Typography } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useNavigate } from "react-router-dom";
+import Routes from "../../../routing/Routing.types";
 import { RolesToNamesMapper } from "../../../store/auth/auth.consts";
 import { logoutThunk } from "../../../store/auth/auth.thunks";
 import {
@@ -13,6 +15,7 @@ import {
 const AuthUser = () => {
   const user = useAppSelector((state) => state.auth.user!);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { t } = useTranslation();
 
@@ -31,10 +34,11 @@ const AuthUser = () => {
     setAnchorEl(null);
   }, [setAnchorEl]);
 
-  const handleLogout = useCallback(() => {
-    dispatch(logoutThunk());
+  const handleLogout = useCallback(async () => {
+    await dispatch(logoutThunk());
+    navigate(Routes.Login);
     handleClose();
-  }, [dispatch, handleClose]);
+  }, [dispatch, handleClose, navigate]);
 
   return (
     <Box>
