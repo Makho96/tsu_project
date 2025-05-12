@@ -13,7 +13,8 @@
     "companies": "კომპანიების მართვა",
     "dashboard": "სამუშაო დაფა",
     "admin": "ადმინისტრაცია",
-    "settings": "პარამეტრები"
+    "settings": "პარამეტრები",
+    "actions": "მოქმედებების მართვა"
   },
   "pages": {
     "companies": {
@@ -30,6 +31,25 @@
       "name": "კომპანიის სახელი",
       "phone": "ტელეფონის ნომერი",
       "email": "ელ-ფოსტა"
+    },
+    "actions": {
+      "addAction": "მოქმედების დამატება",
+      "editAction": "მოქმედების რედაქტირება",
+      "deleteAction": "მოქმედების წაშლა",
+      "deleteActionConfirmation": "ნამდვილად გსურს თქვენი მოქმედების წაშლა?",
+      "manageFields": "ველების მართვა",
+      "deleteActionButton": "წაშლა",
+      "cancel": "გაუქმება",
+      "create": "შექმნა",
+      "edit": "რედაქტირება",
+      "title": "სახელი",
+      "status": "სტატუსი",
+      "color": "ფერი",
+      "description": "აღწერა",
+      "draft": "მონახაზი",
+      "active": "აქტიური",
+      "finished": "დასრულებული",
+      "archived": "დაარქივებული"
     }
   },
   "modals": {

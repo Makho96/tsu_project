@@ -15,6 +15,7 @@ enum NavigationItems {
   Companies = "companies",
   Admin = "admin",
   Settings = "settings",
+  Actions = "actions",
 }
 
 const Navigation = () => {
@@ -38,10 +39,20 @@ const Navigation = () => {
     () => [
       {
         label: NavigationItems.Dashboard,
-        path: Routes.Company,
+        path: currentCompany
+          ? `${Routes.Company}/${currentCompany.id}`
+          : Routes.Company,
         haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
         icon: <DashboardOutlinedIcon sx={{ color: "common.white" }} />,
         onClick: handleDashboardClick,
+        exact: true,
+      },
+      {
+        label: NavigationItems.Actions,
+        path: `${Routes.Company}/${currentCompany?.id}${Routes.Actions}`,
+        haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
+        icon: <DashboardOutlinedIcon sx={{ color: "common.white" }} />,
+        exact: true,
       },
       {
         label: NavigationItems.Companies,
@@ -56,7 +67,7 @@ const Navigation = () => {
         icon: <SettingsOutlinedIcon sx={{ color: "common.white" }} />,
       },
     ],
-    [handleDashboardClick]
+    [handleDashboardClick, currentCompany]
   );
 
   return (
@@ -72,6 +83,7 @@ const Navigation = () => {
             label={t(`menu.${item.label}`)}
             icon={item.icon}
             onClick={item.onClick}
+            exact={item.exact}
           />
         );
       })}

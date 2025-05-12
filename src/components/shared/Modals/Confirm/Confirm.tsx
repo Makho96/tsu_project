@@ -101,7 +101,7 @@ const ConfirmModal = ({
             loading={isLoading}
             loadingPosition="start"
             sx={{
-              bgcolor: "green.500",
+              bgcolor: "green.1000",
               padding: "8px 12px",
               minWidth: "110px",
             }}

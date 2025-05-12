@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import AuthUser from "../AuthUser";
 import BurgerMenu from "../BurgerMenu";
+import SelectedCompany from "../CompanySelectionModal/SelectedCompany";
 import Translator from "../Translator";
 
 type HeaderProps = {
@@ -20,8 +21,9 @@ const Header = ({ isOpen, handleToggle }: HeaderProps) => {
       borderColor="rgb(255 255 255 / 0.1)"
       paddingInline={2}
     >
-      <Box>
+      <Box display="flex" alignItems="center" gap={3}>
         <BurgerMenu isOpen={isOpen} onClick={handleToggle} size={30} />
+        <SelectedCompany />
       </Box>
       <Box display="flex" alignItems="center" gap={2}>
         <Translator />

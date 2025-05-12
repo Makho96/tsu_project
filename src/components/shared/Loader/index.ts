@@ -1,3 +1,4 @@
+import FullPageLoader from "./FullPageLoader";
 import Loader from "./Loader";
 
-export default Loader;
+export { FullPageLoader, Loader };

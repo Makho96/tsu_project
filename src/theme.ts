@@ -19,7 +19,8 @@ declare module "@mui/material/styles" {
     };
     green: {
       100: string;
-      500: string;
+      400: string;
+      1000: string;
     };
     red: {
       500: string;
@@ -38,7 +39,8 @@ declare module "@mui/material/styles" {
     };
     green?: {
       100?: string;
-      500?: string;
+      400?: string;
+      1000?: string;
     };
     red?: {
       500?: string;
@@ -63,7 +65,8 @@ const baseThemeOptions: ThemeOptions = {
     },
     green: {
       100: "rgba(26, 125, 120, 0.1)",
-      500: "rgb(26, 125, 120)",
+      400: "rgba(26, 125, 120, 0.4)",
+      1000: "rgb(26, 125, 120)",
     },
     red: {
       500: "rgb(239, 68, 68)",
@@ -96,10 +99,6 @@ const baseThemeOptions: ThemeOptions = {
           padding: "8px 12px",
           border: "1px solid",
           borderColor: "rgb(209, 213, 219)",
-          "&.Mui-focused": {
-            // This is the correct way to target the focused state
-            borderColor: "#000",
-          },
           "&:after": {
             content: "unset",
           },
@@ -120,8 +119,10 @@ const baseThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           transform: "translate(12px, 30px) scale(1)",
+          color: "rgb(209, 213, 219)",
           "&.Mui-focused, &.MuiFormLabel-filled": {
             transform: "translate(12px, -5px) scale(0.75)",
+            color: "rgb(255, 255, 255)",
           },
         },
       },
@@ -146,6 +147,9 @@ const baseThemeOptions: ThemeOptions = {
     MuiSelect: {
       styleOverrides: {
         root: {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgb(209, 213, 219)",
+          },
           "&.Mui-focused": {
             boxShadow: "none",
             "& .MuiOutlinedInput-notchedOutline": {
@@ -155,6 +159,9 @@ const baseThemeOptions: ThemeOptions = {
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
             borderColor: "inherit",
+          },
+          "& .MuiSelect-icon": {
+            color: "rgb(209, 213, 219)",
           },
         },
       },
@@ -185,6 +192,29 @@ const baseThemeOptions: ThemeOptions = {
             boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
             padding: 0,
           },
+        }),
+      },
+    },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.common.white,
+        }),
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: ({ theme }) => ({
+          backgroundColor: theme.palette.blue[800],
+          color: theme.palette.common.white,
+          fontSize: "0.875rem",
+          padding: "8px 12px",
+          borderRadius: 4,
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          maxWidth: "400px",
+        }),
+        arrow: ({ theme }) => ({
+          color: theme.palette.blue[800],
         }),
       },
     },

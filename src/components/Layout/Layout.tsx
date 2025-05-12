@@ -10,7 +10,7 @@ import {
   useAppDispatch,
 } from "../../store/hooks/useTypedSelector";
 import Header from "../shared/Header/Header";
-import Loader from "../shared/Loader";
+import { FullPageLoader } from "../shared/Loader";
 import Sidebar from "../Sidebar/SIdebar";
 
 const Layout = () => {
@@ -43,7 +43,7 @@ const Layout = () => {
     }
   }, [user, token, dispatch]);
 
-  if (loading) return <Loader />;
+  if (loading) return <FullPageLoader />;
 
   return (
     <Box

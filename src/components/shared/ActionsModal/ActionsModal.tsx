@@ -1,71 +1,93 @@
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import { Box, Button } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import FormInput from "../FormInput/FormInput";
-import { ConfirmModal } from "../Modals";
-import { initialValues, validationSchema } from "./company.config";
-import { CompanyModalProps, FormFields, FormValues } from "./company.types";
+import { initialValues, validationSchema } from "./ActionsModal.config";
 import {
-  createCompany,
-  updateCompany,
-} from "../../../store/companies/companies.thunks";
-import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
+  FormFields,
+  FormValues,
+  type ActionsModalProps,
+} from "./ActionsModal.types";
+import useEvent from "../../../hooks/useEvent";
+import {
+  createAction,
+  updateAction,
+} from "../../../store/actions/actions.thunks";
+import { Statuses } from "../../../store/actions/actions.types";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../store/hooks/useTypedSelector";
+import FormColorPicker from "../FormColorPicker/FormColorPicker";
+import FormInput from "../FormInput/FormInput";
+import FormSelect from "../FormSelect/FormSelect";
+import { ConfirmModal } from "../Modals";
 
-const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
+const ActionsModal = ({ initialData, setIsOpen }: ActionsModalProps) => {
   const { t } = useTranslation();
   const closeModal = useCallback(() => setIsOpen(false), [setIsOpen]);
-  const isEdit = useMemo(() => !!initialData, [initialData]);
   const dispatch = useAppDispatch();
+  const currentCompany = useAppSelector(
+    (state) => state.companies.currentCompany!
+  );
 
   const initialFormValues = useMemo(() => {
     if (initialData) {
       return {
-        [FormFields.Name]: initialData.title,
-        [FormFields.Email]: initialData.eMail,
-        [FormFields.Phone]: initialData.tell,
+        [FormFields.title]: initialData.title,
+        [FormFields.status]: initialData.status,
+        [FormFields.color]: initialData.color,
+        [FormFields.description]: initialData.description,
       };
     }
     return initialValues;
   }, [initialData]);
 
-  const handleSubmit = useCallback(
-    async (values: FormValues) => {
-      const companyData = {
-        title: values[FormFields.Name],
-        eMail: values[FormFields.Email],
-        tell: values[FormFields.Phone],
-      };
+  const handleSubmit = useEvent(async (values: FormValues) => {
+    const params = {
+      title: values[FormFields.title],
+      status: values[FormFields.status],
+      color: values[FormFields.color],
+      description: values[FormFields.description],
+    };
 
-      const apiCall = initialData
-        ? updateCompany({
-            id: initialData.id,
-            ...companyData,
-          })
-        : createCompany(companyData);
+    const apiCall = initialData
+      ? updateAction({
+          ...params,
+          id: initialData.id,
+          company: currentCompany.id,
+        })
+      : createAction({
+          ...params,
+          company: currentCompany.id,
+        });
 
-      return await dispatch(apiCall).then(closeModal);
-    },
-    [dispatch, closeModal, initialData]
+    return await dispatch(apiCall).then(closeModal);
+  });
+
+  const statusOptions = useMemo(
+    () =>
+      Object.values(Statuses).map((status) => ({
+        value: status,
+        label: t(`pages.actions.${status.toLowerCase()}`),
+      })),
+    [t]
   );
 
   return (
     <ConfirmModal
       onClose={closeModal}
       title={
-        isEdit
-          ? t("pages.companies.editCompany")
-          : t("pages.companies.addCompany")
+        initialData
+          ? t("pages.actions.editAction")
+          : t("pages.actions.addAction")
       }
       confirmButtonText={
-        isEdit ? t("pages.companies.edit") : t("pages.companies.create")
+        initialData ? t("pages.actions.edit") : t("pages.actions.create")
       }
-      cancelButtonText={t("pages.companies.cancel")}
+      cancelButtonText={t("pages.actions.cancel")}
       showButtons={false}
       modalBody={
         <Formik
@@ -77,29 +99,21 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
             <Form style={{ minWidth: "400px" }}>
               <Box sx={{ marginBottom: 1 }}>
                 <FormInput
-                  name={FormFields.Name}
-                  label={t("pages.companies.name")}
-                  startIcon={
-                    <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />
-                  }
+                  name={FormFields.title}
+                  label={t("pages.actions.title")}
                 />
               </Box>
               <Box sx={{ marginBottom: 1 }}>
-                <FormInput
-                  name={FormFields.Email}
-                  label={t("pages.companies.email")}
-                  startIcon={
-                    <EmailOutlinedIcon sx={{ color: "common.white" }} />
-                  }
+                <FormSelect
+                  name={FormFields.status}
+                  label={t("pages.actions.status")}
+                  options={statusOptions}
                 />
               </Box>
               <Box sx={{ marginBottom: 1 }}>
-                <FormInput
-                  name={FormFields.Phone}
-                  label={t("pages.companies.phone")}
-                  startIcon={
-                    <LocalPhoneOutlinedIcon sx={{ color: "common.white" }} />
-                  }
+                <FormColorPicker
+                  name={FormFields.color}
+                  label={t("pages.actions.color")}
                 />
               </Box>
               <Box
@@ -119,7 +133,7 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
                     <ClearOutlinedIcon sx={{ color: "common.white" }} />
                   }
                 >
-                  {t("pages.companies.cancel")}
+                  {t("pages.actions.cancel")}
                 </Button>
                 <Button
                   type="submit"
@@ -135,17 +149,17 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
                     <CheckOutlinedIcon sx={{ color: "common.white" }} />
                   }
                 >
-                  {isEdit
-                    ? t("pages.companies.edit")
-                    : t("pages.companies.create")}
+                  {initialData
+                    ? t("pages.actions.edit")
+                    : t("pages.actions.create")}
                 </Button>
               </Box>
             </Form>
           )}
         </Formik>
       }
-    />
+    ></ConfirmModal>
   );
 };
 
-export default CompanyModal;
+export default ActionsModal;

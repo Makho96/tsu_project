@@ -11,20 +11,21 @@ type NavigationItemProps = {
   label: string;
   icon?: React.ReactNode;
   onClick?: (e: React.MouseEvent) => void;
+  exact?: boolean;
 };
 
 const NavigationItem = (props: NavigationItemProps) => {
-  const { path, label, icon, onClick } = props;
+  const { path, label, icon, onClick, exact = false } = props;
 
   return (
-    <NavLink to={path} end={false} onClick={onClick}>
+    <NavLink to={path} end={exact} onClick={onClick} caseSensitive={true}>
       {({ isActive }) => (
         <ListItem disablePadding key={label}>
           <ListItemButton
             sx={{
-              backgroundColor: isActive ? "green.500" : "transparent",
+              backgroundColor: isActive ? "green.1000" : "transparent",
               "&:hover": {
-                backgroundColor: "green.500",
+                backgroundColor: "green.400",
               },
               paddingInline: "20px",
             }}

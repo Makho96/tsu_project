@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 
-const Loader = () => {
+const FullPageLoader = () => {
   return (
     <Box
       width="100%"
@@ -8,7 +8,7 @@ const Loader = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      position="absolute"
+      position="fixed"
       top="0"
       left="0"
       right="0"
@@ -21,4 +21,4 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export default FullPageLoader;

@@ -13,7 +13,7 @@ import {
 import { Company } from "../../../store/companies/companies.types";
 import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
 import CompanyModal from "../CompanyModal";
-import Loader from "../Loader";
+import { FullPageLoader } from "../Loader";
 import { ConfirmModal } from "../Modals";
 
 type CompanyItemProps = {
@@ -51,7 +51,7 @@ const CompanyItem = ({ companyData }: CompanyItemProps) => {
   }, [companyData.id, dispatch]);
 
   if (companyLoading) {
-    return <Loader />;
+    return <FullPageLoader />;
   }
 
   return (

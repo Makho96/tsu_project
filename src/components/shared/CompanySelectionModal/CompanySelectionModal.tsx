@@ -4,11 +4,15 @@ import Box from "@mui/material/Box";
 import DialogTitle from "@mui/material/DialogTitle";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import useEvent from "../../../hooks/useEvent";
 import Routes from "../../../routing/Routing.types";
-import { useAppSelector } from "../../../store/hooks/useTypedSelector";
+import { setSelectedCompany } from "../../../store/companies/companies.slice";
+import {
+  useAppSelector,
+  useAppDispatch,
+} from "../../../store/hooks/useTypedSelector";
 
 const style = {
   position: "absolute",
@@ -23,31 +27,39 @@ const style = {
 };
 
 type CompanySelectionModalProps = {
-  open: boolean;
   handleClose: () => void;
 };
 
-const CompanySelectionModal = ({
-  open,
-  handleClose,
-}: CompanySelectionModalProps) => {
+const CompanySelectionModal = ({ handleClose }: CompanySelectionModalProps) => {
   const { t } = useTranslation();
   const companies = useAppSelector((state) => state.companies.companies);
+  const currentCompany = useAppSelector(
+    (state) => state.companies.currentCompany
+  );
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const handleCompanySelection = useCallback(
-    (companyId: number) => {
+  const handleCompanySelection = useEvent((companyId: number) => {
+    console.log(companyId, currentCompany?.id);
+
+    if (!companyId || companyId === currentCompany?.id) {
+      handleClose();
+      return;
+    }
+
+    const company = companies.find((company) => company.id === companyId);
+    if (company) {
+      dispatch(setSelectedCompany(company));
       navigate(`${Routes.Company}/${companyId}`);
       handleClose();
-    },
-    [navigate, handleClose]
-  );
+    }
+  });
 
   return (
     <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
-      open={open}
+      open={true}
       slots={{ backdrop: Backdrop }}
       slotProps={{
         backdrop: {
@@ -91,7 +103,7 @@ const CompanySelectionModal = ({
                 "&:hover": {
                   bgcolor: "green.100",
                   border: "1px solid",
-                  borderColor: "green.500",
+                  borderColor: "green.1000",
                 },
               }}
               onClick={() => handleCompanySelection(company.id)}

@@ -5,12 +5,11 @@ const CompanySelection = () => {
   const [isCompanySelectionModalOpen, setIsCompanySelectionModalOpen] =
     useState<boolean>(true);
 
-  return (
+  return isCompanySelectionModalOpen ? (
     <CompanySelectionModal
-      open={isCompanySelectionModalOpen}
       handleClose={() => setIsCompanySelectionModalOpen(false)}
     />
-  );
+  ) : null;
 };
 
 export default CompanySelection;

@@ -13,7 +13,8 @@
     "companies": "Company Management",
     "dashboard": "Dashboard",
     "admin": "Admin",
-    "settings": "Settings"
+    "settings": "Settings",
+    "actions": "Action Management"
   },
 
   "pages": {
@@ -31,8 +32,28 @@
       "name": "Company Name",
       "phone": "Phone Number",
       "email": "Email Address"
+    },
+    "actions": {
+      "addAction": "Add Action",
+      "editAction": "Edit Action",
+      "deleteAction": "Delete Action",
+      "deleteActionConfirmation": "Are you sure you want to delete this action?",
+      "manageFields": "Manage Fields",
+      "deleteActionButton": "Delete",
+      "cancel": "Cancel",
+      "create": "Create",
+      "edit": "Edit",
+      "title": "Title",
+      "status": "Status",
+      "color": "Color",
+      "description": "Description",
+      "draft": "Draft",
+      "active": "Active",
+      "finished": "Finished",
+      "archived": "Archived"
     }
   },
+
   "modals": {
     "companySelection": {
       "title": "Select Company"
