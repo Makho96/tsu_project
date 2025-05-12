@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Outlet } from "react-router-dom";
-import Loader from "../components/shared/Loader/Loader";
+import { FullPageLoader } from "../components/shared/Loader";
 import useEvent from "../hooks/useEvent";
 import { setSelectedCompany } from "../store/companies/companies.slice";
 import { getCompany } from "../store/companies/companies.thunks";
@@ -37,7 +37,7 @@ const CompanyRoutingWrapper = () => {
   }, [fetchCompany]);
 
   if (loading) {
-    return <Loader />;
+    return <FullPageLoader />;
   }
 
   return <Outlet />;

@@ -103,7 +103,7 @@ const CompanySelectionModal = ({ handleClose }: CompanySelectionModalProps) => {
                 "&:hover": {
                   bgcolor: "green.100",
                   border: "1px solid",
-                  borderColor: "green.500",
+                  borderColor: "green.1000",
                 },
               }}
               onClick={() => handleCompanySelection(company.id)}

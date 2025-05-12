@@ -19,7 +19,7 @@ const Companies = () => {
   }, [dispatch]);
 
   return (
-    <Box>
+    <Box position="relative">
       <Box
         display="flex"
         alignItems="flex-start"
@@ -37,7 +37,7 @@ const Companies = () => {
         <Button
           variant="contained"
           color="primary"
-          sx={{ bgcolor: "green.500", padding: "8px 16px", fontSize: "12px" }}
+          sx={{ bgcolor: "green.1000", padding: "8px 16px", fontSize: "12px" }}
           startIcon={<AddOutlinedIcon />}
           onClick={() => setIsModalOpen(true)}
         >
