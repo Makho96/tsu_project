@@ -40,7 +40,17 @@
       "deleteActionConfirmation": "Are you sure you want to delete this action?",
       "manageFields": "Manage Fields",
       "deleteActionButton": "Delete",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "create": "Create",
+      "edit": "Edit",
+      "title": "Title",
+      "status": "Status",
+      "color": "Color",
+      "description": "Description",
+      "draft": "Draft",
+      "active": "Active",
+      "finished": "Finished",
+      "archived": "Archived"
     }
   },
 

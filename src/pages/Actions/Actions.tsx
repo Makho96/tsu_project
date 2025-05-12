@@ -3,6 +3,7 @@ import { Box, Button } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ActionsList from "../../components/shared/ActionsList/ActionsList";
+import ActionsModal from "../../components/shared/ActionsModal/ActionsModal";
 import { Roles } from "../../store/auth/auth.types";
 import { useAppSelector } from "../../store/hooks/useTypedSelector";
 
@@ -42,6 +43,7 @@ const Actions = () => {
       <Box>
         <ActionsList />
       </Box>
+      {isModalOpen && <ActionsModal setIsOpen={setIsModalOpen} />}
     </Box>
   );
 };

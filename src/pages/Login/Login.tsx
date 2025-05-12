@@ -16,6 +16,7 @@ import {
 } from "../../store/hooks/useTypedSelector";
 
 const Login = () => {
+  console.log("login");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { token } = useAppSelector((state) => state.auth);
@@ -103,6 +104,9 @@ const Login = () => {
                   }}
                   style={{
                     color: "blue.900",
+                    "&.Mui-focused": {
+                      borderColor: "#000",
+                    },
                   }}
                   helperTextStyle={{
                     color: "blue.900",
@@ -124,6 +128,9 @@ const Login = () => {
                   }}
                   style={{
                     color: "blue.900",
+                    "&.Mui-focused": {
+                      borderColor: "#000",
+                    },
                   }}
                 />
               </Box>

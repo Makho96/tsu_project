@@ -20,7 +20,7 @@ declare module "@mui/material/styles" {
     green: {
       100: string;
       400: string;
-      500: string;
+      1000: string;
     };
     red: {
       500: string;
@@ -40,7 +40,7 @@ declare module "@mui/material/styles" {
     green?: {
       100?: string;
       400?: string;
-      500?: string;
+      1000?: string;
     };
     red?: {
       500?: string;
@@ -99,10 +99,6 @@ const baseThemeOptions: ThemeOptions = {
           padding: "8px 12px",
           border: "1px solid",
           borderColor: "rgb(209, 213, 219)",
-          "&.Mui-focused": {
-            // This is the correct way to target the focused state
-            borderColor: "#000",
-          },
           "&:after": {
             content: "unset",
           },
@@ -123,8 +119,10 @@ const baseThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           transform: "translate(12px, 30px) scale(1)",
+          color: "rgb(209, 213, 219)",
           "&.Mui-focused, &.MuiFormLabel-filled": {
             transform: "translate(12px, -5px) scale(0.75)",
+            color: "rgb(255, 255, 255)",
           },
         },
       },
@@ -149,6 +147,9 @@ const baseThemeOptions: ThemeOptions = {
     MuiSelect: {
       styleOverrides: {
         root: {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgb(209, 213, 219)",
+          },
           "&.Mui-focused": {
             boxShadow: "none",
             "& .MuiOutlinedInput-notchedOutline": {
@@ -158,6 +159,9 @@ const baseThemeOptions: ThemeOptions = {
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
             borderColor: "inherit",
+          },
+          "& .MuiSelect-icon": {
+            color: "rgb(209, 213, 219)",
           },
         },
       },

@@ -5,7 +5,12 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Box, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import useEvent from "../../../hooks/useEvent";
+import { getAction } from "../../../store/actions/actions.thunks";
 import { Action } from "../../../store/actions/actions.types";
+import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
+import ActionsModal from "../ActionsModal";
+import { FullPageLoader } from "../Loader";
 import { ConfirmModal } from "../Modals";
 
 type ActionListItemProps = {
@@ -20,6 +25,27 @@ const ActionListItem = ({
   const { id, title, color } = action;
   const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [actionData, setActionData] = useState<Action | null>(null);
+  const [isActionLoading, setIsActionLoading] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleEditAction = useEvent(async () => {
+    try {
+      setIsActionLoading(true);
+      const action = await dispatch(getAction(id)).unwrap();
+      setActionData(action);
+      setIsEditModalOpen(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsActionLoading(false);
+    }
+  });
+
+  if (isActionLoading) {
+    return <FullPageLoader />;
+  }
 
   return (
     <Box
@@ -28,7 +54,7 @@ const ActionListItem = ({
         justifyContent: "space-between",
         padding: 3,
         borderRadius: 1,
-        backgroundColor: "blue.800",
+        backgroundColor: color || "blue.800",
       }}
     >
       <Box
@@ -51,7 +77,10 @@ const ActionListItem = ({
             <SettingsOutlinedIcon sx={{ fontSize: 16, cursor: "pointer" }} />
           </Tooltip>
           <Tooltip title={t("pages.actions.editAction")}>
-            <EditOutlinedIcon sx={{ fontSize: 16, cursor: "pointer" }} />
+            <EditOutlinedIcon
+              sx={{ fontSize: 16, cursor: "pointer" }}
+              onClick={handleEditAction}
+            />
           </Tooltip>
           <Tooltip title={t("pages.actions.deleteAction")}>
             <DeleteOutlineOutlinedIcon
@@ -60,6 +89,9 @@ const ActionListItem = ({
             />
           </Tooltip>
         </Box>
+      )}
+      {isEditModalOpen && actionData && (
+        <ActionsModal initialData={actionData} setIsOpen={setIsEditModalOpen} />
       )}
       {isDeleteModalOpen && (
         <ConfirmModal

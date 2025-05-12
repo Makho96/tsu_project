@@ -1,81 +1,74 @@
 import {
-  Input,
-  InputProps,
+  Select,
+  SelectProps,
   FormControl,
   FormHelperText,
   InputLabel,
-  InputAdornment,
-  SxProps,
+  MenuItem,
   Theme,
+  SxProps,
 } from "@mui/material";
 import { useField } from "formik";
-import React from "react";
 
-type FormInputProps = {
+type FormSelectProps = {
   name: string;
   label: string;
   helperText?: string;
   style?: SxProps<Theme>;
   inputLabelStyle?: SxProps<Theme>;
   helperTextStyle?: SxProps<Theme>;
-  startIcon?: React.ReactNode;
-  endIcon?: React.ReactNode;
-} & Omit<InputProps, "name">;
+  options: Array<{
+    value: string | number;
+    label: string;
+  }>;
+} & Omit<SelectProps, "name">;
 
-const FormInput: React.FC<FormInputProps> = ({
+const FormSelect = ({
   name,
   label,
   helperText,
   style,
   inputLabelStyle,
   helperTextStyle,
-  startIcon,
-  endIcon,
+  options,
   ...props
-}) => {
+}: FormSelectProps) => {
   const [field, meta] = useField(name);
 
   const isError = meta.touched && Boolean(meta.error);
   const errorMessage = isError ? meta.error : undefined;
 
-  // Always treat the input as controlled by ensuring value is always a string
-  const inputValue = field.value ?? "";
-  const hasValue = inputValue !== "";
+  // Always treat the select as controlled by ensuring value is always a string
+  const selectValue = field.value ?? "";
 
   return (
     <FormControl fullWidth error={isError}>
       <InputLabel
         htmlFor={name}
-        shrink={hasValue || props.placeholder !== undefined}
         sx={{
-          ...(startIcon ? { marginLeft: "30px" } : {}),
           ...inputLabelStyle,
         }}
       >
-        {label || props.placeholder}
+        {label}
       </InputLabel>
-      <Input
+      <Select
         {...field}
         {...props}
         id={name}
         name={name}
-        value={inputValue}
-        placeholder=""
-        startAdornment={
-          startIcon ? (
-            <InputAdornment position="start">{startIcon}</InputAdornment>
-          ) : undefined
-        }
-        endAdornment={
-          endIcon ? (
-            <InputAdornment position="end">{endIcon}</InputAdornment>
-          ) : undefined
-        }
+        value={selectValue}
+        label={label}
         sx={{
           width: "100%",
           ...style,
         }}
-      />
+      >
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
       {(errorMessage || helperText) && (
         <FormHelperText sx={helperTextStyle}>
           {errorMessage || helperText}
@@ -85,4 +78,4 @@ const FormInput: React.FC<FormInputProps> = ({
   );
 };
 
-export default FormInput;
+export default FormSelect;

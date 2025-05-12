@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useEvent from "../../../hooks/useEvent";
 import { getActions } from "../../../store/actions/actions.thunks";
@@ -10,7 +10,6 @@ import {
 import { SliceStatuses } from "../../../store/types";
 import { FullPageLoader } from "../Loader";
 import ActionListItem from "./ActionListItem";
-import { ConfirmModal } from "../Modals";
 
 type ActionsListProps = {
   showActions?: boolean;
@@ -19,7 +18,6 @@ type ActionsListProps = {
 const ActionsList = ({ showActions = true }: ActionsListProps) => {
   const { id } = useParams();
   const actions = useAppSelector((state) => state.actions.actions);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const isLoading = useAppSelector((state) =>
     [SliceStatuses.LOADING, SliceStatuses.IDLE].includes(state.actions.status)
   );

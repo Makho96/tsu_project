@@ -1,5 +1,12 @@
 import { SliceStatuses } from "../types";
 
+enum Statuses {
+  DRAFT = "DRAFT",
+  ACTIVE = "ACTIVE",
+  FINISHED = "FINISHED",
+  ARCHIVED = "ARCHIVED",
+}
+
 type Action = {
   id: number;
   title: string;
@@ -9,6 +16,7 @@ type Action = {
   description: string;
   color: string;
   user: { userId: number };
+  status: Statuses;
 };
 
 type ActionsState = {
@@ -16,5 +24,7 @@ type ActionsState = {
   status: SliceStatuses;
   error: string | null;
 };
+
+export { Statuses };
 
 export type { Action, ActionsState };
