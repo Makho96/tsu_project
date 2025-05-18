@@ -22,7 +22,7 @@ import {
   Popover,
   InputAdornment,
 } from "@mui/material";
-import React, { useState, useMemo, useCallback, memo } from "react";
+import React, { useState, useMemo, useCallback, memo, useRef } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -34,6 +34,7 @@ export interface ColumnDef {
   filterable?: boolean;
   renderCell?: (params: any) => React.ReactNode;
   type?: "text" | "number" | "date" | "boolean" | "custom";
+  onResize?: (width: number) => void;
 }
 
 interface CustomGridProps {
@@ -101,6 +102,35 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
     },
   });
 
+  const onMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const startX = e.pageX;
+    const startWidth = ref.current?.offsetWidth || 0;
+    const minWidth = 100;
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!ref.current) return;
+      const width = startWidth + (e.pageX - startX);
+      if (width >= minWidth) {
+        ref.current.style.width = `${width}px`;
+        // Update the column width in the parent component
+        if (column.onResize) {
+          column.onResize(width);
+        }
+      }
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
+
   drag(drop(ref));
 
   return (
@@ -113,6 +143,7 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         minWidth: column.width || 150,
         padding: "16px",
         whiteSpace: "nowrap",
+        position: "relative",
       }}
     >
       <Box display="flex" alignItems="center">
@@ -121,6 +152,22 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         </IconButton>
         {children}
       </Box>
+      <div
+        onMouseDown={onMouseDown}
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          bottom: 0,
+          width: "8px",
+          cursor: "col-resize",
+          backgroundColor: "transparent",
+          border: "none",
+          padding: 0,
+          zIndex: 1,
+        }}
+        aria-label="Resize column"
+      />
     </TableCell>
   );
 };
@@ -296,6 +343,20 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     }));
   }, []);
 
+  const handleColumnResize = useCallback((field: string, width: number) => {
+    setColumns((prevColumns) =>
+      prevColumns.map((col) => (col.field === field ? { ...col, width } : col))
+    );
+  }, []);
+
+  // Update columns with resize handler
+  const columnsWithResize = useMemo(() => {
+    return columns.map((col) => ({
+      ...col,
+      onResize: (width: number) => handleColumnResize(col.field, width),
+    }));
+  }, [columns, handleColumnResize]);
+
   if (loading) {
     return (
       <Box
@@ -370,7 +431,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                     />
                   </TableCell>
                 )}
-                {columns.map((column, index) => (
+                {columnsWithResize.map((column, index) => (
                   <DraggableHeader
                     key={column.field}
                     column={column}
@@ -546,7 +607,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                         />
                       </TableCell>
                     )}
-                    {columns.map((column) => (
+                    {columnsWithResize.map((column) => (
                       <TableCell
                         key={column.field}
                         sx={{
