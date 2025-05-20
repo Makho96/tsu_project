@@ -29,6 +29,7 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
+import { Workbook } from "exceljs";
 import React, {
   useState,
   useMemo,
@@ -39,7 +40,6 @@ import React, {
 } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import * as XLSX from "xlsx";
 
 export interface ColumnDef {
   field: string;
@@ -448,10 +448,9 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     return columnsWithResize.filter((col) => visibleColumns[col.field]);
   }, [columnsWithResize, visibleColumns]);
 
-  const handleExport = () => {
+  const handleExport = async () => {
     // Get the current view of the data (filtered and sorted)
     const dataToExport = filteredAndSortedRows.map((row) => {
-      // Only include visible columns
       const rowData: { [key: string]: any } = {};
       visibleColumnsWithResize.forEach((column) => {
         let value;
@@ -475,56 +474,74 @@ const CustomGrid: React.FC<CustomGridProps> = ({
       return rowData;
     });
 
-    // Create worksheet with headers
-    const headers = visibleColumnsWithResize.map((col) => col.headerName);
-    const ws = XLSX.utils.aoa_to_sheet([
-      headers,
-      ...dataToExport.map((row) => headers.map((header) => row[header])),
-    ]);
+    // Create a new workbook and worksheet
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet("Data");
 
-    // Define styles
-    const headerStyle = {
-      font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "4F81BD" } },
-      alignment: { horizontal: "center" },
+    // Add headers
+    const headers = visibleColumnsWithResize.map((col) => col.headerName);
+    worksheet.addRow(headers);
+
+    // Style the header row
+    const headerRow = worksheet.getRow(1);
+    headerRow.height = 25;
+    headerRow.font = {
+      bold: true,
+      color: { argb: "FFFFFFFF" }, // White text
+    };
+    headerRow.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FF4F81BD" }, // Blue background
+    };
+    headerRow.alignment = {
+      vertical: "middle",
+      horizontal: "center",
     };
 
-    // Create a style object for the worksheet
-    const wscols = visibleColumnsWithResize.map((col) => ({
-      wch:
-        Math.max(
-          col.headerName.length,
-          ...dataToExport.map((row) => String(row[col.headerName] || "").length)
-        ) + 2,
-    }));
-
-    // Apply styles to the worksheet
-    ws["!cols"] = wscols;
-    ws["!rows"] = [{ hpt: 25 }]; // Set header row height
-
-    // Apply styles to header cells
-    const range = XLSX.utils.decode_range(ws["!ref"] || "A1");
-    for (let C = range.s.c; C <= range.e.c; ++C) {
-      const cellRef = XLSX.utils.encode_cell({ r: 0, c: C });
-      if (!ws[cellRef]) continue;
-
-      // Create a new cell with style
-      ws[cellRef] = {
-        v: ws[cellRef].v,
-        t: ws[cellRef].t,
-        s: headerStyle,
-      };
-    }
-
-    // Create workbook with styles
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Data");
-
-    // Write file with styles
-    XLSX.writeFile(wb, "grid-export.xlsx", {
-      bookType: "xlsx",
-      bookSST: false,
+    // Add data rows
+    dataToExport.forEach((row) => {
+      worksheet.addRow(headers.map((header) => row[header]));
     });
+
+    // Set column widths
+    visibleColumnsWithResize.forEach((col, index) => {
+      const maxLength = Math.max(
+        col.headerName.length,
+        ...dataToExport.map((row) => String(row[col.headerName] || "").length)
+      );
+      worksheet.getColumn(index + 1).width = maxLength + 2;
+    });
+
+    // Style all cells
+    worksheet.eachRow((row, rowNumber) => {
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+        if (rowNumber > 1) {
+          cell.alignment = {
+            vertical: "middle",
+            horizontal: "left",
+          };
+        }
+      });
+    });
+
+    // Generate and download the file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "grid-export.xlsx";
+    link.click();
+    window.URL.revokeObjectURL(url);
   };
 
   if (loading) {
