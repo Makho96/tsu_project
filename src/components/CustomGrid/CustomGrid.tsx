@@ -2,6 +2,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterListOffIcon from "@mui/icons-material/FilterListOff";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Box,
   Table,
@@ -21,6 +22,11 @@ import {
   Tooltip,
   Popover,
   InputAdornment,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  Divider,
+  Typography,
 } from "@mui/material";
 import React, {
   useState,
@@ -146,11 +152,14 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
         width: column.width,
-        minWidth: column.width,
+        minWidth: 150,
         maxWidth: column.width,
         padding: "16px",
         whiteSpace: "nowrap",
-        position: "relative",
+        position: "sticky",
+        top: 0,
+        zIndex: 2,
+        backgroundColor: "background.paper",
       }}
     >
       <Box display="flex" alignItems="center">
@@ -167,7 +176,7 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
             e.preventDefault();
             const newWidth =
               e.key === "ArrowLeft"
-                ? Math.max(100, (column.width || 150) - 10)
+                ? Math.max(150, (column.width || 150) - 10)
                 : (column.width || 150) + 10;
             if (column.onResize) {
               column.onResize(newWidth);
@@ -184,14 +193,14 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
           backgroundColor: isResizing ? "primary.main" : "transparent",
           border: "none",
           padding: 0,
-          zIndex: 1,
+          zIndex: 3,
           "&:hover": {
             backgroundColor: "primary.main",
           },
         }}
         aria-label="Resize column"
         role="slider"
-        aria-valuemin={100}
+        aria-valuemin={150}
         aria-valuemax={500}
         aria-valuenow={column.width || 150}
         tabIndex={0}
@@ -233,6 +242,11 @@ const CustomGrid: React.FC<CustomGridProps> = ({
       }, {});
     }
   );
+  const [visibleColumns, setVisibleColumns] = useState<{
+    [key: string]: boolean;
+  }>(() =>
+    initialColumns.reduce((acc, col) => ({ ...acc, [col.field]: true }), {})
+  );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(pageSize);
   const [orderBy, setOrderBy] = useState<string>("");
@@ -242,6 +256,9 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   const [filterAnchorEl, setFilterAnchorEl] = useState<{
     [key: string]: HTMLElement | null;
   }>({});
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<HTMLElement | null>(
+    null
+  );
 
   const handleFilterClick = useCallback(
     (event: React.MouseEvent<HTMLElement>, field: string) => {
@@ -408,6 +425,27 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     }));
   }, [columns, columnWidths, handleColumnResize]);
 
+  const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setSettingsAnchorEl(event.currentTarget);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsAnchorEl(null);
+  };
+
+  const handleColumnVisibilityChange =
+    (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setVisibleColumns((prev) => ({
+        ...prev,
+        [field]: event.target.checked,
+      }));
+    };
+
+  // Filter columns based on visibility
+  const visibleColumnsWithResize = useMemo(() => {
+    return columnsWithResize.filter((col) => visibleColumns[col.field]);
+  }, [columnsWithResize, visibleColumns]);
+
   if (loading) {
     return (
       <Box
@@ -430,6 +468,84 @@ const CustomGrid: React.FC<CustomGridProps> = ({
           overflow: "hidden",
         }}
       >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 1,
+            borderBottom: 1,
+            borderColor: "divider",
+          }}
+        >
+          <Tooltip title="Column Settings">
+            <IconButton
+              onClick={handleSettingsClick}
+              size="small"
+              sx={{
+                color: "text.secondary",
+                "&:hover": {
+                  color: "primary.main",
+                },
+              }}
+            >
+              <SettingsIcon />
+            </IconButton>
+          </Tooltip>
+          <Popover
+            open={Boolean(settingsAnchorEl)}
+            anchorEl={settingsAnchorEl}
+            onClose={handleSettingsClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            PaperProps={{
+              sx: {
+                p: 2,
+                minWidth: 200,
+                bgcolor: "background.paper",
+                boxShadow: theme.shadows[3],
+              },
+            }}
+          >
+            <Box sx={{ mb: 1 }}>
+              <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
+                Visible Columns
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 1 }} />
+            <FormGroup>
+              {columns.map((column) => (
+                <FormControlLabel
+                  key={column.field}
+                  control={
+                    <Checkbox
+                      checked={visibleColumns[column.field]}
+                      onChange={handleColumnVisibilityChange(column.field)}
+                      size="small"
+                      sx={{
+                        color: "text.secondary",
+                        "&.Mui-checked": {
+                          color: "primary.main",
+                        },
+                      }}
+                    />
+                  }
+                  label={column.headerName}
+                  sx={{
+                    "& .MuiFormControlLabel-label": {
+                      color: "text.primary",
+                    },
+                  }}
+                />
+              ))}
+            </FormGroup>
+          </Popover>
+        </Box>
         <TableContainer
           sx={{
             maxHeight: 400,
@@ -461,6 +577,9 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                       padding: "16px 8px",
                       bgcolor: "background.paper",
                       color: "text.primary",
+                      position: "sticky",
+                      top: 0,
+                      zIndex: 2,
                     }}
                   >
                     <Checkbox
@@ -482,7 +601,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                     />
                   </TableCell>
                 )}
-                {columnsWithResize.map((column, index) => (
+                {visibleColumnsWithResize.map((column, index) => (
                   <DraggableHeader
                     key={column.field}
                     column={column}
@@ -681,12 +800,12 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                         />
                       </TableCell>
                     )}
-                    {columnsWithResize.map((column) => (
+                    {visibleColumnsWithResize.map((column) => (
                       <TableCell
                         key={column.field}
                         sx={{
                           width: columnWidths[column.field],
-                          minWidth: columnWidths[column.field],
+                          minWidth: 150,
                           maxWidth: columnWidths[column.field],
                           padding: "16px",
                           whiteSpace: "nowrap",
