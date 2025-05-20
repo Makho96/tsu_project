@@ -480,8 +480,50 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                   >
                     <Tooltip title={column.headerName} placement="top">
                       <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                          minWidth: 0,
+                        }}
                       >
+                        <Box
+                          sx={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            flex: 1,
+                          }}
+                        >
+                          {column.sortable ? (
+                            <TableSortLabel
+                              active={orderBy === column.field}
+                              direction={
+                                orderBy === column.field ? order : "asc"
+                              }
+                              onClick={() => handleSort(column.field)}
+                              sx={{
+                                color: "text.primary",
+                                "&.MuiTableSortLabel-root": {
+                                  color: "text.primary",
+                                },
+                                "&.MuiTableSortLabel-root:hover": {
+                                  color: "primary.main",
+                                },
+                                "&.Mui-active": {
+                                  color: "primary.main",
+                                },
+                                "& .MuiTableSortLabel-icon": {
+                                  color: "primary.main !important",
+                                },
+                              }}
+                            >
+                              {column.headerName}
+                            </TableSortLabel>
+                          ) : (
+                            column.headerName
+                          )}
+                        </Box>
                         {column.filterable && (
                           <Tooltip
                             title={
@@ -502,37 +544,12 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                                 "&:hover": {
                                   color: "primary.main",
                                 },
+                                flexShrink: 0,
                               }}
                             >
                               <FilterListIcon fontSize="small" />
                             </IconButton>
                           </Tooltip>
-                        )}
-                        {column.sortable ? (
-                          <TableSortLabel
-                            active={orderBy === column.field}
-                            direction={orderBy === column.field ? order : "asc"}
-                            onClick={() => handleSort(column.field)}
-                            sx={{
-                              color: "text.primary",
-                              "&.MuiTableSortLabel-root": {
-                                color: "text.primary",
-                              },
-                              "&.MuiTableSortLabel-root:hover": {
-                                color: "primary.main",
-                              },
-                              "&.Mui-active": {
-                                color: "primary.main",
-                              },
-                              "& .MuiTableSortLabel-icon": {
-                                color: "primary.main !important",
-                              },
-                            }}
-                          >
-                            {column.headerName}
-                          </TableSortLabel>
-                        ) : (
-                          column.headerName
                         )}
                       </Box>
                     </Tooltip>
