@@ -478,58 +478,64 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                     index={index}
                     moveColumn={moveColumn}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {column.sortable ? (
-                        <TableSortLabel
-                          active={orderBy === column.field}
-                          direction={orderBy === column.field ? order : "asc"}
-                          onClick={() => handleSort(column.field)}
-                          sx={{
-                            color: "text.primary",
-                            "&.MuiTableSortLabel-root": {
-                              color: "text.primary",
-                            },
-                            "&.MuiTableSortLabel-root:hover": {
-                              color: "primary.main",
-                            },
-                            "&.Mui-active": {
-                              color: "primary.main",
-                            },
-                            "& .MuiTableSortLabel-icon": {
-                              color: "primary.main !important",
-                            },
-                          }}
-                        >
-                          {column.headerName}
-                        </TableSortLabel>
-                      ) : (
-                        column.headerName
-                      )}
-                      {column.filterable && (
-                        <Tooltip
-                          title={
-                            filters[column.field]
-                              ? "Filter active"
-                              : "Show filter"
-                          }
-                        >
-                          <IconButton
-                            size="small"
-                            onClick={(e) => handleFilterClick(e, column.field)}
+                    <Tooltip title={column.headerName} placement="top">
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        {column.filterable && (
+                          <Tooltip
+                            title={
+                              filters[column.field]
+                                ? "Filter active"
+                                : "Show filter"
+                            }
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) =>
+                                handleFilterClick(e, column.field)
+                              }
+                              sx={{
+                                color: filters[column.field]
+                                  ? "primary.main"
+                                  : "text.secondary",
+                                "&:hover": {
+                                  color: "primary.main",
+                                },
+                              }}
+                            >
+                              <FilterListIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {column.sortable ? (
+                          <TableSortLabel
+                            active={orderBy === column.field}
+                            direction={orderBy === column.field ? order : "asc"}
+                            onClick={() => handleSort(column.field)}
                             sx={{
-                              color: filters[column.field]
-                                ? "primary.main"
-                                : "text.secondary",
-                              "&:hover": {
+                              color: "text.primary",
+                              "&.MuiTableSortLabel-root": {
+                                color: "text.primary",
+                              },
+                              "&.MuiTableSortLabel-root:hover": {
                                 color: "primary.main",
+                              },
+                              "&.Mui-active": {
+                                color: "primary.main",
+                              },
+                              "& .MuiTableSortLabel-icon": {
+                                color: "primary.main !important",
                               },
                             }}
                           >
-                            <FilterListIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                    </Box>
+                            {column.headerName}
+                          </TableSortLabel>
+                        ) : (
+                          column.headerName
+                        )}
+                      </Box>
+                    </Tooltip>
                     {column.filterable && (
                       <Popover
                         open={Boolean(filterAnchorEl[column.field])}
