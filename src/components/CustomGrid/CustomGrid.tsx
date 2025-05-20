@@ -1,5 +1,6 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterListOffIcon from "@mui/icons-material/FilterListOff";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -38,6 +39,7 @@ import React, {
 } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import * as XLSX from "xlsx";
 
 export interface ColumnDef {
   field: string;
@@ -446,6 +448,85 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     return columnsWithResize.filter((col) => visibleColumns[col.field]);
   }, [columnsWithResize, visibleColumns]);
 
+  const handleExport = () => {
+    // Get the current view of the data (filtered and sorted)
+    const dataToExport = filteredAndSortedRows.map((row) => {
+      // Only include visible columns
+      const rowData: { [key: string]: any } = {};
+      visibleColumnsWithResize.forEach((column) => {
+        let value;
+        if (column.renderCell) {
+          const renderedCell = column.renderCell({ row });
+          if (React.isValidElement(renderedCell)) {
+            value = String(renderedCell);
+          } else if (
+            typeof renderedCell === "object" &&
+            renderedCell !== null
+          ) {
+            value = JSON.stringify(renderedCell);
+          } else {
+            value = renderedCell;
+          }
+        } else {
+          value = row[column.field];
+        }
+        rowData[column.headerName] = value;
+      });
+      return rowData;
+    });
+
+    // Create worksheet with headers
+    const headers = visibleColumnsWithResize.map((col) => col.headerName);
+    const ws = XLSX.utils.aoa_to_sheet([
+      headers,
+      ...dataToExport.map((row) => headers.map((header) => row[header])),
+    ]);
+
+    // Define styles
+    const headerStyle = {
+      font: { bold: true, color: { rgb: "FFFFFF" } },
+      fill: { fgColor: { rgb: "4F81BD" } },
+      alignment: { horizontal: "center" },
+    };
+
+    // Create a style object for the worksheet
+    const wscols = visibleColumnsWithResize.map((col) => ({
+      wch:
+        Math.max(
+          col.headerName.length,
+          ...dataToExport.map((row) => String(row[col.headerName] || "").length)
+        ) + 2,
+    }));
+
+    // Apply styles to the worksheet
+    ws["!cols"] = wscols;
+    ws["!rows"] = [{ hpt: 25 }]; // Set header row height
+
+    // Apply styles to header cells
+    const range = XLSX.utils.decode_range(ws["!ref"] || "A1");
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const cellRef = XLSX.utils.encode_cell({ r: 0, c: C });
+      if (!ws[cellRef]) continue;
+
+      // Create a new cell with style
+      ws[cellRef] = {
+        v: ws[cellRef].v,
+        t: ws[cellRef].t,
+        s: headerStyle,
+      };
+    }
+
+    // Create workbook with styles
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Data");
+
+    // Write file with styles
+    XLSX.writeFile(wb, "grid-export.xlsx", {
+      bookType: "xlsx",
+      bookSST: false,
+    });
+  };
+
   if (loading) {
     return (
       <Box
@@ -475,8 +556,23 @@ const CustomGrid: React.FC<CustomGridProps> = ({
             p: 1,
             borderBottom: 1,
             borderColor: "divider",
+            gap: 1,
           }}
         >
+          <Tooltip title="Export to Excel">
+            <IconButton
+              onClick={handleExport}
+              size="small"
+              sx={{
+                color: "text.secondary",
+                "&:hover": {
+                  color: "primary.main",
+                },
+              }}
+            >
+              <FileDownloadIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Column Settings">
             <IconButton
               onClick={handleSettingsClick}
