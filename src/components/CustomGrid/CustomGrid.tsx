@@ -71,6 +71,14 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
   const ref = React.useRef<HTMLTableCellElement>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [columnWidth, setColumnWidth] = useState(column.width || 150);
+
+  // Add effect to sync with parent column width
+  useEffect(() => {
+    if (column.width) {
+      setColumnWidth(column.width);
+    }
+  }, [column.width]);
+
   const [{ isDragging }, drag] = useDrag({
     type: "COLUMN",
     item: { index },
@@ -149,6 +157,7 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         cursor: "move",
         width: columnWidth,
         minWidth: columnWidth,
+        maxWidth: columnWidth,
         padding: "16px",
         whiteSpace: "nowrap",
         position: "relative",
