@@ -213,14 +213,25 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   const theme = useTheme();
   const [columns, setColumns] = useState(initialColumns);
   const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>(
-    () =>
-      initialColumns.reduce(
-        (acc, col) => ({
+    () => {
+      // Calculate initial widths based on content
+      return initialColumns.reduce((acc, col) => {
+        // Get the maximum length between header and content
+        const headerLength = col.headerName.length;
+        const maxContentLength = Math.max(
+          headerLength,
+          ...rows.map((row) => String(row[col.field]).length)
+        );
+        // Convert character length to approximate pixel width (assuming ~8px per character)
+        const contentWidth = maxContentLength * 8;
+        // Add padding and ensure minimum width
+        const totalWidth = Math.max(150, contentWidth + 32); // 32px for padding
+        return {
           ...acc,
-          [col.field]: col.width || 150,
-        }),
-        {}
-      )
+          [col.field]: totalWidth,
+        };
+      }, {});
+    }
   );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(pageSize);
