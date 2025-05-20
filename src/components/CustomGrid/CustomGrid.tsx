@@ -70,14 +70,6 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
 }) => {
   const ref = React.useRef<HTMLTableCellElement>(null);
   const [isResizing, setIsResizing] = useState(false);
-  const [columnWidth, setColumnWidth] = useState(column.width || 150);
-
-  // Add effect to sync with parent column width
-  useEffect(() => {
-    if (column.width) {
-      setColumnWidth(column.width);
-    }
-  }, [column.width]);
 
   const [{ isDragging }, drag] = useDrag({
     type: "COLUMN",
@@ -125,22 +117,20 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
     setIsResizing(true);
 
     const startX = e.pageX;
-    const startWidth = columnWidth;
+    const startWidth = column.width || 150;
     const minWidth = 100;
 
     const onMouseMove = (e: MouseEvent) => {
       const width = Math.max(minWidth, startWidth + (e.pageX - startX));
-      setColumnWidth(width);
+      if (column.onResize) {
+        column.onResize(width);
+      }
     };
 
     const onMouseUp = () => {
       setIsResizing(false);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
-
-      if (column.onResize) {
-        column.onResize(columnWidth);
-      }
     };
 
     document.addEventListener("mousemove", onMouseMove);
@@ -155,9 +145,9 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
-        width: columnWidth,
-        minWidth: columnWidth,
-        maxWidth: columnWidth,
+        width: column.width,
+        minWidth: column.width,
+        maxWidth: column.width,
         padding: "16px",
         whiteSpace: "nowrap",
         position: "relative",
@@ -177,9 +167,8 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
             e.preventDefault();
             const newWidth =
               e.key === "ArrowLeft"
-                ? Math.max(100, columnWidth - 10)
-                : columnWidth + 10;
-            setColumnWidth(newWidth);
+                ? Math.max(100, (column.width || 150) - 10)
+                : (column.width || 150) + 10;
             if (column.onResize) {
               column.onResize(newWidth);
             }
@@ -204,7 +193,7 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         role="slider"
         aria-valuemin={100}
         aria-valuemax={500}
-        aria-valuenow={columnWidth}
+        aria-valuenow={column.width || 150}
         tabIndex={0}
       />
     </TableCell>
@@ -223,6 +212,16 @@ const CustomGrid: React.FC<CustomGridProps> = ({
 }) => {
   const theme = useTheme();
   const [columns, setColumns] = useState(initialColumns);
+  const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>(
+    () =>
+      initialColumns.reduce(
+        (acc, col) => ({
+          ...acc,
+          [col.field]: col.width || 150,
+        }),
+        {}
+      )
+  );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(pageSize);
   const [orderBy, setOrderBy] = useState<string>("");
@@ -383,18 +382,20 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   }, []);
 
   const handleColumnResize = useCallback((field: string, width: number) => {
-    setColumns((prevColumns) =>
-      prevColumns.map((col) => (col.field === field ? { ...col, width } : col))
-    );
+    setColumnWidths((prev) => ({
+      ...prev,
+      [field]: width,
+    }));
   }, []);
 
   // Update columns with resize handler
   const columnsWithResize = useMemo(() => {
     return columns.map((col) => ({
       ...col,
+      width: columnWidths[col.field],
       onResize: (width: number) => handleColumnResize(col.field, width),
     }));
-  }, [columns, handleColumnResize]);
+  }, [columns, columnWidths, handleColumnResize]);
 
   if (loading) {
     return (
@@ -650,12 +651,15 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                       <TableCell
                         key={column.field}
                         sx={{
-                          width: column.width || "auto",
-                          minWidth: column.width || 150,
+                          width: columnWidths[column.field],
+                          minWidth: columnWidths[column.field],
+                          maxWidth: columnWidths[column.field],
                           padding: "16px",
                           whiteSpace: "nowrap",
                           bgcolor: "background.paper",
                           color: "text.primary",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                         }}
                       >
                         {column.renderCell
