@@ -22,7 +22,14 @@ import {
   Popover,
   InputAdornment,
 } from "@mui/material";
-import React, { useState, useMemo, useCallback, memo, useRef } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  memo,
+  useRef,
+  useEffect,
+} from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -62,6 +69,8 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
   children,
 }) => {
   const ref = React.useRef<HTMLTableCellElement>(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const [columnWidth, setColumnWidth] = useState(column.width || 150);
   const [{ isDragging }, drag] = useDrag({
     type: "COLUMN",
     item: { index },
@@ -105,26 +114,25 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
   const onMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsResizing(true);
 
     const startX = e.pageX;
-    const startWidth = ref.current?.offsetWidth || 0;
+    const startWidth = columnWidth;
     const minWidth = 100;
 
     const onMouseMove = (e: MouseEvent) => {
-      if (!ref.current) return;
-      const width = startWidth + (e.pageX - startX);
-      if (width >= minWidth) {
-        ref.current.style.width = `${width}px`;
-        // Update the column width in the parent component
-        if (column.onResize) {
-          column.onResize(width);
-        }
-      }
+      const width = Math.max(minWidth, startWidth + (e.pageX - startX));
+      setColumnWidth(width);
     };
 
     const onMouseUp = () => {
+      setIsResizing(false);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
+
+      if (column.onResize) {
+        column.onResize(columnWidth);
+      }
     };
 
     document.addEventListener("mousemove", onMouseMove);
@@ -139,8 +147,8 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
-        width: column.width || "auto",
-        minWidth: column.width || 150,
+        width: columnWidth,
+        minWidth: columnWidth,
         padding: "16px",
         whiteSpace: "nowrap",
         position: "relative",
@@ -152,21 +160,43 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         </IconButton>
         {children}
       </Box>
-      <div
+      <Box
+        component="div"
         onMouseDown={onMouseDown}
-        style={{
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+            e.preventDefault();
+            const newWidth =
+              e.key === "ArrowLeft"
+                ? Math.max(100, columnWidth - 10)
+                : columnWidth + 10;
+            setColumnWidth(newWidth);
+            if (column.onResize) {
+              column.onResize(newWidth);
+            }
+          }
+        }}
+        sx={{
           position: "absolute",
           right: 0,
           top: 0,
           bottom: 0,
           width: "8px",
           cursor: "col-resize",
-          backgroundColor: "transparent",
+          backgroundColor: isResizing ? "primary.main" : "transparent",
           border: "none",
           padding: 0,
           zIndex: 1,
+          "&:hover": {
+            backgroundColor: "primary.main",
+          },
         }}
         aria-label="Resize column"
+        role="slider"
+        aria-valuemin={100}
+        aria-valuemax={500}
+        aria-valuenow={columnWidth}
+        tabIndex={0}
       />
     </TableCell>
   );
@@ -292,7 +322,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   const filteredAndSortedRows = useMemo(() => {
     let processedRows = [...rows];
 
-    // Apply filters
+    // Apply filters directly
     Object.entries(filters).forEach(([field, value]) => {
       if (value) {
         processedRows = processedRows.filter((row) =>
@@ -324,7 +354,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     );
   }, [filteredAndSortedRows, page, rowsPerPage]);
 
-  const handleChangePage = useCallback((event: unknown, newPage: number) => {
+  const handleChangePage = useCallback((_event: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
 
