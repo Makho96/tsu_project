@@ -97,20 +97,20 @@ const ActionsModal = ({ initialData, setIsOpen }: ActionsModalProps) => {
         >
           {({ isSubmitting }) => (
             <Form style={{ minWidth: "400px" }}>
-              <Box sx={{ marginBottom: 1 }}>
+              <Box sx={{ marginBottom: 2 }}>
                 <FormInput
                   name={FormFields.title}
                   label={t("pages.actions.title")}
                 />
               </Box>
-              <Box sx={{ marginBottom: 1 }}>
+              <Box sx={{ marginBottom: 2 }}>
                 <FormSelect
                   name={FormFields.status}
                   label={t("pages.actions.status")}
                   options={statusOptions}
                 />
               </Box>
-              <Box sx={{ marginBottom: 1 }}>
+              <Box sx={{ marginBottom: 2 }}>
                 <FormColorPicker
                   name={FormFields.color}
                   label={t("pages.actions.color")}

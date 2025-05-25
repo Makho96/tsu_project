@@ -75,7 +75,7 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
         >
           {({ isSubmitting }) => (
             <Form style={{ minWidth: "400px" }}>
-              <Box sx={{ marginBottom: 1 }}>
+              <Box sx={{ marginBottom: 2 }}>
                 <FormInput
                   name={FormFields.Name}
                   label={t("pages.companies.name")}
@@ -84,7 +84,7 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
                   }
                 />
               </Box>
-              <Box sx={{ marginBottom: 1 }}>
+              <Box sx={{ marginBottom: 2 }}>
                 <FormInput
                   name={FormFields.Email}
                   label={t("pages.companies.email")}
@@ -93,7 +93,7 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
                   }
                 />
               </Box>
-              <Box sx={{ marginBottom: 1 }}>
+              <Box sx={{ marginBottom: 2 }}>
                 <FormInput
                   name={FormFields.Phone}
                   label={t("pages.companies.phone")}

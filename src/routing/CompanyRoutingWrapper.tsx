@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams, Outlet } from "react-router-dom";
+import { useParams, Outlet, Navigate } from "react-router-dom";
 import { FullPageLoader } from "../components/shared/Loader";
 import useEvent from "../hooks/useEvent";
 import { setSelectedCompany } from "../store/companies/companies.slice";
@@ -21,7 +21,7 @@ const CompanyRoutingWrapper = () => {
   const dispatch = useAppDispatch();
 
   const fetchCompany = useEvent(async () => {
-    if (id && !currentCompany) {
+    if (id && !isNaN(+id) && !currentCompany) {
       try {
         const company = await dispatch(getCompany(+id)).unwrap();
         console.log(company);
@@ -35,6 +35,10 @@ const CompanyRoutingWrapper = () => {
   useEffect(() => {
     fetchCompany();
   }, [fetchCompany]);
+
+  if (id && isNaN(+id)) {
+    return <Navigate to="/company/" />;
+  }
 
   if (loading) {
     return <FullPageLoader />;

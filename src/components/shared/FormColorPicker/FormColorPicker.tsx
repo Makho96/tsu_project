@@ -35,7 +35,6 @@ const FormColorPicker = ({
 
   const isError = meta.touched && Boolean(meta.error);
   const errorMessage = isError ? meta.error : undefined;
-  const hasValue = field.value !== "";
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -74,9 +73,9 @@ const FormColorPicker = ({
     <FormControl fullWidth error={isError}>
       <InputLabel
         htmlFor={name}
-        shrink={hasValue}
         sx={{
           ...inputLabelStyle,
+          transform: "translate(10px, -10px) scale(0.75)",
         }}
       >
         {label}
@@ -85,8 +84,8 @@ const FormColorPicker = ({
         onClick={handleClick}
         sx={{
           width: "100%",
-          height: "40px",
-          padding: "2px",
+          height: "52px",
+          padding: "16px",
           border: "1px solid rgb(209, 213, 219)",
           borderRadius: "8px",
           backgroundColor: "transparent",

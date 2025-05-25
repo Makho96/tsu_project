@@ -125,7 +125,7 @@ const baseThemeOptions: ThemeOptions = {
     },
     MuiTextField: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           "& .MuiOutlinedInput-root": {
             borderRadius: 8,
             "&:hover": {
@@ -137,15 +137,16 @@ const baseThemeOptions: ThemeOptions = {
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "rgb(156, 163, 175)",
               },
+              color: theme.palette.common.white,
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "rgb(209, 213, 219)",
+              borderColor: theme.palette.common.white,
             },
             "& .MuiInputBase-input": {
-              color: "rgb(229, 231, 235)", // This is the default white color
+              color: theme.palette.common.white, // This is the default white color
             },
           },
-        },
+        }),
       },
     },
     MuiSelect: {
