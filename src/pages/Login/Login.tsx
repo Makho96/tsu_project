@@ -103,9 +103,8 @@ const Login = () => {
                     color: "blue.900",
                   }}
                   style={{
-                    color: "blue.900",
-                    "&.Mui-focused": {
-                      borderColor: "#000",
+                    "& .MuiOutlinedInput-root .MuiInputBase-input": {
+                      color: "blue.900",
                     },
                   }}
                   helperTextStyle={{
@@ -127,9 +126,8 @@ const Login = () => {
                     color: "blue.900",
                   }}
                   style={{
-                    color: "blue.900",
-                    "&.Mui-focused": {
-                      borderColor: "#000",
+                    "& .MuiOutlinedInput-root .MuiInputBase-input": {
+                      color: "blue.900",
                     },
                   }}
                 />

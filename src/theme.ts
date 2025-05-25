@@ -141,6 +141,9 @@ const baseThemeOptions: ThemeOptions = {
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: "rgb(209, 213, 219)",
             },
+            "& .MuiInputBase-input": {
+              color: "rgb(229, 231, 235)", // This is the default white color
+            },
           },
         },
       },
