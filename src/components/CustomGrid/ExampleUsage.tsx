@@ -1,4 +1,4 @@
-import { Box, ThemeProvider, createTheme } from "@mui/material";
+import { Box, Chip, ThemeProvider, createTheme } from "@mui/material";
 import React from "react";
 import CustomGrid, { ColumnDef } from "./CustomGrid";
 
@@ -21,187 +21,100 @@ const darkTheme = createTheme({
   },
 });
 
-const exampleColumns: ColumnDef[] = [
+const columns: ColumnDef[] = [
   {
     field: "id",
     headerName: "ID",
     width: 80,
     sortable: true,
-    filterable: true,
-    type: "text",
   },
   {
-    field: "firstName",
-    headerName: "First Name",
-    width: 130,
+    field: "name",
+    headerName: "Very Long Column Name That Will Be Truncated",
     sortable: true,
     filterable: true,
-    type: "text",
-  },
-  {
-    field: "lastName",
-    headerName: "Last Name",
-    width: 130,
-    sortable: true,
-    filterable: true,
-    type: "text",
-  },
-  {
-    field: "age",
-    headerName: "Age",
-    width: 90,
-    sortable: true,
-    filterable: true,
-    type: "number",
   },
   {
     field: "email",
-    headerName: "Email",
-    width: 200,
+    headerName: "Email Address",
     sortable: true,
     filterable: true,
-    type: "text",
   },
   {
     field: "status",
     headerName: "Status",
-    width: 120,
     sortable: true,
     filterable: true,
-    type: "text",
-    renderCell: (params) => (
-      <Box
-        sx={{
-          backgroundColor:
-            params.row.status === "Active" ? "success.light" : "error.light",
-          color: params.row.status === "Active" ? "success.dark" : "error.dark",
-          padding: "4px 8px",
-          borderRadius: "4px",
-          fontSize: "0.875rem",
-          fontWeight: 500,
-        }}
-      >
-        {params.row.status}
-      </Box>
+    renderCell: ({ row }) => (
+      <Chip
+        label={row.status}
+        color={row.status === "Active" ? "success" : "error"}
+        size="small"
+      />
     ),
   },
   {
-    field: "joinDate",
-    headerName: "Join Date",
-    width: 130,
+    field: "description",
+    headerName: "Description",
     sortable: true,
     filterable: true,
-    type: "date",
-    renderCell: (params) => new Date(params.row.joinDate).toLocaleDateString(),
   },
   {
-    field: "salary",
-    headerName: "Salary",
-    width: 130,
+    field: "longText",
+    headerName: "Long Text Field",
     sortable: true,
     filterable: true,
-    type: "number",
-    renderCell: (params) => `$${params.row.salary.toLocaleString()}`,
-  },
-  {
-    field: "department",
-    headerName: "Department",
-    width: 150,
-    sortable: true,
-    filterable: true,
-    type: "text",
-  },
-  {
-    field: "isActive",
-    headerName: "Active",
-    width: 100,
-    sortable: true,
-    filterable: true,
-    type: "boolean",
-    renderCell: (params) => (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
-        <Box
-          sx={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            backgroundColor: params.row.isActive
-              ? "success.main"
-              : "error.main",
-          }}
-        />
-        {params.row.isActive ? "Yes" : "No"}
-      </Box>
-    ),
   },
 ];
 
-const exampleRows = [
+// Example data with various content types
+const rows = [
   {
-    id: "1",
-    firstName: "John",
-    lastName: "Doe",
-    age: 32,
+    id: 1,
+    name: "John Doe",
     email: "john.doe@example.com",
     status: "Active",
-    joinDate: "2023-01-15",
-    salary: 75000,
-    department: "Engineering",
-    isActive: true,
+    description:
+      "This is a very long description that will be truncated in the grid",
+    longText:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   },
   {
-    id: "2",
-    firstName: "Jane",
-    lastName: "Smith",
-    age: 28,
+    id: 2,
+    name: "Jane Smith",
     email: "jane.smith@example.com",
     status: "Inactive",
-    joinDate: "2023-02-20",
-    salary: 65000,
-    department: "Marketing",
-    isActive: false,
+    description: "Another long description that needs truncation",
+    longText:
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
   },
   {
-    id: "3",
-    firstName: "Michael",
-    lastName: "Johnson",
-    age: 35,
-    email: "michael.j@example.com",
+    id: 3,
+    name: "Robert Johnson",
+    email: "robert.johnson@example.com",
     status: "Active",
-    joinDate: "2023-03-10",
-    salary: 85000,
-    department: "Sales",
-    isActive: true,
+    description: "Short desc",
+    longText:
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   },
   {
-    id: "4",
-    firstName: "Emily",
-    lastName: "Brown",
-    age: 30,
-    email: "emily.b@example.com",
-    status: "Active",
-    joinDate: "2023-04-05",
-    salary: 70000,
-    department: "HR",
-    isActive: true,
-  },
-  {
-    id: "5",
-    firstName: "David",
-    lastName: "Wilson",
-    age: 45,
-    email: "david.w@example.com",
+    id: 4,
+    name: "Emily Davis",
+    email: "emily.davis@example.com",
     status: "Inactive",
-    joinDate: "2023-05-12",
-    salary: 95000,
-    department: "Engineering",
-    isActive: false,
+    description: "Yet another description that will be truncated",
+    longText:
+      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  },
+  {
+    id: 5,
+    name: "Michael Wilson",
+    email: "michael.wilson@example.com",
+    status: "Active",
+    description:
+      "A very detailed description that needs to be truncated in the grid view",
+    longText:
+      "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
   },
 ];
 
@@ -221,8 +134,8 @@ const ExampleUsage: React.FC = () => {
           Custom Grid Example
         </h1>
         <CustomGrid
-          columns={exampleColumns}
-          rows={exampleRows}
+          columns={columns}
+          rows={rows}
           checkboxSelection
           pageSize={10}
           onRowClick={(row) => console.log("Clicked row:", row)}
