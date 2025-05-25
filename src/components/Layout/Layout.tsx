@@ -73,7 +73,12 @@ const Layout = () => {
             <Sidebar isOpen={isSidebarOpen} />
           </Box>
         )}
-        <Box width="100%" height="100%">
+        <Box
+          height="100%"
+          sx={{
+            width: isSidebarOpen ? "calc(100% - 300px)" : "calc(100% - 64px)",
+          }}
+        >
           <Routing />
         </Box>
       </Box>
