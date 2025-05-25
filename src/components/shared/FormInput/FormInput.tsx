@@ -1,10 +1,7 @@
 import {
-  Input,
-  InputProps,
+  TextField,
+  TextFieldProps,
   FormControl,
-  FormHelperText,
-  InputLabel,
-  InputAdornment,
   SxProps,
   Theme,
 } from "@mui/material";
@@ -20,7 +17,7 @@ type FormInputProps = {
   helperTextStyle?: SxProps<Theme>;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
-} & Omit<InputProps, "name">;
+} & Omit<TextFieldProps, "name" | "label" | "helperText">;
 
 const FormInput: React.FC<FormInputProps> = ({
   name,
@@ -38,49 +35,34 @@ const FormInput: React.FC<FormInputProps> = ({
   const isError = meta.touched && Boolean(meta.error);
   const errorMessage = isError ? meta.error : undefined;
 
-  // Always treat the input as controlled by ensuring value is always a string
-  const inputValue = field.value ?? "";
-  const hasValue = inputValue !== "";
-
   return (
     <FormControl fullWidth error={isError}>
-      <InputLabel
-        htmlFor={name}
-        shrink={hasValue || props.placeholder !== undefined}
-        sx={{
-          ...(startIcon ? { marginLeft: "30px" } : {}),
-          ...inputLabelStyle,
-        }}
-      >
-        {label || props.placeholder}
-      </InputLabel>
-      <Input
+      <TextField
         {...field}
         {...props}
         id={name}
         name={name}
-        value={inputValue}
-        placeholder=""
-        startAdornment={
-          startIcon ? (
-            <InputAdornment position="start">{startIcon}</InputAdornment>
-          ) : undefined
-        }
-        endAdornment={
-          endIcon ? (
-            <InputAdornment position="end">{endIcon}</InputAdornment>
-          ) : undefined
-        }
+        label={label}
+        error={isError}
+        helperText={errorMessage || helperText}
+        InputProps={{
+          startAdornment: startIcon,
+          endAdornment: endIcon,
+          ...props.InputProps,
+        }}
+        InputLabelProps={{
+          sx: inputLabelStyle,
+          ...props.InputLabelProps,
+        }}
+        FormHelperTextProps={{
+          sx: helperTextStyle,
+          ...props.FormHelperTextProps,
+        }}
         sx={{
           width: "100%",
           ...style,
         }}
       />
-      {(errorMessage || helperText) && (
-        <FormHelperText sx={helperTextStyle}>
-          {errorMessage || helperText}
-        </FormHelperText>
-      )}
     </FormControl>
   );
 };

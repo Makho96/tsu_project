@@ -65,7 +65,7 @@ const Layout = () => {
         alignItems="center"
         width="100%"
         sx={{
-          height: "calc(100% - 64px)",
+          height: showFullContent ? "calc(100% - 64px)" : "100%",
         }}
       >
         {showFullContent && (
@@ -76,7 +76,10 @@ const Layout = () => {
         <Box
           height="100%"
           sx={{
-            width: isSidebarOpen ? "calc(100% - 300px)" : "calc(100% - 64px)",
+            width:
+              isSidebarOpen && showFullContent
+                ? "calc(100% - 300px)"
+                : "calc(100% - 64px)",
           }}
         >
           <Routing />

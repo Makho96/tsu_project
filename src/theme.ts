@@ -115,18 +115,6 @@ const baseThemeOptions: ThemeOptions = {
         },
       },
     },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          transform: "translate(12px, 30px) scale(1)",
-          color: "rgb(209, 213, 219)",
-          "&.Mui-focused, &.MuiFormLabel-filled": {
-            transform: "translate(12px, -5px) scale(0.75)",
-            color: "rgb(255, 255, 255)",
-          },
-        },
-      },
-    },
     MuiCard: {
       styleOverrides: {
         root: {
@@ -140,6 +128,19 @@ const baseThemeOptions: ThemeOptions = {
         root: {
           "& .MuiOutlinedInput-root": {
             borderRadius: 8,
+            "&:hover": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgb(156, 163, 175)",
+              },
+            },
+            "&.Mui-focused": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgb(156, 163, 175)",
+              },
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgb(209, 213, 219)",
+            },
           },
         },
       },
