@@ -2,7 +2,6 @@ import ClearIcon from "@mui/icons-material/Clear";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import FilterListOffIcon from "@mui/icons-material/FilterListOff";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Box,
@@ -25,19 +24,11 @@ import {
   InputAdornment,
   FormGroup,
   FormControlLabel,
-  Switch,
   Divider,
   Typography,
 } from "@mui/material";
 import { Workbook } from "exceljs";
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  memo,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useState, useMemo, useCallback, memo } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
