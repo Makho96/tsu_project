@@ -17,7 +17,7 @@ const DashboardListItem = ({ data }: DashboardListItemProps) => {
   const companyId = useMemo(() => Number(params.id), [params.id]);
 
   const handleClick = useEvent(() => {
-    navigate(`/company/${companyId}/data-records/${id}`);
+    navigate(`/company/${companyId}/actions/${id}`);
   });
 
   return (
