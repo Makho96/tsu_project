@@ -1,11 +1,13 @@
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import { Box, Button } from "@mui/material";
+import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
+import { Box, Button, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { initialValues, validationSchema } from "./ActionsModal.config";
 import {
+  Colors,
   FormFields,
   FormValues,
   type ActionsModalProps,
@@ -20,10 +22,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../store/hooks/useTypedSelector";
-import FormColorPicker from "../FormColorPicker/FormColorPicker";
 import FormInput from "../FormInput/FormInput";
 import FormSelect from "../FormSelect/FormSelect";
 import { ConfirmModal } from "../Modals";
+import ColorPicker from "./ColorPicker";
 
 const ActionsModal = ({ initialData, setIsOpen }: ActionsModalProps) => {
   const { t } = useTranslation();
@@ -95,7 +97,7 @@ const ActionsModal = ({ initialData, setIsOpen }: ActionsModalProps) => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, setValues, values }) => (
             <Form style={{ minWidth: "400px" }}>
               <Box sx={{ marginBottom: 2 }}>
                 <FormInput
@@ -111,9 +113,29 @@ const ActionsModal = ({ initialData, setIsOpen }: ActionsModalProps) => {
                 />
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <FormColorPicker
-                  name={FormFields.color}
-                  label={t("pages.actions.color")}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    marginBottom: 1,
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <PaletteOutlinedIcon
+                    sx={{ marginRight: 1, fontSize: "18px" }}
+                  />
+                  {t("pages.actions.color")}
+                </Typography>
+                <ColorPicker
+                  onChange={(color: Colors) => {
+                    setValues({
+                      ...values,
+                      [FormFields.color]: color,
+                    });
+                  }}
+                  chosenColor={values[FormFields.color]}
                 />
               </Box>
               <Box

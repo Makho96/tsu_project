@@ -106,6 +106,11 @@ const Login = () => {
                     "& .MuiOutlinedInput-root .MuiInputBase-input": {
                       color: "blue.900",
                     },
+                    "& .MuiOutlinedInput-root": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "blue.900",
+                      },
+                    },
                   }}
                   helperTextStyle={{
                     color: "blue.900",
@@ -128,6 +133,11 @@ const Login = () => {
                   style={{
                     "& .MuiOutlinedInput-root .MuiInputBase-input": {
                       color: "blue.900",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "blue.900",
+                      },
                     },
                   }}
                 />

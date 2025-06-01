@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import ActionsList from "../components/shared/ActionsList/ActionsList";
+import DashboardList from "../components/shared/DashboardList/DashboardList";
 
 const Dashboard = () => {
   return (
@@ -12,7 +12,7 @@ const Dashboard = () => {
       position="relative"
     >
       <Box margin="auto" width="800px">
-        <ActionsList showActions={false} />
+        <DashboardList />
       </Box>
     </Box>
   );

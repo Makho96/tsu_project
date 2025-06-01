@@ -1,20 +1,16 @@
-import { Box } from "@mui/material";
-import { useEffect, useCallback } from "react";
+import Box from "@mui/material/Box";
+import { useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getActions } from "../../../store/actions/actions.thunks";
 import {
-  useAppSelector,
   useAppDispatch,
+  useAppSelector,
 } from "../../../store/hooks/useTypedSelector";
 import { SliceStatuses } from "../../../store/types";
 import { FullPageLoader } from "../Loader";
-import ActionListItem from "./ActionListItem";
+import DashboardListItem from "./DashboardListItem";
 
-type ActionsListProps = {
-  showActions?: boolean;
-};
-
-const ActionsList = ({ showActions = true }: ActionsListProps) => {
+const DashboardList = () => {
   const { id } = useParams();
   const actions = useAppSelector((state) => state.actions.actions);
   const isLoading = useAppSelector((state) =>
@@ -39,11 +35,11 @@ const ActionsList = ({ showActions = true }: ActionsListProps) => {
     <Box display="flex" flexDirection="column" gap={2}>
       {actions.map((action) => (
         <Box key={action.id}>
-          <ActionListItem action={action} showActions={showActions} />
+          <DashboardListItem data={action} />
         </Box>
       ))}
     </Box>
   );
 };
 
-export default ActionsList;
+export default DashboardList;

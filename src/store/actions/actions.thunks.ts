@@ -61,3 +61,19 @@ export const getAction = createAsyncThunk(
     }
   }
 );
+
+export const deleteAction = createAsyncThunk(
+  "actions/deleteAction",
+  async (
+    { id, companyId }: { id: number; companyId: number },
+    { dispatch }
+  ) => {
+    try {
+      await api.delete(`/action/${id}`);
+      dispatch(getActions(companyId));
+    } catch (error) {
+      showApiError(error as AxiosError);
+      throw error;
+    }
+  }
+);

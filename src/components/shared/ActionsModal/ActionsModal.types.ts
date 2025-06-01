@@ -1,4 +1,4 @@
-import { Action, Statuses } from "../../../store/actions/actions.types";
+import { Action, Colors, Statuses } from "../../../store/actions/actions.types";
 
 type ActionsModalProps = {
   initialData?: Action;
@@ -15,10 +15,10 @@ enum FormFields {
 type FormValues = {
   [FormFields.title]: string;
   [FormFields.status]: Statuses;
-  [FormFields.color]: string;
+  [FormFields.color]: Colors;
   [FormFields.description]: string;
 };
 
-export { FormFields };
+export { FormFields, Colors };
 
 export type { ActionsModalProps, FormValues };

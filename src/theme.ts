@@ -22,8 +22,14 @@ declare module "@mui/material/styles" {
       400: string;
       1000: string;
     };
+    gray: {
+      500: string;
+    };
     red: {
       500: string;
+    };
+    black: {
+      1000: string;
     };
   }
 
@@ -43,6 +49,12 @@ declare module "@mui/material/styles" {
       1000?: string;
     };
     red?: {
+      500?: string;
+    };
+    black?: {
+      1000?: string;
+    };
+    gray?: {
       500?: string;
     };
   }
@@ -68,8 +80,14 @@ const baseThemeOptions: ThemeOptions = {
       400: "rgba(26, 125, 120, 0.4)",
       1000: "rgb(26, 125, 120)",
     },
+    gray: {
+      500: "rgb(156, 163, 175)",
+    },
     red: {
       500: "rgb(239, 68, 68)",
+    },
+    black: {
+      1000: "rgb(0,0,0)",
     },
   },
   shape: {

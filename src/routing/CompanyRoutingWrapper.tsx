@@ -24,7 +24,6 @@ const CompanyRoutingWrapper = () => {
     if (id && !isNaN(+id) && !currentCompany) {
       try {
         const company = await dispatch(getCompany(+id)).unwrap();
-        console.log(company);
         dispatch(setSelectedCompany(company));
       } catch (error) {
         console.error(error);

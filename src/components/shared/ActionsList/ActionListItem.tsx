@@ -3,10 +3,11 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Box, Tooltip, Typography } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import useEvent from "../../../hooks/useEvent";
-import { getAction } from "../../../store/actions/actions.thunks";
+import { deleteAction, getAction } from "../../../store/actions/actions.thunks";
 import { Action } from "../../../store/actions/actions.types";
 import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
 import ActionsModal from "../ActionsModal";
@@ -29,6 +30,8 @@ const ActionListItem = ({
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const params = useParams();
+  const companyId = useMemo(() => Number(params.id), [params.id]);
 
   const handleEditAction = useEvent(async () => {
     try {
@@ -43,6 +46,14 @@ const ActionListItem = ({
     }
   });
 
+  const handleDeleteAction = useEvent(async () => {
+    try {
+      return await dispatch(deleteAction({ id, companyId })).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   if (isActionLoading) {
     return <FullPageLoader />;
   }
@@ -54,7 +65,7 @@ const ActionListItem = ({
         justifyContent: "space-between",
         padding: 3,
         borderRadius: 1,
-        backgroundColor: color || "blue.800",
+        backgroundColor: color || "black.1000",
       }}
     >
       <Box
@@ -97,6 +108,7 @@ const ActionListItem = ({
         <ConfirmModal
           title={t("pages.actions.deleteAction")}
           onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDeleteAction}
           modalBody={
             <Typography variant="body1">
               {t("pages.actions.deleteActionConfirmation")}

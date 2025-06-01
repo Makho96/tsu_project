@@ -1,3 +1,4 @@
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -51,7 +52,7 @@ const Navigation = () => {
         label: NavigationItems.Actions,
         path: `${Routes.Company}/${currentCompany?.id}${Routes.Actions}`,
         haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
-        icon: <DashboardOutlinedIcon sx={{ color: "common.white" }} />,
+        icon: <ContentPasteIcon sx={{ color: "common.white" }} />,
         exact: true,
       },
       {

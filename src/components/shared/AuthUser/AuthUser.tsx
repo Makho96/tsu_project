@@ -13,7 +13,7 @@ import {
 } from "../../../store/hooks/useTypedSelector";
 
 const AuthUser = () => {
-  const user = useAppSelector((state) => state.auth.user!);
+  const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -39,6 +39,10 @@ const AuthUser = () => {
     navigate(Routes.Login);
     handleClose();
   }, [dispatch, handleClose, navigate]);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Box>
