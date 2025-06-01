@@ -51,6 +51,11 @@
       "finished": "დასრულებული",
       "archived": "დაარქივებული",
       "list": "მოქმედებების სია"
+    },
+    "action": {
+      "addDepartment": "დეპარტამენტის დამატება",
+      "departmentName": "დეპარტამენტის სახელი",
+      "search": "ძებნა"
     }
   },
   "modals": {

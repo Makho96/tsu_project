@@ -52,6 +52,11 @@
       "finished": "Finished",
       "archived": "Archived",
       "list": "Action List"
+    },
+    "action": {
+      "addDepartment": "Add Department",
+      "departmentName": "Department Name",
+      "search": "Search"
     }
   },
 

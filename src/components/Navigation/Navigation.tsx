@@ -42,6 +42,8 @@ const Navigation = () => {
   });
 
   const topNavigation = useMemo(() => {
+    if (!actions) return [];
+
     return actions
       .filter((action) => action.status === Statuses.ACTIVE)
       .map((item) => {
@@ -92,23 +94,27 @@ const Navigation = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      <nav>
-        <Typography
-          variant="h6"
-          sx={{ color: "gray.500", padding: "8px  20px" }}
-        >
-          {t("pages.actions.list")}
-        </Typography>
-        <ul>
-          {topNavigation.map((item) => {
-            if (!item.haveAccess.includes(user?.role)) {
-              return null;
-            }
-            return <NavigationItem key={item.label} {...item} />;
-          })}
-        </ul>
-      </nav>
-      <Divider sx={{ borderColor: "gray.500", borderWidth: "1px" }} />
+      {!!topNavigation.length && (
+        <>
+          <nav>
+            <Typography
+              variant="h6"
+              sx={{ color: "gray.500", padding: "8px  20px" }}
+            >
+              {t("pages.actions.list")}
+            </Typography>
+            <ul>
+              {topNavigation.map((item) => {
+                if (!item.haveAccess.includes(user?.role)) {
+                  return null;
+                }
+                return <NavigationItem key={item.label} {...item} />;
+              })}
+            </ul>
+          </nav>
+          <Divider sx={{ borderColor: "gray.500", borderWidth: "1px" }} />
+        </>
+      )}
       <nav style={{ marginTop: "20px" }}>
         {navigation.map((item) => {
           if (!item.haveAccess.includes(user?.role)) {

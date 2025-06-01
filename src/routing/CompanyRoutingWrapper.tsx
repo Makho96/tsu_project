@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams, Outlet, Navigate } from "react-router-dom";
 import { FullPageLoader } from "../components/shared/Loader";
 import useEvent from "../hooks/useEvent";
+import { getActions } from "../store/actions/actions.thunks";
 import { setSelectedCompany } from "../store/companies/companies.slice";
 import { getCompany } from "../store/companies/companies.thunks";
 import {
@@ -24,6 +25,7 @@ const CompanyRoutingWrapper = () => {
     if (id && !isNaN(+id) && !currentCompany) {
       try {
         const company = await dispatch(getCompany(+id)).unwrap();
+        await dispatch(getActions(company.id)).unwrap();
         dispatch(setSelectedCompany(company));
       } catch (error) {
         console.error(error);
