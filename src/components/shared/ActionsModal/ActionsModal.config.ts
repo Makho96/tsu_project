@@ -1,11 +1,11 @@
 import { object, string } from "yup";
-import { FormFields, FormValues } from "./ActionsModal.types";
+import { FormFields, FormValues, Colors } from "./ActionsModal.types";
 import { Statuses } from "../../../store/actions/actions.types";
 
 const initialValues: FormValues = {
   [FormFields.title]: "",
   [FormFields.status]: Statuses.DRAFT,
-  [FormFields.color]: "",
+  [FormFields.color]: Colors.Coral,
   [FormFields.description]: "",
 };
 

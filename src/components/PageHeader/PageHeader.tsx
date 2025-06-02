@@ -12,7 +12,6 @@ const PageHeader = ({
   arrowAction,
   backgroundColor,
 }: PageHeaderProps) => {
-  console.log(title);
   return (
     <Box
       display="flex"

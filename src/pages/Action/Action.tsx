@@ -1,24 +1,41 @@
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Box, Button, Input, InputAdornment, Typography } from "@mui/material";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
+import DepartmentsList from "../../components/shared/DepartmentsList/DepartmentsList";
+import DepartmentsModal from "../../components/shared/DepartmentsModal/DepartmentsModal";
 import useEvent from "../../hooks/useEvent";
 import { useAppSelector } from "../../store/hooks/useTypedSelector";
 
 const Action = () => {
+  const [isDepartmentsModalOpen, setIsDepartmentsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const actions = useAppSelector((state) => state.actions.actions);
+  const { departments } = useAppSelector((state) => state.departments);
   const navigate = useNavigate();
   const { actionId, id } = useParams();
   const { t } = useTranslation();
 
+  const departmentsForAction = useMemo(() => {
+    if (searchQuery === "") return departments;
+
+    return departments.filter(
+      (department) =>
+        department.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        department.contactPerson
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        department.tell.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        department.eMail.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [departments, searchQuery]);
+
   const goToDashboard = useEvent(() => {
     navigate(`/company/${id}`);
   });
-
-  console.log(actions);
 
   const action = useMemo(() => {
     if (!actionId) return null;
@@ -34,6 +51,7 @@ const Action = () => {
         display: "flex",
         flexDirection: "column",
         gap: 3,
+        height: "100%",
       }}
     >
       <PageHeader
@@ -41,7 +59,17 @@ const Action = () => {
         backgroundColor={action.color}
         arrowAction={goToDashboard}
       />
-      <Box sx={{ backgroundColor: "white.100", padding: 3, borderRadius: 1 }}>
+      <Box
+        sx={{
+          backgroundColor: "white.100",
+          padding: 3,
+          borderRadius: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          height: "calc(100% - 102px)",
+        }}
+      >
         <Box display="flex" gap={2} justifyContent="space-between">
           <Button
             variant="outlined"
@@ -57,6 +85,7 @@ const Action = () => {
               flexShrink: 0,
             }}
             startIcon={<AddOutlinedIcon />}
+            onClick={() => setIsDepartmentsModalOpen(true)}
           >
             <Typography variant="h6">
               {t("pages.action.addDepartment")}
@@ -72,9 +101,17 @@ const Action = () => {
                 <SearchOutlinedIcon />
               </InputAdornment>
             }
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </Box>
+        <Box sx={{ height: "calc(100% - 64px)", overflow: "auto" }}>
+          <DepartmentsList departments={departmentsForAction} />
+        </Box>
       </Box>
+      {isDepartmentsModalOpen && (
+        <DepartmentsModal setIsOpen={setIsDepartmentsModalOpen} />
+      )}
     </Box>
   );
 };
