@@ -18,6 +18,9 @@ const Action = () => {
   const navigate = useNavigate();
   const { actionId, id } = useParams();
   const { t } = useTranslation();
+  const currentCompany = useAppSelector(
+    (state) => state.companies.currentCompany
+  );
 
   const departmentsForAction = useMemo(() => {
     if (searchQuery === "") return departments;
@@ -105,9 +108,11 @@ const Action = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </Box>
-        <Box sx={{ height: "calc(100% - 64px)", overflow: "auto" }}>
-          <DepartmentsList departments={departmentsForAction} />
-        </Box>
+        {!!currentCompany && (
+          <Box sx={{ height: "calc(100% - 64px)", overflow: "auto" }}>
+            <DepartmentsList departments={departmentsForAction} />
+          </Box>
+        )}
       </Box>
       {isDepartmentsModalOpen && (
         <DepartmentsModal setIsOpen={setIsDepartmentsModalOpen} />

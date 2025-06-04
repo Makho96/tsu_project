@@ -3,12 +3,19 @@ import { AxiosError } from "axios";
 import { CreateDepartmentParams, Department } from "./departments.types";
 import api from "../../api/axiosInstance";
 import showApiError from "../../utils/showApiError";
+import { RootState } from "../hooks/useTypedSelector";
 
 export const getDepartments = createAsyncThunk<Department[]>(
   "departments/getDepartments",
-  async () => {
+  async (_, { getState }) => {
+    const { currentCompany } = (getState() as RootState).companies;
+
+    if (!currentCompany) return [];
+
     try {
-      const { data } = await api.get("/department");
+      const { data } = await api.get(
+        `/department/company/${currentCompany.id}`
+      );
       return data;
     } catch (error) {
       showApiError(error as AxiosError);
@@ -53,7 +60,7 @@ export const updateDepartment = createAsyncThunk<
   }
 >("departments/updateDepartment", async (department, { dispatch }) => {
   try {
-    const { data } = await api.put(`/department/${department.id}`, department);
+    const { data } = await api.put("/department", department);
     dispatch(getDepartments());
     return data;
   } catch (error) {
