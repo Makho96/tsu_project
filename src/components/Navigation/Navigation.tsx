@@ -50,7 +50,7 @@ const Navigation = () => {
         return {
           label: item.title,
           path: `${Routes.Company}/${currentCompany?.id}${Routes.Actions}/${item.id}`,
-          exact: true,
+          exact: false,
           icon: <DvrOutlinedIcon sx={{ color: "common.white" }} />,
           haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
         };

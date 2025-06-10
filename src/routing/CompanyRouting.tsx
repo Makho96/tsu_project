@@ -5,6 +5,7 @@ import Action from "../pages/Action/Action";
 import Actions from "../pages/Actions/Actions";
 import CompanySelection from "../pages/Company/CompanySelection";
 import Dashboard from "../pages/Dashboard";
+import Department from "../pages/Department/Department";
 
 const CompanyRouting = () => {
   return (
@@ -15,6 +16,10 @@ const CompanyRouting = () => {
           <Route path=":id" element={<Dashboard />} />
           <Route path=":id/actions" element={<Actions />} />
           <Route path=":id/actions/:actionId" element={<Action />} />
+          <Route
+            path=":id/actions/:actionId/department/:departmentId"
+            element={<Department />}
+          />
         </Route>
       </Route>
     </Routes>

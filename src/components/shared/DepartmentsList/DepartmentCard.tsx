@@ -5,13 +5,15 @@ import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import { Box, Tooltip, Typography } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 import { deleteDepartment } from "../../../store/departments";
 import { Department } from "../../../store/departments/departments.types";
 import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
 import DepartmentsModal from "../DepartmentsModal/DepartmentsModal";
 import { ConfirmModal } from "../Modals";
+
 type DepartmentCardProps = {
   department: Department;
 };
@@ -19,6 +21,11 @@ type DepartmentCardProps = {
 const DepartmentCard = ({ department }: DepartmentCardProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const params = useParams();
+  const companyId = useMemo(() => Number(params.id), [params.id]);
+  const actionId = useMemo(() => Number(params.actionId), [params.actionId]);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -45,6 +52,11 @@ const DepartmentCard = ({ department }: DepartmentCardProps) => {
         },
         transition: "all 0.3s ease",
       }}
+      onClick={() =>
+        navigate(
+          `/company/${companyId}/actions/${actionId}/department/${department.id}`
+        )
+      }
     >
       <Box
         display="flex"
