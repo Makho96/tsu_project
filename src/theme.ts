@@ -26,6 +26,8 @@ declare module "@mui/material/styles" {
       500: string;
     };
     red: {
+      200: string;
+      300: string;
       500: string;
     };
     black: {
@@ -49,6 +51,8 @@ declare module "@mui/material/styles" {
       1000?: string;
     };
     red?: {
+      200?: string;
+      300?: string;
       500?: string;
     };
     black?: {
@@ -84,6 +88,8 @@ const baseThemeOptions: ThemeOptions = {
       500: "rgb(156, 163, 175)",
     },
     red: {
+      200: "rgba(248, 113, 113, 0.2)",
+      300: "rgb(252, 165, 165)",
       500: "rgb(239, 68, 68)",
     },
     black: {

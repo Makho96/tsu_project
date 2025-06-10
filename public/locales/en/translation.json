@@ -53,6 +53,24 @@
       "archived": "Archived",
       "list": "Action List"
     },
+    "actionFormModal": {
+      "title": "Manage Fields",
+      "addField": "Add Field",
+      "name": "Name",
+      "description": "Description",
+      "legalName": "Legal Name",
+      "type": "Type",
+      "requirement": "Is field required",
+      "hidden": "Hide field",
+      "cancel": "Cancel",
+      "create": "Create",
+      "edit": "Edit",
+      "text": "Text",
+      "number": "Number",
+      "date": "Date",
+      "delete": "Delete",
+      "deleteConfirmation": "Are you sure you want to delete this field?"
+    },
     "action": {
       "addDepartment": "Add Department",
       "departmentName": "Department Name",

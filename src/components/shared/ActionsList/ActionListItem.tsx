@@ -10,6 +10,7 @@ import useEvent from "../../../hooks/useEvent";
 import { deleteAction, getAction } from "../../../store/actions/actions.thunks";
 import { Action } from "../../../store/actions/actions.types";
 import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
+import ActionFieldsManagementModal from "../ActionFieldsManagementModal/ActionFieldsManagementModal";
 import ActionsModal from "../ActionsModal";
 import { FullPageLoader } from "../Loader";
 import { ConfirmModal } from "../Modals";
@@ -26,6 +27,7 @@ const ActionListItem = ({
   const { id, title, color } = action;
   const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isManageFieldsModalOpen, setIsManageFieldsModalOpen] = useState(false);
   const [actionData, setActionData] = useState<Action | null>(null);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -85,7 +87,10 @@ const ActionListItem = ({
           gap={2}
         >
           <Tooltip title={t("pages.actions.manageFields")}>
-            <SettingsOutlinedIcon sx={{ fontSize: 16, cursor: "pointer" }} />
+            <SettingsOutlinedIcon
+              sx={{ fontSize: 16, cursor: "pointer" }}
+              onClick={() => setIsManageFieldsModalOpen(true)}
+            />
           </Tooltip>
           <Tooltip title={t("pages.actions.editAction")}>
             <EditOutlinedIcon
@@ -100,6 +105,12 @@ const ActionListItem = ({
             />
           </Tooltip>
         </Box>
+      )}
+      {isManageFieldsModalOpen && (
+        <ActionFieldsManagementModal
+          onClose={() => setIsManageFieldsModalOpen(false)}
+          actionId={id}
+        />
       )}
       {isEditModalOpen && actionData && (
         <ActionsModal initialData={actionData} setIsOpen={setIsEditModalOpen} />
