@@ -75,6 +75,7 @@ const Layout = () => {
         )}
         <Box
           height="100%"
+          position="relative"
           sx={{
             width:
               isSidebarOpen && showFullContent

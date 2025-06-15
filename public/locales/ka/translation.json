@@ -82,6 +82,12 @@
       "edit": "რედაქტირება",
       "delete": "წაშლა",
       "deleteConfirmation": "დარწმუნებული ხართ, რომ გსურთ ამ დეპარტამენტის წაშლა?"
+    },
+    "department": {
+      "newRecord": "ახალი ჩანაწერი",
+      "editRecord": "ჩანაწერის რედაქტირება",
+      "deleteRecord": "ჩანაწერის წაშლა",
+      "deleteConfirmation": "ნამდვილად გსურთ ჩანაწერის წაშლა?"
     }
   },
   "modals": {
