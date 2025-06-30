@@ -28,8 +28,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Workbook } from 'exceljs';
-import React, { useState, useMemo, useCallback, memo } from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import React, { useState, useMemo, useCallback, memo, useEffect } from 'react';
+import {
+  DndProvider,
+  // useDrag, useDrop
+} from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export interface ColumnDef {
@@ -63,51 +66,51 @@ interface DraggableHeaderProps {
 
 const DraggableHeader: React.FC<DraggableHeaderProps> = ({
   column,
-  index,
-  moveColumn,
+  // index,
+  // moveColumn,
   children,
 }) => {
   const ref = React.useRef<HTMLTableCellElement>(null);
   const [isResizing, setIsResizing] = useState(false);
 
-  const [{ isDragging }, drag] = useDrag({
-    type: 'COLUMN',
-    item: { index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
+  // const [{ isDragging }, drag] = useDrag({
+  //   type: 'COLUMN',
+  //   item: { index },
+  //   collect: (monitor) => ({
+  //     isDragging: monitor.isDragging(),
+  //   }),
+  // });
 
-  const [, drop] = useDrop({
-    accept: 'COLUMN',
-    hover: (item: { index: number }, monitor) => {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
+  // const [, drop] = useDrop({
+  //   accept: 'COLUMN',
+  //   hover: (item: { index: number }, monitor) => {
+  //     if (!ref.current) {
+  //       return;
+  //     }
+  //     const dragIndex = item.index;
+  //     const hoverIndex = index;
 
-      if (dragIndex === hoverIndex) {
-        return;
-      }
+  //     if (dragIndex === hoverIndex) {
+  //       return;
+  //     }
 
-      const hoverBoundingRect = ref.current.getBoundingClientRect();
-      const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientX = clientOffset!.x - hoverBoundingRect.left;
+  //     const hoverBoundingRect = ref.current.getBoundingClientRect();
+  //     const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+  //     const clientOffset = monitor.getClientOffset();
+  //     const hoverClientX = clientOffset!.x - hoverBoundingRect.left;
 
-      if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
-        return;
-      }
+  //     if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
+  //       return;
+  //     }
 
-      if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
-        return;
-      }
+  //     if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
+  //       return;
+  //     }
 
-      moveColumn(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-  });
+  //     moveColumn(dragIndex, hoverIndex);
+  //     item.index = hoverIndex;
+  //   },
+  // });
 
   const onMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -135,14 +138,15 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  drag(drop(ref));
+  //commented
+  // drag(drop(ref));
 
   return (
     <TableCell
       ref={ref}
       sx={{
-        opacity: isDragging ? 0.5 : 1,
-        cursor: 'move',
+        // opacity: isDragging ? 0.5 : 1,
+        // cursor: 'move',
         width: `${column.width || 150}px`,
         minWidth: `${column.width || 150}px`,
         maxWidth: `${column.width || 150}px`,
@@ -157,9 +161,9 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
       }}
     >
       <Box display="flex" alignItems="center">
-        <IconButton size="small" sx={{ cursor: 'move', mr: 1 }}>
+        {/* <IconButton size="small" sx={{ cursor: 'move', mr: 1 }}>
           <DragIndicatorIcon />
-        </IconButton>
+        </IconButton> */}
         {children}
       </Box>
       <Box
@@ -216,21 +220,26 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   const theme = useTheme();
   const [columns, setColumns] = useState(initialColumns);
   const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>(() => {
-    // Calculate initial widths based on content
+    // Use the provided width or calculate based on content if no width is specified
     return initialColumns.reduce((acc, col) => {
-      // Get the maximum length between header and content
-      const headerLength = col.headerName.length;
-      const maxContentLength = Math.max(
-        headerLength,
-        ...rows.map((row) => String(row[col.field]).length)
-      );
-      // Convert character length to approximate pixel width (assuming ~8px per character)
-      const contentWidth = maxContentLength * 8;
-      // Add padding and ensure minimum width
-      const totalWidth = Math.max(150, contentWidth + 32); // 32px for padding
+      let width = col.width;
+
+      if (!width) {
+        // Only calculate width if not explicitly provided
+        const headerLength = col.headerName.length;
+        const maxContentLength = Math.max(
+          headerLength,
+          ...rows.map((row) => String(row[col.field]).length)
+        );
+        // Convert character length to approximate pixel width (assuming ~8px per character)
+        const contentWidth = maxContentLength * 8;
+        // Add padding and ensure minimum width
+        width = Math.max(150, contentWidth + 32); // 32px for padding
+      }
+
       return {
         ...acc,
-        [col.field]: totalWidth,
+        [col.field]: width,
       };
     }, {});
   });
@@ -247,6 +256,43 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     [key: string]: HTMLElement | null;
   }>({});
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<HTMLElement | null>(null);
+
+  // Update internal state when props change
+  useEffect(() => {
+    setColumns(initialColumns);
+
+    // Update column widths based on new columns
+    const newColumnWidths = initialColumns.reduce((acc, col) => {
+      let width = col.width;
+
+      if (!width) {
+        // Only calculate width if not explicitly provided
+        const headerLength = col.headerName.length;
+        const maxContentLength = Math.max(
+          headerLength,
+          ...rows.map((row) => String(row[col.field]).length)
+        );
+        // Convert character length to approximate pixel width (assuming ~8px per character)
+        const contentWidth = maxContentLength * 8;
+        // Add padding and ensure minimum width
+        width = Math.max(150, contentWidth + 32); // 32px for padding
+      }
+
+      return {
+        ...acc,
+        [col.field]: width,
+      };
+    }, {});
+
+    setColumnWidths(newColumnWidths);
+
+    // Update visible columns
+    const newVisibleColumns = initialColumns.reduce(
+      (acc, col) => ({ ...acc, [col.field]: true }),
+      {}
+    );
+    setVisibleColumns(newVisibleColumns);
+  }, [initialColumns, rows]);
 
   const handleFilterClick = useCallback((event: React.MouseEvent<HTMLElement>, field: string) => {
     event.stopPropagation();
