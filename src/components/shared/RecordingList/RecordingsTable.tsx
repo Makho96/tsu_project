@@ -1,26 +1,8 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useEffect, useMemo, useState } from 'react';
 import useEvent from '../../../hooks/useEvent';
 import { Recordings } from '../../../store/recordings/recordings.types';
 import CustomGrid, { ColumnDef } from '../../CustomGrid/CustomGrid';
-import CustomGridExample from '../../CustomGrid/CustomGridExample';
 import Loader from '../Loader/Loader';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    background: {
-      default: '#121212',
-      paper: '#1e1e1e',
-    },
-    primary: {
-      main: '#90caf9',
-    },
-    secondary: {
-      main: '#f48fb1',
-    },
-  },
-});
 
 type RecordingsTableProps = {
   recordings: {

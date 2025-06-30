@@ -1,4 +1,3 @@
-import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
 import CustomGrid, { ColumnDef } from './CustomGrid';
@@ -20,7 +19,7 @@ const darkTheme = createTheme({
 });
 
 const CustomGridExample: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [columns, setColumns] = useState<ColumnDef[]>([
     {
       field: 'id',
