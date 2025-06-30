@@ -1,8 +1,8 @@
-import ClearIcon from "@mui/icons-material/Clear";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import SettingsIcon from "@mui/icons-material/Settings";
+import ClearIcon from '@mui/icons-material/Clear';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Box,
   Table,
@@ -26,11 +26,11 @@ import {
   FormControlLabel,
   Divider,
   Typography,
-} from "@mui/material";
-import { Workbook } from "exceljs";
-import React, { useState, useMemo, useCallback, memo } from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+} from '@mui/material';
+import { Workbook } from 'exceljs';
+import React, { useState, useMemo, useCallback, memo } from 'react';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export interface ColumnDef {
   field: string;
@@ -39,7 +39,7 @@ export interface ColumnDef {
   sortable?: boolean;
   filterable?: boolean;
   renderCell?: (params: any) => React.ReactNode;
-  type?: "text" | "number" | "date" | "boolean" | "custom";
+  type?: 'text' | 'number' | 'date' | 'boolean' | 'custom';
   onResize?: (width: number) => void;
 }
 
@@ -71,7 +71,7 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
   const [isResizing, setIsResizing] = useState(false);
 
   const [{ isDragging }, drag] = useDrag({
-    type: "COLUMN",
+    type: 'COLUMN',
     item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -79,7 +79,7 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
   });
 
   const [, drop] = useDrop({
-    accept: "COLUMN",
+    accept: 'COLUMN',
     hover: (item: { index: number }, monitor) => {
       if (!ref.current) {
         return;
@@ -92,8 +92,7 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
       }
 
       const hoverBoundingRect = ref.current.getBoundingClientRect();
-      const hoverMiddleX =
-        (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+      const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
       const clientOffset = monitor.getClientOffset();
       const hoverClientX = clientOffset!.x - hoverBoundingRect.left;
 
@@ -128,12 +127,12 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
 
     const onMouseUp = () => {
       setIsResizing(false);
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
     };
 
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   };
 
   drag(drop(ref));
@@ -141,22 +140,24 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
   return (
     <TableCell
       ref={ref}
-      style={{
+      sx={{
         opacity: isDragging ? 0.5 : 1,
-        cursor: "move",
-        width: column.width,
-        minWidth: 150,
-        maxWidth: column.width,
-        padding: "16px",
-        whiteSpace: "nowrap",
-        position: "sticky",
+        cursor: 'move',
+        width: `${column.width || 150}px`,
+        minWidth: `${column.width || 150}px`,
+        maxWidth: `${column.width || 150}px`,
+        padding: '16px',
+        whiteSpace: 'nowrap',
+        position: 'sticky',
         top: 0,
         zIndex: 2,
-        backgroundColor: "background.paper",
+        bgcolor: 'background.paper',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
       }}
     >
       <Box display="flex" alignItems="center">
-        <IconButton size="small" sx={{ cursor: "move", mr: 1 }}>
+        <IconButton size="small" sx={{ cursor: 'move', mr: 1 }}>
           <DragIndicatorIcon />
         </IconButton>
         {children}
@@ -165,10 +166,10 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         component="div"
         onMouseDown={onMouseDown}
         onKeyDown={(e) => {
-          if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
             e.preventDefault();
             const newWidth =
-              e.key === "ArrowLeft"
+              e.key === 'ArrowLeft'
                 ? Math.max(150, (column.width || 150) - 10)
                 : (column.width || 150) + 10;
             if (column.onResize) {
@@ -177,18 +178,18 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
           }
         }}
         sx={{
-          position: "absolute",
+          position: 'absolute',
           right: 0,
           top: 0,
           bottom: 0,
-          width: "8px",
-          cursor: "col-resize",
-          backgroundColor: isResizing ? "primary.main" : "transparent",
-          border: "none",
+          width: '8px',
+          cursor: 'col-resize',
+          backgroundColor: isResizing ? 'primary.main' : 'transparent',
+          border: 'none',
           padding: 0,
           zIndex: 3,
-          "&:hover": {
-            backgroundColor: "primary.main",
+          '&:hover': {
+            backgroundColor: 'primary.main',
           },
         }}
         aria-label="Resize column"
@@ -214,55 +215,46 @@ const CustomGrid: React.FC<CustomGridProps> = ({
 }) => {
   const theme = useTheme();
   const [columns, setColumns] = useState(initialColumns);
-  const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>(
-    () => {
-      // Calculate initial widths based on content
-      return initialColumns.reduce((acc, col) => {
-        // Get the maximum length between header and content
-        const headerLength = col.headerName.length;
-        const maxContentLength = Math.max(
-          headerLength,
-          ...rows.map((row) => String(row[col.field]).length)
-        );
-        // Convert character length to approximate pixel width (assuming ~8px per character)
-        const contentWidth = maxContentLength * 8;
-        // Add padding and ensure minimum width
-        const totalWidth = Math.max(150, contentWidth + 32); // 32px for padding
-        return {
-          ...acc,
-          [col.field]: totalWidth,
-        };
-      }, {});
-    }
-  );
+  const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>(() => {
+    // Calculate initial widths based on content
+    return initialColumns.reduce((acc, col) => {
+      // Get the maximum length between header and content
+      const headerLength = col.headerName.length;
+      const maxContentLength = Math.max(
+        headerLength,
+        ...rows.map((row) => String(row[col.field]).length)
+      );
+      // Convert character length to approximate pixel width (assuming ~8px per character)
+      const contentWidth = maxContentLength * 8;
+      // Add padding and ensure minimum width
+      const totalWidth = Math.max(150, contentWidth + 32); // 32px for padding
+      return {
+        ...acc,
+        [col.field]: totalWidth,
+      };
+    }, {});
+  });
   const [visibleColumns, setVisibleColumns] = useState<{
     [key: string]: boolean;
-  }>(() =>
-    initialColumns.reduce((acc, col) => ({ ...acc, [col.field]: true }), {})
-  );
+  }>(() => initialColumns.reduce((acc, col) => ({ ...acc, [col.field]: true }), {}));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(pageSize);
-  const [orderBy, setOrderBy] = useState<string>("");
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const [orderBy, setOrderBy] = useState<string>('');
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [filterAnchorEl, setFilterAnchorEl] = useState<{
     [key: string]: HTMLElement | null;
   }>({});
-  const [settingsAnchorEl, setSettingsAnchorEl] = useState<HTMLElement | null>(
-    null
-  );
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleFilterClick = useCallback(
-    (event: React.MouseEvent<HTMLElement>, field: string) => {
-      event.stopPropagation();
-      setFilterAnchorEl((prev) => ({
-        ...prev,
-        [field]: prev[field] ? null : event.currentTarget,
-      }));
-    },
-    []
-  );
+  const handleFilterClick = useCallback((event: React.MouseEvent<HTMLElement>, field: string) => {
+    event.stopPropagation();
+    setFilterAnchorEl((prev) => ({
+      ...prev,
+      [field]: prev[field] ? null : event.currentTarget,
+    }));
+  }, []);
 
   const handleFilterClose = useCallback((field: string) => {
     setFilterAnchorEl((prev) => ({
@@ -288,8 +280,8 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   const handleSort = useCallback(
     (field: string) => {
       setOrder((prevOrder) => {
-        const isAsc = orderBy === field && prevOrder === "asc";
-        return isAsc ? "desc" : "asc";
+        const isAsc = orderBy === field && prevOrder === 'asc';
+        return isAsc ? 'desc' : 'asc';
       });
       setOrderBy(field);
     },
@@ -343,10 +335,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     [rows, onSelectionChange]
   );
 
-  const isSelected = useCallback(
-    (id: string) => selected.indexOf(id) !== -1,
-    [selected]
-  );
+  const isSelected = useCallback((id: string) => selected.indexOf(id) !== -1, [selected]);
 
   const filteredAndSortedRows = useMemo(() => {
     let processedRows = [...rows];
@@ -365,7 +354,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
       processedRows.sort((a, b) => {
         const aValue = a[orderBy];
         const bValue = b[orderBy];
-        if (order === "asc") {
+        if (order === 'asc') {
           return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
         } else {
           return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
@@ -377,28 +366,22 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   }, [rows, filters, orderBy, order]);
 
   const paginatedRows = useMemo(() => {
-    return filteredAndSortedRows.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
-    );
+    return filteredAndSortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   }, [filteredAndSortedRows, page, rowsPerPage]);
 
   const handleChangePage = useCallback((_event: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
 
-  const handleChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    },
-    []
-  );
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }, []);
 
   const handleClearFilter = useCallback((field: string) => {
     setFilters((prev) => ({
       ...prev,
-      [field]: "",
+      [field]: '',
     }));
   }, []);
 
@@ -439,6 +422,15 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     return columnsWithResize.filter((col) => visibleColumns[col.field]);
   }, [columnsWithResize, visibleColumns]);
 
+  // Calculate total width of all visible columns
+  const totalTableWidth = useMemo(() => {
+    const checkboxWidth = checkboxSelection ? 48 : 0;
+    const columnsWidth = visibleColumnsWithResize.reduce((total, col) => {
+      return total + (col.width || 150);
+    }, 0);
+    return checkboxWidth + columnsWidth;
+  }, [visibleColumnsWithResize, checkboxSelection]);
+
   const handleExport = async () => {
     // Get the current view of the data (filtered and sorted)
     const dataToExport = filteredAndSortedRows.map((row) => {
@@ -449,10 +441,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
           const renderedCell = column.renderCell({ row });
           if (React.isValidElement(renderedCell)) {
             value = String(renderedCell);
-          } else if (
-            typeof renderedCell === "object" &&
-            renderedCell !== null
-          ) {
+          } else if (typeof renderedCell === 'object' && renderedCell !== null) {
             value = JSON.stringify(renderedCell);
           } else {
             value = renderedCell;
@@ -467,7 +456,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
 
     // Create a new workbook and worksheet
     const workbook = new Workbook();
-    const worksheet = workbook.addWorksheet("Data");
+    const worksheet = workbook.addWorksheet('Data');
 
     // Add headers
     const headers = visibleColumnsWithResize.map((col) => col.headerName);
@@ -478,16 +467,16 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     headerRow.height = 25;
     headerRow.font = {
       bold: true,
-      color: { argb: "FFFFFFFF" }, // White text
+      color: { argb: 'FFFFFFFF' }, // White text
     };
     headerRow.fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "FF4F81BD" }, // Blue background
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF4F81BD' }, // Blue background
     };
     headerRow.alignment = {
-      vertical: "middle",
-      horizontal: "center",
+      vertical: 'middle',
+      horizontal: 'center',
     };
 
     // Add data rows
@@ -499,7 +488,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     visibleColumnsWithResize.forEach((col, index) => {
       const maxLength = Math.max(
         col.headerName.length,
-        ...dataToExport.map((row) => String(row[col.headerName] || "").length)
+        ...dataToExport.map((row) => String(row[col.headerName] || '').length)
       );
       worksheet.getColumn(index + 1).width = maxLength + 2;
     });
@@ -508,15 +497,15 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     worksheet.eachRow((row, rowNumber) => {
       row.eachCell((cell) => {
         cell.border = {
-          top: { style: "thin" },
-          left: { style: "thin" },
-          bottom: { style: "thin" },
-          right: { style: "thin" },
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
         };
         if (rowNumber > 1) {
           cell.alignment = {
-            vertical: "middle",
-            horizontal: "left",
+            vertical: 'middle',
+            horizontal: 'left',
           };
         }
       });
@@ -525,24 +514,19 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     // Generate and download the file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = "grid-export.xlsx";
+    link.download = 'grid-export.xlsx';
     link.click();
     window.URL.revokeObjectURL(url);
   };
 
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height={400}
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height={400}>
         <CircularProgress />
       </Box>
     );
@@ -552,18 +536,18 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     <DndProvider backend={HTML5Backend}>
       <Paper
         sx={{
-          bgcolor: "background.paper",
-          width: "100%",
-          overflow: "hidden",
+          bgcolor: 'background.paper',
+          width: '100%',
+          overflow: 'hidden',
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "flex-end",
+            display: 'flex',
+            justifyContent: 'flex-end',
             p: 1,
             borderBottom: 1,
-            borderColor: "divider",
+            borderColor: 'divider',
             gap: 1,
           }}
         >
@@ -572,9 +556,9 @@ const CustomGrid: React.FC<CustomGridProps> = ({
               onClick={handleExport}
               size="small"
               sx={{
-                color: "text.secondary",
-                "&:hover": {
-                  color: "primary.main",
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
                 },
               }}
             >
@@ -586,9 +570,9 @@ const CustomGrid: React.FC<CustomGridProps> = ({
               onClick={handleSettingsClick}
               size="small"
               sx={{
-                color: "text.secondary",
-                "&:hover": {
-                  color: "primary.main",
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
                 },
               }}
             >
@@ -600,24 +584,24 @@ const CustomGrid: React.FC<CustomGridProps> = ({
             anchorEl={settingsAnchorEl}
             onClose={handleSettingsClose}
             anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
+              vertical: 'bottom',
+              horizontal: 'right',
             }}
             transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
+              vertical: 'top',
+              horizontal: 'right',
             }}
             PaperProps={{
               sx: {
                 p: 2,
                 minWidth: 200,
-                bgcolor: "background.paper",
+                bgcolor: 'background.paper',
                 boxShadow: theme.shadows[3],
               },
             }}
           >
             <Box sx={{ mb: 1 }}>
-              <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 Visible Columns
               </Typography>
             </Box>
@@ -632,17 +616,17 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                       onChange={handleColumnVisibilityChange(column.field)}
                       size="small"
                       sx={{
-                        color: "text.secondary",
-                        "&.Mui-checked": {
-                          color: "primary.main",
+                        color: 'text.secondary',
+                        '&.Mui-checked': {
+                          color: 'primary.main',
                         },
                       }}
                     />
                   }
                   label={column.headerName}
                   sx={{
-                    "& .MuiFormControlLabel-label": {
-                      color: "text.primary",
+                    '& .MuiFormControlLabel-label': {
+                      color: 'text.primary',
                     },
                   }}
                 />
@@ -653,43 +637,50 @@ const CustomGrid: React.FC<CustomGridProps> = ({
         <TableContainer
           sx={{
             maxHeight: 400,
-            overflowX: "auto",
-            "&::-webkit-scrollbar": {
+            overflowX: 'auto',
+            '&::-webkit-scrollbar': {
               height: 8,
             },
-            "&::-webkit-scrollbar-track": {
+            '&::-webkit-scrollbar-track': {
               background: theme.palette.background.default,
             },
-            "&::-webkit-scrollbar-thumb": {
+            '&::-webkit-scrollbar-thumb': {
               background: theme.palette.divider,
               borderRadius: 4,
             },
-            "&::-webkit-scrollbar-thumb:hover": {
+            '&::-webkit-scrollbar-thumb:hover': {
               background: theme.palette.action.hover,
             },
           }}
         >
-          <Table stickyHeader>
+          <Table
+            stickyHeader
+            sx={{
+              tableLayout: 'fixed',
+              minWidth: `${totalTableWidth}px`,
+              width: '100%',
+            }}
+          >
             <TableHead>
               <TableRow>
                 {checkboxSelection && (
                   <TableCell
                     padding="checkbox"
                     sx={{
-                      width: 48,
-                      minWidth: 48,
-                      padding: "16px 8px",
-                      bgcolor: "background.paper",
-                      color: "text.primary",
-                      position: "sticky",
+                      width: '48px',
+                      minWidth: '48px',
+                      maxWidth: '48px',
+                      padding: '16px 8px',
+                      bgcolor: 'background.paper',
+                      color: 'text.primary',
+                      position: 'sticky',
                       top: 0,
                       zIndex: 2,
                     }}
                   >
                     <Checkbox
                       indeterminate={
-                        selected.length > 0 &&
-                        selected.length < filteredAndSortedRows.length
+                        selected.length > 0 && selected.length < filteredAndSortedRows.length
                       }
                       checked={
                         filteredAndSortedRows.length > 0 &&
@@ -697,9 +688,9 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                       }
                       onChange={handleSelectAllClick}
                       sx={{
-                        color: "text.secondary",
-                        "&.Mui-checked": {
-                          color: "primary.main",
+                        color: 'text.secondary',
+                        '&.Mui-checked': {
+                          color: 'primary.main',
                         },
                       }}
                     />
@@ -715,40 +706,38 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                     <Tooltip title={column.headerName} placement="top">
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                           gap: 1,
                           minWidth: 0,
                         }}
                       >
                         <Box
                           sx={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
                             flex: 1,
                           }}
                         >
                           {column.sortable ? (
                             <TableSortLabel
                               active={orderBy === column.field}
-                              direction={
-                                orderBy === column.field ? order : "asc"
-                              }
+                              direction={orderBy === column.field ? order : 'asc'}
                               onClick={() => handleSort(column.field)}
                               sx={{
-                                color: "text.primary",
-                                "&.MuiTableSortLabel-root": {
-                                  color: "text.primary",
+                                color: 'text.primary',
+                                '&.MuiTableSortLabel-root': {
+                                  color: 'text.primary',
                                 },
-                                "&.MuiTableSortLabel-root:hover": {
-                                  color: "primary.main",
+                                '&.MuiTableSortLabel-root:hover': {
+                                  color: 'primary.main',
                                 },
-                                "&.Mui-active": {
-                                  color: "primary.main",
+                                '&.Mui-active': {
+                                  color: 'primary.main',
                                 },
-                                "& .MuiTableSortLabel-icon": {
-                                  color: "primary.main !important",
+                                '& .MuiTableSortLabel-icon': {
+                                  color: 'primary.main !important',
                                 },
                               }}
                             >
@@ -759,24 +748,14 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                           )}
                         </Box>
                         {column.filterable && (
-                          <Tooltip
-                            title={
-                              filters[column.field]
-                                ? "Filter active"
-                                : "Show filter"
-                            }
-                          >
+                          <Tooltip title={filters[column.field] ? 'Filter active' : 'Show filter'}>
                             <IconButton
                               size="small"
-                              onClick={(e) =>
-                                handleFilterClick(e, column.field)
-                              }
+                              onClick={(e) => handleFilterClick(e, column.field)}
                               sx={{
-                                color: filters[column.field]
-                                  ? "primary.main"
-                                  : "text.secondary",
-                                "&:hover": {
-                                  color: "primary.main",
+                                color: filters[column.field] ? 'primary.main' : 'text.secondary',
+                                '&:hover': {
+                                  color: 'primary.main',
                                 },
                                 flexShrink: 0,
                               }}
@@ -793,28 +772,26 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                         anchorEl={filterAnchorEl[column.field]}
                         onClose={() => handleFilterClose(column.field)}
                         anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
+                          vertical: 'bottom',
+                          horizontal: 'left',
                         }}
                         transformOrigin={{
-                          vertical: "top",
-                          horizontal: "left",
+                          vertical: 'top',
+                          horizontal: 'left',
                         }}
                         PaperProps={{
                           sx: {
                             p: 2,
                             mt: 1,
-                            bgcolor: "background.paper",
+                            bgcolor: 'background.paper',
                             boxShadow: theme.shadows[3],
                           },
                         }}
                       >
                         <TextField
                           size="small"
-                          value={filters[column.field] || ""}
-                          onChange={(e) =>
-                            handleFilter(column.field, e.target.value)
-                          }
+                          value={filters[column.field] || ''}
+                          onChange={(e) => handleFilter(column.field, e.target.value)}
                           placeholder={`Filter ${column.headerName}`}
                           fullWidth
                           InputProps={{
@@ -822,9 +799,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                               <InputAdornment position="end">
                                 <IconButton
                                   size="small"
-                                  onClick={() =>
-                                    handleClearFilter(column.field)
-                                  }
+                                  onClick={() => handleClearFilter(column.field)}
                                   edge="end"
                                 >
                                   <ClearIcon fontSize="small" />
@@ -834,17 +809,17 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                           }}
                           sx={{
                             minWidth: 200,
-                            "& .MuiInputBase-root": {
-                              color: "text.primary",
+                            '& .MuiInputBase-root': {
+                              color: 'text.primary',
                             },
-                            "& .MuiInputLabel-root": {
-                              color: "text.secondary",
+                            '& .MuiInputLabel-root': {
+                              color: 'text.secondary',
                             },
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "divider",
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: 'divider',
                             },
-                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "primary.main",
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                              borderColor: 'primary.main',
                             },
                           }}
                         />
@@ -867,14 +842,14 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{
-                      "&:hover": {
-                        bgcolor: "action.hover",
+                      '&:hover': {
+                        bgcolor: 'action.hover',
                       },
-                      "&.Mui-selected": {
-                        bgcolor: "action.selected",
+                      '&.Mui-selected': {
+                        bgcolor: 'action.selected',
                       },
-                      "&.Mui-selected:hover": {
-                        bgcolor: "action.selected",
+                      '&.Mui-selected:hover': {
+                        bgcolor: 'action.selected',
                       },
                     }}
                   >
@@ -882,11 +857,12 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                       <TableCell
                         padding="checkbox"
                         sx={{
-                          width: 48,
-                          minWidth: 48,
-                          padding: "16px 8px",
-                          bgcolor: "background.paper",
-                          color: "text.primary",
+                          width: '48px',
+                          minWidth: '48px',
+                          maxWidth: '48px',
+                          padding: '16px 8px',
+                          bgcolor: 'background.paper',
+                          color: 'text.primary',
                         }}
                       >
                         <Checkbox
@@ -896,9 +872,9 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                             handleClick(row.id);
                           }}
                           sx={{
-                            color: "text.secondary",
-                            "&.Mui-checked": {
-                              color: "primary.main",
+                            color: 'text.secondary',
+                            '&.Mui-checked': {
+                              color: 'primary.main',
                             },
                           }}
                         />
@@ -908,20 +884,18 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                       <TableCell
                         key={column.field}
                         sx={{
-                          width: columnWidths[column.field],
-                          minWidth: 150,
-                          maxWidth: columnWidths[column.field],
-                          padding: "16px",
-                          whiteSpace: "nowrap",
-                          bgcolor: "background.paper",
-                          color: "text.primary",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
+                          width: `${columnWidths[column.field] || 150}px`,
+                          minWidth: `${columnWidths[column.field] || 150}px`,
+                          maxWidth: `${columnWidths[column.field] || 150}px`,
+                          padding: '16px',
+                          whiteSpace: 'nowrap',
+                          bgcolor: 'background.paper',
+                          color: 'text.primary',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
                         }}
                       >
-                        {column.renderCell
-                          ? column.renderCell({ row })
-                          : row[column.field]}
+                        {column.renderCell ? column.renderCell({ row }) : row[column.field]}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -939,26 +913,26 @@ const CustomGrid: React.FC<CustomGridProps> = ({
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           sx={{
-            bgcolor: "background.paper",
-            color: "text.primary",
+            bgcolor: 'background.paper',
+            color: 'text.primary',
             borderTop: 1,
-            borderColor: "divider",
-            "& .MuiTablePagination-select": {
-              color: "text.primary",
+            borderColor: 'divider',
+            '& .MuiTablePagination-select': {
+              color: 'text.primary',
             },
-            "& .MuiTablePagination-selectIcon": {
-              color: "text.secondary",
+            '& .MuiTablePagination-selectIcon': {
+              color: 'text.secondary',
             },
-            "& .MuiTablePagination-displayedRows": {
-              color: "text.primary",
+            '& .MuiTablePagination-displayedRows': {
+              color: 'text.primary',
             },
-            "& .MuiTablePagination-actions": {
-              color: "text.secondary",
+            '& .MuiTablePagination-actions': {
+              color: 'text.secondary',
             },
-            "& .MuiIconButton-root": {
-              color: "text.secondary",
-              "&:hover": {
-                color: "primary.main",
+            '& .MuiIconButton-root': {
+              color: 'text.secondary',
+              '&:hover': {
+                color: 'primary.main',
               },
             },
           }}
