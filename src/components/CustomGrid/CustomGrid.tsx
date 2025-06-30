@@ -914,6 +914,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                       sx={{
                         '&:hover': {
                           bgcolor: 'action.hover',
+                          opacity: 0.7,
                         },
                         '&.Mui-selected': {
                           bgcolor: 'action.selected',
