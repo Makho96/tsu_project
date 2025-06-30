@@ -89,6 +89,17 @@
       "editRecord": "Edit Record",
       "deleteRecord": "Delete Record",
       "deleteConfirmation": "Are you sure you want to delete this record?"
+    },
+    "recordings": {
+      "deleteRecord": "Delete Record",
+      "deleteConfirmation": "Are you sure you want to delete this record?",
+      "editRecord": "Edit Record",
+      "newRecord": "New Record",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "copyRecord": "Copy Record",
+      "copyConfirmation": "Are you sure you want to copy this record?",
+      "copy": "Copy"
     }
   },
 

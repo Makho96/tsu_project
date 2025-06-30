@@ -88,6 +88,17 @@
       "editRecord": "ჩანაწერის რედაქტირება",
       "deleteRecord": "ჩანაწერის წაშლა",
       "deleteConfirmation": "ნამდვილად გსურთ ჩანაწერის წაშლა?"
+    },
+    "recordings": {
+      "deleteRecord": "ჩანაწერის წაშლა",
+      "deleteConfirmation": "ნამდვილად გსურთ ჩანაწერის წაშლა?",
+      "editRecord": "ჩანაწერის რედაქტირება",
+      "newRecord": "ახალი ჩანაწერი",
+      "cancel": "გაუქმება",
+      "delete": "წაშლა",
+      "copyRecord": "ჩანაწერის კოპირება",
+      "copyConfirmation": "ნამდვილად გსურთ ჩანაწერის კოპირება?",
+      "copy": "კოპირება"
     }
   },
   "modals": {
