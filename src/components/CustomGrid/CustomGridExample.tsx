@@ -211,45 +211,16 @@ const CustomGridExample: React.FC = () => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <div
-        style={{
-          padding: '20px',
-          backgroundColor: darkTheme.palette.background.default,
-          minHeight: '100vh',
-        }}
-      >
-        <h1 style={{ color: darkTheme.palette.text.primary }}>Custom Grid Example</h1>
-        <div
-          style={{
-            marginBottom: '20px',
-            padding: '15px',
-            backgroundColor: darkTheme.palette.background.paper,
-            borderRadius: '8px',
-            border: `1px solid ${darkTheme.palette.divider}`,
-          }}
-        >
-          <h3 style={{ color: darkTheme.palette.text.primary, margin: '0 0 10px 0' }}>
-            How to test horizontal scrolling:
-          </h3>
-          <ul style={{ color: darkTheme.palette.text.secondary, margin: 0 }}>
-            <li>Drag the right edge of any column header to resize it</li>
-            <li>Make columns wider - other columns won&apos;t auto-resize</li>
-            <li>When total width exceeds container, horizontal scroll will appear</li>
-            <li>Try resizing the &quot;Email Address&quot; column to make it very wide</li>
-          </ul>
-        </div>
-        <CustomGrid
-          columns={columns}
-          rows={rows}
-          onRowClick={handleRowClick}
-          onSelectionChange={handleSelectionChange}
-          onColumnOrderChange={handleColumnOrderChange}
-          pageSize={5}
-          checkboxSelection
-          loading={loading}
-        />
-      </div>
+      <CustomGrid
+        columns={columns}
+        rows={rows}
+        onRowClick={handleRowClick}
+        onSelectionChange={handleSelectionChange}
+        onColumnOrderChange={handleColumnOrderChange}
+        pageSize={5}
+        checkboxSelection
+        loading={loading}
+      />
     </ThemeProvider>
   );
 };

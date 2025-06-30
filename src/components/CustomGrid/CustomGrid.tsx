@@ -26,6 +26,8 @@ import {
   FormControlLabel,
   Divider,
   Typography,
+  ThemeProvider,
+  createTheme,
 } from '@mui/material';
 import { Workbook } from 'exceljs';
 import React, { useState, useMemo, useCallback, memo, useEffect } from 'react';
@@ -34,6 +36,23 @@ import {
   // useDrag, useDrop
 } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { theme } from '../../theme';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    background: {
+      default: theme.palette.background.default,
+      paper: theme.palette.blue[800],
+    },
+    primary: {
+      main: theme.palette.primary.main,
+    },
+    secondary: {
+      main: theme.palette.secondary.main,
+    },
+  },
+});
 
 export interface ColumnDef {
   field: string;
@@ -155,9 +174,10 @@ const DraggableHeader: React.FC<DraggableHeaderProps> = ({
         position: 'sticky',
         top: 0,
         zIndex: 2,
-        bgcolor: 'background.paper',
+        bgcolor: theme.palette.blue[900],
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        fontSize: '18px',
       }}
     >
       <Box display="flex" alignItems="center">
@@ -579,412 +599,418 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <Paper
-        sx={{
-          bgcolor: 'background.paper',
-          width: '100%',
-          overflow: 'hidden',
-        }}
-      >
-        <Box
+    <ThemeProvider theme={darkTheme}>
+      <DndProvider backend={HTML5Backend}>
+        <Paper
           sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 1,
-            borderBottom: 1,
-            borderColor: 'divider',
-            gap: 1,
+            width: '100%',
+            overflow: 'hidden',
+            bgcolor: theme.palette.blue[900],
+            backgroundImage: 'none',
           }}
         >
-          <Tooltip title="Export to Excel">
-            <IconButton
-              onClick={handleExport}
-              size="small"
-              sx={{
-                color: 'text.secondary',
-                '&:hover': {
-                  color: 'primary.main',
-                },
-              }}
-            >
-              <FileDownloadIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Column Settings">
-            <IconButton
-              onClick={handleSettingsClick}
-              size="small"
-              sx={{
-                color: 'text.secondary',
-                '&:hover': {
-                  color: 'primary.main',
-                },
-              }}
-            >
-              <SettingsIcon />
-            </IconButton>
-          </Tooltip>
-          <Popover
-            open={Boolean(settingsAnchorEl)}
-            anchorEl={settingsAnchorEl}
-            onClose={handleSettingsClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            PaperProps={{
-              sx: {
-                p: 2,
-                minWidth: 200,
-                bgcolor: 'background.paper',
-                boxShadow: theme.shadows[3],
-              },
-            }}
-          >
-            <Box sx={{ mb: 1 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                Visible Columns
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 1 }} />
-            <FormGroup>
-              {columns.map((column) => (
-                <FormControlLabel
-                  key={column.field}
-                  control={
-                    <Checkbox
-                      checked={visibleColumns[column.field]}
-                      onChange={handleColumnVisibilityChange(column.field)}
-                      size="small"
-                      sx={{
-                        color: 'text.secondary',
-                        '&.Mui-checked': {
-                          color: 'primary.main',
-                        },
-                      }}
-                    />
-                  }
-                  label={column.headerName}
-                  sx={{
-                    '& .MuiFormControlLabel-label': {
-                      color: 'text.primary',
-                    },
-                  }}
-                />
-              ))}
-            </FormGroup>
-          </Popover>
-        </Box>
-        <TableContainer
-          sx={{
-            maxHeight: 400,
-            overflowX: 'auto',
-            '&::-webkit-scrollbar': {
-              height: 8,
-            },
-            '&::-webkit-scrollbar-track': {
-              background: theme.palette.background.default,
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: theme.palette.divider,
-              borderRadius: 4,
-            },
-            '&::-webkit-scrollbar-thumb:hover': {
-              background: theme.palette.action.hover,
-            },
-          }}
-        >
-          <Table
-            stickyHeader
+          <Box
             sx={{
-              tableLayout: 'fixed',
-              minWidth: `${totalTableWidth}px`,
-              width: '100%',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              p: 1,
+              borderBottom: 1,
+              borderColor: 'divider',
+              gap: 1,
             }}
           >
-            <TableHead>
-              <TableRow>
-                {checkboxSelection && (
-                  <TableCell
-                    padding="checkbox"
-                    sx={{
-                      width: '48px',
-                      minWidth: '48px',
-                      maxWidth: '48px',
-                      padding: '16px 8px',
-                      bgcolor: 'background.paper',
-                      color: 'text.primary',
-                      position: 'sticky',
-                      top: 0,
-                      zIndex: 2,
-                    }}
-                  >
-                    <Checkbox
-                      indeterminate={
-                        selected.length > 0 && selected.length < filteredAndSortedRows.length
-                      }
-                      checked={
-                        filteredAndSortedRows.length > 0 &&
-                        selected.length === filteredAndSortedRows.length
-                      }
-                      onChange={handleSelectAllClick}
-                      sx={{
-                        color: 'text.secondary',
-                        '&.Mui-checked': {
-                          color: 'primary.main',
-                        },
-                      }}
-                    />
-                  </TableCell>
-                )}
-                {visibleColumnsWithResize.map((column, index) => (
-                  <DraggableHeader
+            <Tooltip title="Export to Excel">
+              <IconButton
+                onClick={handleExport}
+                size="small"
+                sx={{
+                  color: 'text.secondary',
+                  '&:hover': {
+                    color: 'primary.main',
+                  },
+                }}
+              >
+                <FileDownloadIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Column Settings">
+              <IconButton
+                onClick={handleSettingsClick}
+                size="small"
+                sx={{
+                  color: 'text.secondary',
+                  '&:hover': {
+                    color: 'primary.main',
+                  },
+                }}
+              >
+                <SettingsIcon />
+              </IconButton>
+            </Tooltip>
+            <Popover
+              open={Boolean(settingsAnchorEl)}
+              anchorEl={settingsAnchorEl}
+              onClose={handleSettingsClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              PaperProps={{
+                sx: {
+                  p: 2,
+                  minWidth: 200,
+                  boxShadow: theme.shadows[3],
+                },
+              }}
+            >
+              <Box sx={{ mb: 1 }}>
+                <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                  Visible Columns
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 1 }} />
+              <FormGroup>
+                {columns.map((column) => (
+                  <FormControlLabel
                     key={column.field}
-                    column={column}
-                    index={index}
-                    moveColumn={moveColumn}
-                  >
-                    <Tooltip title={column.headerName} placement="top">
-                      <Box
+                    control={
+                      <Checkbox
+                        checked={visibleColumns[column.field]}
+                        onChange={handleColumnVisibilityChange(column.field)}
+                        size="small"
                         sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 1,
-                          minWidth: 0,
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            flex: 1,
-                          }}
-                        >
-                          {column.sortable ? (
-                            <TableSortLabel
-                              active={orderBy === column.field}
-                              direction={orderBy === column.field ? order : 'asc'}
-                              onClick={() => handleSort(column.field)}
-                              sx={{
-                                color: 'text.primary',
-                                '&.MuiTableSortLabel-root': {
-                                  color: 'text.primary',
-                                },
-                                '&.MuiTableSortLabel-root:hover': {
-                                  color: 'primary.main',
-                                },
-                                '&.Mui-active': {
-                                  color: 'primary.main',
-                                },
-                                '& .MuiTableSortLabel-icon': {
-                                  color: 'primary.main !important',
-                                },
-                              }}
-                            >
-                              {column.headerName}
-                            </TableSortLabel>
-                          ) : (
-                            column.headerName
-                          )}
-                        </Box>
-                        {column.filterable && (
-                          <Tooltip title={filters[column.field] ? 'Filter active' : 'Show filter'}>
-                            <IconButton
-                              size="small"
-                              onClick={(e) => handleFilterClick(e, column.field)}
-                              sx={{
-                                color: filters[column.field] ? 'primary.main' : 'text.secondary',
-                                '&:hover': {
-                                  color: 'primary.main',
-                                },
-                                flexShrink: 0,
-                              }}
-                            >
-                              <FilterListIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      </Box>
-                    </Tooltip>
-                    {column.filterable && (
-                      <Popover
-                        open={Boolean(filterAnchorEl[column.field])}
-                        anchorEl={filterAnchorEl[column.field]}
-                        onClose={() => handleFilterClose(column.field)}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'left',
-                        }}
-                        transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'left',
-                        }}
-                        PaperProps={{
-                          sx: {
-                            p: 2,
-                            mt: 1,
-                            bgcolor: 'background.paper',
-                            boxShadow: theme.shadows[3],
+                          color: 'text.secondary',
+                          '&.Mui-checked': {
+                            color: 'primary.main',
                           },
                         }}
-                      >
-                        <TextField
-                          size="small"
-                          value={filters[column.field] || ''}
-                          onChange={(e) => handleFilter(column.field, e.target.value)}
-                          placeholder={`Filter ${column.headerName}`}
-                          fullWidth
-                          InputProps={{
-                            endAdornment: filters[column.field] && (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  size="small"
-                                  onClick={() => handleClearFilter(column.field)}
-                                  edge="end"
-                                >
-                                  <ClearIcon fontSize="small" />
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                          }}
-                          sx={{
-                            minWidth: 200,
-                            '& .MuiInputBase-root': {
-                              color: 'text.primary',
-                            },
-                            '& .MuiInputLabel-root': {
-                              color: 'text.secondary',
-                            },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: 'divider',
-                            },
-                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                              borderColor: 'primary.main',
-                            },
-                          }}
-                        />
-                      </Popover>
-                    )}
-                  </DraggableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedRows.map((row) => {
-                const isItemSelected = isSelected(row.id);
-                return (
-                  <TableRow
-                    hover
-                    onClick={() => onRowClick?.(row)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
+                      />
+                    }
+                    label={column.headerName}
                     sx={{
-                      '&:hover': {
-                        bgcolor: 'action.hover',
-                      },
-                      '&.Mui-selected': {
-                        bgcolor: 'action.selected',
-                      },
-                      '&.Mui-selected:hover': {
-                        bgcolor: 'action.selected',
+                      '& .MuiFormControlLabel-label': {
+                        color: 'text.primary',
                       },
                     }}
-                  >
-                    {checkboxSelection && (
-                      <TableCell
-                        padding="checkbox"
+                  />
+                ))}
+              </FormGroup>
+            </Popover>
+          </Box>
+          <TableContainer
+            sx={{
+              maxHeight: 400,
+              overflowX: 'auto',
+              '&::-webkit-scrollbar': {
+                height: 8,
+              },
+              '&::-webkit-scrollbar-track': {
+                background: theme.palette.background.default,
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: theme.palette.divider,
+                borderRadius: 4,
+              },
+              '&::-webkit-scrollbar-thumb:hover': {
+                background: theme.palette.action.hover,
+              },
+            }}
+          >
+            <Table
+              stickyHeader
+              sx={{
+                tableLayout: 'fixed',
+                minWidth: `${totalTableWidth}px`,
+                width: '100%',
+              }}
+            >
+              <TableHead>
+                <TableRow>
+                  {checkboxSelection && (
+                    <TableCell
+                      padding="checkbox"
+                      sx={{
+                        width: '48px',
+                        minWidth: '48px',
+                        maxWidth: '48px',
+                        padding: '16px 8px',
+                        bgcolor: theme.palette.blue[900],
+                        color: 'text.primary',
+                        position: 'sticky',
+                        top: 0,
+                        zIndex: 2,
+                        fontSize: '18px',
+                      }}
+                    >
+                      <Checkbox
+                        indeterminate={
+                          selected.length > 0 && selected.length < filteredAndSortedRows.length
+                        }
+                        checked={
+                          filteredAndSortedRows.length > 0 &&
+                          selected.length === filteredAndSortedRows.length
+                        }
+                        onChange={handleSelectAllClick}
                         sx={{
-                          width: '48px',
-                          minWidth: '48px',
-                          maxWidth: '48px',
-                          padding: '16px 8px',
-                          bgcolor: 'background.paper',
-                          color: 'text.primary',
+                          color: 'text.secondary',
+                          '&.Mui-checked': {
+                            color: 'primary.main',
+                          },
                         }}
-                      >
-                        <Checkbox
-                          checked={isItemSelected}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleClick(row.id);
-                          }}
+                      />
+                    </TableCell>
+                  )}
+                  {visibleColumnsWithResize.map((column, index) => (
+                    <DraggableHeader
+                      key={column.field}
+                      column={column}
+                      index={index}
+                      moveColumn={moveColumn}
+                    >
+                      <Tooltip title={column.headerName} placement="top">
+                        <Box
                           sx={{
-                            color: 'text.secondary',
-                            '&.Mui-checked': {
-                              color: 'primary.main',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            minWidth: 0,
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              flex: 1,
+                            }}
+                          >
+                            {column.sortable ? (
+                              <TableSortLabel
+                                active={orderBy === column.field}
+                                direction={orderBy === column.field ? order : 'asc'}
+                                onClick={() => handleSort(column.field)}
+                                sx={{
+                                  color: 'text.primary',
+                                  '&.MuiTableSortLabel-root': {
+                                    color: 'text.primary',
+                                  },
+                                  '&.MuiTableSortLabel-root:hover': {
+                                    color: 'primary.main',
+                                  },
+                                  '&.Mui-active': {
+                                    color: 'primary.main',
+                                  },
+                                  '& .MuiTableSortLabel-icon': {
+                                    color: 'primary.main !important',
+                                  },
+                                }}
+                              >
+                                {column.headerName}
+                              </TableSortLabel>
+                            ) : (
+                              column.headerName
+                            )}
+                          </Box>
+                          {column.filterable && (
+                            <Tooltip
+                              title={filters[column.field] ? 'Filter active' : 'Show filter'}
+                            >
+                              <IconButton
+                                size="small"
+                                onClick={(e) => handleFilterClick(e, column.field)}
+                                sx={{
+                                  color: filters[column.field] ? 'primary.main' : 'text.secondary',
+                                  '&:hover': {
+                                    color: 'primary.main',
+                                  },
+                                  flexShrink: 0,
+                                }}
+                              >
+                                <FilterListIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </Box>
+                      </Tooltip>
+                      {column.filterable && (
+                        <Popover
+                          open={Boolean(filterAnchorEl[column.field])}
+                          anchorEl={filterAnchorEl[column.field]}
+                          onClose={() => handleFilterClose(column.field)}
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                          PaperProps={{
+                            sx: {
+                              p: 2,
+                              mt: 1,
+                              bgcolor: 'background.paper',
+                              boxShadow: theme.shadows[3],
                             },
                           }}
-                        />
-                      </TableCell>
-                    )}
-                    {visibleColumnsWithResize.map((column) => (
-                      <TableCell
-                        key={column.field}
-                        sx={{
-                          width: `${columnWidths[column.field] || 150}px`,
-                          minWidth: `${columnWidths[column.field] || 150}px`,
-                          maxWidth: `${columnWidths[column.field] || 150}px`,
-                          padding: '16px',
-                          whiteSpace: 'nowrap',
-                          bgcolor: 'background.paper',
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                        }}
-                      >
-                        {column.renderCell ? column.renderCell({ row }) : row[column.field]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredAndSortedRows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            bgcolor: 'background.paper',
-            color: 'text.primary',
-            borderTop: 1,
-            borderColor: 'divider',
-            '& .MuiTablePagination-select': {
+                        >
+                          <TextField
+                            size="small"
+                            value={filters[column.field] || ''}
+                            onChange={(e) => handleFilter(column.field, e.target.value)}
+                            placeholder={`Filter ${column.headerName}`}
+                            fullWidth
+                            InputProps={{
+                              endAdornment: filters[column.field] && (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => handleClearFilter(column.field)}
+                                    edge="end"
+                                  >
+                                    <ClearIcon fontSize="small" />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                            sx={{
+                              minWidth: 200,
+                              '& .MuiInputBase-root': {
+                                color: 'text.primary',
+                              },
+                              '& .MuiInputLabel-root': {
+                                color: 'text.secondary',
+                              },
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'divider',
+                              },
+                              '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'primary.main',
+                              },
+                            }}
+                          />
+                        </Popover>
+                      )}
+                    </DraggableHeader>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedRows.map((row) => {
+                  const isItemSelected = isSelected(row.id);
+                  return (
+                    <TableRow
+                      hover
+                      onClick={() => onRowClick?.(row)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      sx={{
+                        '&:hover': {
+                          bgcolor: 'action.hover',
+                        },
+                        '&.Mui-selected': {
+                          bgcolor: 'action.selected',
+                        },
+                        '&.Mui-selected:hover': {
+                          bgcolor: 'action.selected',
+                        },
+                      }}
+                    >
+                      {checkboxSelection && (
+                        <TableCell
+                          padding="checkbox"
+                          sx={{
+                            width: '48px',
+                            minWidth: '48px',
+                            maxWidth: '48px',
+                            padding: '16px 8px',
+                            bgcolor: 'background.paper',
+                            color: 'text.primary',
+                          }}
+                        >
+                          <Checkbox
+                            checked={isItemSelected}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClick(row.id);
+                            }}
+                            sx={{
+                              color: 'text.secondary',
+                              '&.Mui-checked': {
+                                color: 'primary.main',
+                              },
+                            }}
+                          />
+                        </TableCell>
+                      )}
+                      {visibleColumnsWithResize.map((column) => (
+                        <TableCell
+                          key={column.field}
+                          sx={{
+                            width: `${columnWidths[column.field] || 150}px`,
+                            minWidth: `${columnWidths[column.field] || 150}px`,
+                            maxWidth: `${columnWidths[column.field] || 150}px`,
+                            padding: '16px',
+                            whiteSpace: 'nowrap',
+                            bgcolor: 'background.paper',
+                            color: 'text.primary',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            fontSize: '16px',
+                          }}
+                        >
+                          {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredAndSortedRows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{
+              bgcolor: theme.palette.blue[900],
               color: 'text.primary',
-            },
-            '& .MuiTablePagination-selectIcon': {
-              color: 'text.secondary',
-            },
-            '& .MuiTablePagination-displayedRows': {
-              color: 'text.primary',
-            },
-            '& .MuiTablePagination-actions': {
-              color: 'text.secondary',
-            },
-            '& .MuiIconButton-root': {
-              color: 'text.secondary',
-              '&:hover': {
-                color: 'primary.main',
+              borderTop: 1,
+              borderColor: 'divider',
+              '& .MuiTablePagination-select': {
+                color: 'text.primary',
               },
-            },
-          }}
-        />
-      </Paper>
-    </DndProvider>
+              '& .MuiTablePagination-selectIcon': {
+                color: 'text.secondary',
+              },
+              '& .MuiTablePagination-displayedRows': {
+                color: 'text.primary',
+              },
+              '& .MuiTablePagination-actions': {
+                color: 'text.secondary',
+              },
+              '& .MuiIconButton-root': {
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              },
+            }}
+          />
+        </Paper>
+      </DndProvider>
+    </ThemeProvider>
   );
 };
 
