@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import useEvent from '../../../hooks/useEvent';
 import { Recordings } from '../../../store/recordings/recordings.types';
-import CustomGrid, { ColumnDef } from '../../CustomGrid/CustomGrid';
+import CustomGrid from '../../CustomGrid/CustomGrid';
+import { ColumnDef } from '../../CustomGrid/Customgrid.types';
 import Loader from '../Loader/Loader';
 
 type RecordingsTableProps = {

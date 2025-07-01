@@ -107,5 +107,14 @@
     "companySelection": {
       "title": "Select Company"
     }
+  },
+  "grid": {
+    "filterActive": "Filter active",
+    "showFilter": "Show filter",
+    "exportToExcel": "Export to Excel",
+    "columnsVisibility": "Columns Visibility",
+    "rowPerPage": "Row per page",
+    "filter": "Filter",
+    "add_filter": "Add filter"
   }
 }

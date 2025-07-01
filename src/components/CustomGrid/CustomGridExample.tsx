@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
-import CustomGrid, { ColumnDef } from './CustomGrid';
+import CustomGrid from './CustomGrid';
+import { ColumnDef } from './Customgrid.types';
 
 const darkTheme = createTheme({
   palette: {

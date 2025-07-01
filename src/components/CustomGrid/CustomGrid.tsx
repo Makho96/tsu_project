@@ -1,27 +1,18 @@
-import ClearIcon from '@mui/icons-material/Clear';
 // import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Box,
   Table,
-  TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
-  TableRow,
   TablePagination,
-  TableSortLabel,
   Paper,
   Checkbox,
-  TextField,
   CircularProgress,
   useTheme,
   IconButton,
   Tooltip,
   Popover,
-  InputAdornment,
   FormGroup,
   FormControlLabel,
   Divider,
@@ -36,7 +27,11 @@ import {
   // useDrag, useDrop
 } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useTranslation } from 'react-i18next';
 import { theme } from '../../theme';
+import TableBody from './components/TableBody';
+import TableHead from './components/TableHead';
+import { ColumnDef } from './Customgrid.types';
 
 const darkTheme = createTheme({
   palette: {
@@ -54,17 +49,6 @@ const darkTheme = createTheme({
   },
 });
 
-export interface ColumnDef {
-  field: string;
-  headerName: string;
-  width?: number;
-  sortable?: boolean;
-  filterable?: boolean;
-  renderCell?: (params: any) => React.ReactNode;
-  type?: 'text' | 'number' | 'date' | 'boolean' | 'custom';
-  onResize?: (width: number) => void;
-}
-
 interface CustomGridProps {
   columns: ColumnDef[];
   rows: any[];
@@ -76,157 +60,6 @@ interface CustomGridProps {
   onColumnOrderChange?: (newColumns: ColumnDef[]) => void;
 }
 
-interface DraggableHeaderProps {
-  column: ColumnDef;
-  index: number;
-  moveColumn: (dragIndex: number, hoverIndex: number) => void;
-  children: React.ReactNode;
-}
-
-const DraggableHeader: React.FC<DraggableHeaderProps> = ({
-  column,
-  // index,
-  // moveColumn,
-  children,
-}) => {
-  const ref = React.useRef<HTMLTableCellElement>(null);
-  const [isResizing, setIsResizing] = useState(false);
-
-  // const [{ isDragging }, drag] = useDrag({
-  //   type: 'COLUMN',
-  //   item: { index },
-  //   collect: (monitor) => ({
-  //     isDragging: monitor.isDragging(),
-  //   }),
-  // });
-
-  // const [, drop] = useDrop({
-  //   accept: 'COLUMN',
-  //   hover: (item: { index: number }, monitor) => {
-  //     if (!ref.current) {
-  //       return;
-  //     }
-  //     const dragIndex = item.index;
-  //     const hoverIndex = index;
-
-  //     if (dragIndex === hoverIndex) {
-  //       return;
-  //     }
-
-  //     const hoverBoundingRect = ref.current.getBoundingClientRect();
-  //     const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
-  //     const clientOffset = monitor.getClientOffset();
-  //     const hoverClientX = clientOffset!.x - hoverBoundingRect.left;
-
-  //     if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
-  //       return;
-  //     }
-
-  //     if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
-  //       return;
-  //     }
-
-  //     moveColumn(dragIndex, hoverIndex);
-  //     item.index = hoverIndex;
-  //   },
-  // });
-
-  const onMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsResizing(true);
-
-    const startX = e.pageX;
-    const startWidth = column.width || 150;
-    const minWidth = 100;
-
-    const onMouseMove = (e: MouseEvent) => {
-      const width = Math.max(minWidth, startWidth + (e.pageX - startX));
-      if (column.onResize) {
-        column.onResize(width);
-      }
-    };
-
-    const onMouseUp = () => {
-      setIsResizing(false);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  };
-
-  //commented
-  // drag(drop(ref));
-
-  return (
-    <TableCell
-      ref={ref}
-      sx={{
-        // opacity: isDragging ? 0.5 : 1,
-        // cursor: 'move',
-        width: `${column.width || 150}px`,
-        minWidth: `${column.width || 150}px`,
-        maxWidth: `${column.width || 150}px`,
-        padding: '16px',
-        whiteSpace: 'nowrap',
-        position: 'sticky',
-        top: 0,
-        zIndex: 2,
-        bgcolor: theme.palette.blue[900],
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        fontSize: '18px',
-      }}
-    >
-      <Box display="flex" alignItems="center">
-        {/* <IconButton size="small" sx={{ cursor: 'move', mr: 1 }}>
-          <DragIndicatorIcon />
-        </IconButton> */}
-        {children}
-      </Box>
-      <Box
-        component="div"
-        onMouseDown={onMouseDown}
-        onKeyDown={(e) => {
-          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-            e.preventDefault();
-            const newWidth =
-              e.key === 'ArrowLeft'
-                ? Math.max(150, (column.width || 150) - 10)
-                : (column.width || 150) + 10;
-            if (column.onResize) {
-              column.onResize(newWidth);
-            }
-          }
-        }}
-        sx={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width: '8px',
-          cursor: 'col-resize',
-          backgroundColor: isResizing ? 'primary.main' : 'transparent',
-          border: 'none',
-          padding: 0,
-          zIndex: 3,
-          '&:hover': {
-            backgroundColor: 'primary.main',
-          },
-        }}
-        aria-label="Resize column"
-        role="slider"
-        aria-valuemin={150}
-        aria-valuemax={500}
-        aria-valuenow={column.width || 150}
-        tabIndex={0}
-      />
-    </TableCell>
-  );
-};
-
 const CustomGrid: React.FC<CustomGridProps> = ({
   columns: initialColumns,
   rows,
@@ -237,6 +70,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   loading = false,
   onColumnOrderChange,
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [columns, setColumns] = useState(initialColumns);
   const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>(() => {
@@ -619,7 +453,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
               gap: 1,
             }}
           >
-            <Tooltip title="Export to Excel">
+            <Tooltip title={t('grid.exportToExcel')}>
               <IconButton
                 onClick={handleExport}
                 size="small"
@@ -633,7 +467,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                 <FileDownloadIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Column Settings">
+            <Tooltip title={t('grid.columnsVisibility')}>
               <IconButton
                 onClick={handleSettingsClick}
                 size="small"
@@ -669,7 +503,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
             >
               <Box sx={{ mb: 1 }}>
                 <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                  Visible Columns
+                  {t('grid.columnsVisibility')}
                 </Typography>
               </Box>
               <Divider sx={{ mb: 1 }} />
@@ -728,252 +562,32 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                 width: '100%',
               }}
             >
-              <TableHead>
-                <TableRow>
-                  {checkboxSelection && (
-                    <TableCell
-                      padding="checkbox"
-                      sx={{
-                        width: '48px',
-                        minWidth: '48px',
-                        maxWidth: '48px',
-                        padding: '16px 8px',
-                        bgcolor: theme.palette.blue[900],
-                        color: 'text.primary',
-                        position: 'sticky',
-                        top: 0,
-                        zIndex: 2,
-                        fontSize: '18px',
-                      }}
-                    >
-                      <Checkbox
-                        indeterminate={
-                          selected.length > 0 && selected.length < filteredAndSortedRows.length
-                        }
-                        checked={
-                          filteredAndSortedRows.length > 0 &&
-                          selected.length === filteredAndSortedRows.length
-                        }
-                        onChange={handleSelectAllClick}
-                        sx={{
-                          color: 'text.secondary',
-                          '&.Mui-checked': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      />
-                    </TableCell>
-                  )}
-                  {visibleColumnsWithResize.map((column, index) => (
-                    <DraggableHeader
-                      key={column.field}
-                      column={column}
-                      index={index}
-                      moveColumn={moveColumn}
-                    >
-                      <Tooltip title={column.headerName} placement="top">
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                            minWidth: 0,
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              flex: 1,
-                            }}
-                          >
-                            {column.sortable ? (
-                              <TableSortLabel
-                                active={orderBy === column.field}
-                                direction={orderBy === column.field ? order : 'asc'}
-                                onClick={() => handleSort(column.field)}
-                                sx={{
-                                  color: 'text.primary',
-                                  '&.MuiTableSortLabel-root': {
-                                    color: 'text.primary',
-                                  },
-                                  '&.MuiTableSortLabel-root:hover': {
-                                    color: 'primary.main',
-                                  },
-                                  '&.Mui-active': {
-                                    color: 'primary.main',
-                                  },
-                                  '& .MuiTableSortLabel-icon': {
-                                    color: 'primary.main !important',
-                                  },
-                                }}
-                              >
-                                {column.headerName}
-                              </TableSortLabel>
-                            ) : (
-                              column.headerName
-                            )}
-                          </Box>
-                          {column.filterable && (
-                            <Tooltip
-                              title={filters[column.field] ? 'Filter active' : 'Show filter'}
-                            >
-                              <IconButton
-                                size="small"
-                                onClick={(e) => handleFilterClick(e, column.field)}
-                                sx={{
-                                  color: filters[column.field] ? 'primary.main' : 'text.secondary',
-                                  '&:hover': {
-                                    color: 'primary.main',
-                                  },
-                                  flexShrink: 0,
-                                }}
-                              >
-                                <FilterListIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                        </Box>
-                      </Tooltip>
-                      {column.filterable && (
-                        <Popover
-                          open={Boolean(filterAnchorEl[column.field])}
-                          anchorEl={filterAnchorEl[column.field]}
-                          onClose={() => handleFilterClose(column.field)}
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                          }}
-                          transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                          }}
-                          PaperProps={{
-                            sx: {
-                              p: 2,
-                              mt: 1,
-                              bgcolor: 'background.paper',
-                              boxShadow: theme.shadows[3],
-                            },
-                          }}
-                        >
-                          <TextField
-                            size="small"
-                            value={filters[column.field] || ''}
-                            onChange={(e) => handleFilter(column.field, e.target.value)}
-                            placeholder={`Filter ${column.headerName}`}
-                            fullWidth
-                            InputProps={{
-                              endAdornment: filters[column.field] && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    size="small"
-                                    onClick={() => handleClearFilter(column.field)}
-                                    edge="end"
-                                  >
-                                    <ClearIcon fontSize="small" />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                            sx={{
-                              minWidth: 200,
-                              '& .MuiInputBase-root': {
-                                color: 'text.primary',
-                              },
-                              '& .MuiInputLabel-root': {
-                                color: 'text.secondary',
-                              },
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'divider',
-                              },
-                              '&:hover .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'primary.main',
-                              },
-                            }}
-                          />
-                        </Popover>
-                      )}
-                    </DraggableHeader>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {paginatedRows.map((row) => {
-                  const isItemSelected = isSelected(row.id);
-                  return (
-                    <TableRow
-                      hover
-                      onClick={() => onRowClick?.(row)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                      sx={{
-                        '&:hover': {
-                          bgcolor: 'action.hover',
-                          opacity: 0.7,
-                        },
-                        '&.Mui-selected': {
-                          bgcolor: 'action.selected',
-                        },
-                        '&.Mui-selected:hover': {
-                          bgcolor: 'action.selected',
-                        },
-                      }}
-                    >
-                      {checkboxSelection && (
-                        <TableCell
-                          padding="checkbox"
-                          sx={{
-                            width: '48px',
-                            minWidth: '48px',
-                            maxWidth: '48px',
-                            padding: '16px 8px',
-                            bgcolor: 'background.paper',
-                            color: 'text.primary',
-                          }}
-                        >
-                          <Checkbox
-                            checked={isItemSelected}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleClick(row.id);
-                            }}
-                            sx={{
-                              color: 'text.secondary',
-                              '&.Mui-checked': {
-                                color: 'primary.main',
-                              },
-                            }}
-                          />
-                        </TableCell>
-                      )}
-                      {visibleColumnsWithResize.map((column) => (
-                        <TableCell
-                          key={column.field}
-                          sx={{
-                            width: `${columnWidths[column.field] || 150}px`,
-                            minWidth: `${columnWidths[column.field] || 150}px`,
-                            maxWidth: `${columnWidths[column.field] || 150}px`,
-                            padding: '16px',
-                            whiteSpace: 'nowrap',
-                            bgcolor: 'background.paper',
-                            color: 'text.primary',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            fontSize: '16px',
-                          }}
-                        >
-                          {column.renderCell ? column.renderCell({ row }) : row[column.field]}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
+              <TableHead
+                checkboxSelection={checkboxSelection}
+                selected={selected}
+                filteredAndSortedRows={filteredAndSortedRows}
+                handleSelectAllClick={handleSelectAllClick}
+                visibleColumnsWithResize={visibleColumnsWithResize}
+                moveColumn={moveColumn}
+                orderBy={orderBy}
+                order={order}
+                handleSort={handleSort}
+                filters={filters}
+                handleFilterClick={handleFilterClick}
+                filterAnchorEl={filterAnchorEl}
+                handleFilterClose={handleFilterClose}
+                handleFilter={handleFilter}
+                handleClearFilter={handleClearFilter}
+              />
+              <TableBody
+                paginatedRows={paginatedRows}
+                checkboxSelection={checkboxSelection}
+                isSelected={isSelected}
+                onRowClick={onRowClick}
+                handleChekboxClick={handleClick}
+                visibleColumnsWithResize={visibleColumnsWithResize}
+                columnWidths={columnWidths}
+              />
             </Table>
           </TableContainer>
           <TablePagination
@@ -982,6 +596,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
             count={filteredAndSortedRows.length}
             rowsPerPage={rowsPerPage}
             page={page}
+            labelRowsPerPage={t('grid.rowPerPage')}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             sx={{

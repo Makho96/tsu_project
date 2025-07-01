@@ -105,5 +105,14 @@
     "companySelection": {
       "title": "აირჩიეთ კომპანია"
     }
+  },
+  "grid": {
+    "filterActive": "ფილტრი აქტიურია",
+    "showFilter": "ფილტრის გამოჩენა",
+    "exportToExcel": "ექსელში ექსპორტი",
+    "columnsVisibility": "სვეტების გამოჩენა/დამალვა",
+    "rowPerPage": "ჩანაწერების რაოდენობა გვერდზე",
+    "filter": "გაფილტრე",
+    "add_filter": "ფილტრის დამატება"
   }
 }
