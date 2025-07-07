@@ -115,6 +115,15 @@
     "columnsVisibility": "Columns Visibility",
     "rowPerPage": "Row per page",
     "filter": "Filter",
-    "add_filter": "Add filter"
+    "add_filter": "Add filter",
+    "copy": "Copy",
+    "edit": "Edit",
+    "delete": "Delete",
+    "copyRecord": "Copy Record",
+    "copyRecordConfirmation": "Are you sure you want to copy this record?",
+    "deleteRecord": "Delete Record",
+    "deleteRecordConfirmation": "Are you sure you want to delete this record?",
+    "editConfirmation": "Are you sure you want to edit this record?",
+    "cancel": "Cancel"
   }
 }

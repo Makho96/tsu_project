@@ -1,10 +1,7 @@
 import { Box, Typography } from '@mui/material';
-import { useState } from 'react';
-import RecordingItem from './RecordingItem';
 import RecordingsTable from './RecordingsTable';
 import { useAppSelector } from '../../../store/hooks/useTypedSelector';
 import { SliceStatuses } from '../../../store/types';
-import CustomGrid, { ColumnDef } from '../../CustomGrid/CustomGrid';
 import Loader from '../Loader/Loader';
 
 type RecordingListProps = {
@@ -13,7 +10,6 @@ type RecordingListProps = {
 
 const RecordingList = ({ departmentId }: RecordingListProps) => {
   const recordings = useAppSelector((state) => state.recordings.recordings);
-  const [columns, setColumns] = useState<ColumnDef[]>([]);
 
   const isLoading = useAppSelector(
     (state) =>

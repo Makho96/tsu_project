@@ -58,6 +58,7 @@ interface CustomGridProps {
   checkboxSelection?: boolean;
   loading?: boolean;
   onColumnOrderChange?: (newColumns: ColumnDef[]) => void;
+  tableActions?: React.ReactNode;
 }
 
 const CustomGrid: React.FC<CustomGridProps> = ({
@@ -69,6 +70,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   checkboxSelection = false,
   loading = false,
   onColumnOrderChange,
+  tableActions,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -469,6 +471,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
               gap: 1,
             }}
           >
+            {tableActions}
             <Tooltip title={t('grid.exportToExcel')}>
               <IconButton
                 onClick={handleExport}

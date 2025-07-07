@@ -11,7 +11,7 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { theme } from '../../../theme';
 import { ColumnDef } from '../Customgrid.types';
