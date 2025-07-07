@@ -1,18 +1,16 @@
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { Box, Button } from "@mui/material";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import ActionsList from "../../components/shared/ActionsList/ActionsList";
-import ActionsModal from "../../components/shared/ActionsModal/ActionsModal";
-import { Roles } from "../../store/auth/auth.types";
-import { useAppSelector } from "../../store/hooks/useTypedSelector";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { Box, Button } from '@mui/material';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import ActionsList from '../../components/shared/ActionsList/ActionsList';
+import ActionsModal from '../../components/shared/ActionsModal/ActionsModal';
+import { Roles } from '../../store/auth/auth.types';
+import { useAppSelector } from '../../store/hooks/useTypedSelector';
 
 const Actions = () => {
   const { t } = useTranslation();
   const user = useAppSelector((state) => state.auth.user!);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  console.log(user);
 
   return (
     <Box>
@@ -29,14 +27,14 @@ const Actions = () => {
             variant="contained"
             color="primary"
             sx={{
-              bgcolor: "green.1000",
-              padding: "8px 16px",
-              fontSize: "12px",
+              bgcolor: 'green.1000',
+              padding: '8px 16px',
+              fontSize: '12px',
             }}
             startIcon={<AddOutlinedIcon />}
             onClick={() => setIsModalOpen(true)}
           >
-            {t("pages.actions.addAction")}
+            {t('pages.actions.addAction')}
           </Button>
         </Box>
       )}

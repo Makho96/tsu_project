@@ -1,7 +1,9 @@
 import ClearIcon from '@mui/icons-material/Clear';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
+  Button,
   IconButton,
   InputAdornment,
   Popover,
@@ -9,6 +11,7 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { theme } from '../../../theme';
 import { ColumnDef } from '../Customgrid.types';
@@ -23,11 +26,16 @@ type THProps = {
   handleSort: (field: string) => void;
   handleFilterClick: (event: React.MouseEvent<HTMLElement>, field: string) => void;
   handleFilterClose: (field: string) => void;
-  handleFilter: (field: string, value: string) => void;
-  handleClearFilter: (field: string) => void;
+  handleFilter: (field: string, value: string, index: number) => void;
+  handleClearFilter: (field: string, index: number) => void;
   filters: {
-    [key: string]: string;
+    [key: string]: string[];
   };
+  setFilters: React.Dispatch<
+    React.SetStateAction<{
+      [key: string]: string[];
+    }>
+  >;
 };
 
 const TH = ({
@@ -41,8 +49,31 @@ const TH = ({
   handleClearFilter,
   filters,
   filterAnchorEl,
+  setFilters,
 }: THProps) => {
   const { t } = useTranslation();
+
+  const handleAddFilter = useCallback(() => {
+    setFilters((prev) => ({
+      ...prev,
+      [column.field]: [...prev[column.field], ''],
+    }));
+  }, [column.field, setFilters]);
+
+  const handleDeleteFilter = useCallback(
+    (index: number) => {
+      setFilters((prev) => {
+        const newFilters = [...prev[column.field]];
+        newFilters.splice(index, 1);
+        return {
+          ...prev,
+          [column.field]: newFilters,
+        };
+      });
+    },
+    [column.field, setFilters]
+  );
+
   return (
     <>
       <Tooltip title={column.headerName} placement="top">
@@ -130,41 +161,64 @@ const TH = ({
             },
           }}
         >
-          <TextField
-            size="small"
-            value={filters[column.field] || ''}
-            onChange={(e) => handleFilter(column.field, e.target.value)}
-            placeholder={`${t('grid.filter')} ${column.headerName}`}
-            fullWidth
-            InputProps={{
-              endAdornment: filters[column.field] && (
-                <InputAdornment position="end">
-                  <IconButton
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {filters[column.field]?.map((filterValue, index) => {
+              return (
+                <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <TextField
                     size="small"
-                    onClick={() => handleClearFilter(column.field)}
-                    edge="end"
-                  >
-                    <ClearIcon fontSize="small" />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              minWidth: 200,
-              '& .MuiInputBase-root': {
-                color: 'text.primary',
-              },
-              '& .MuiInputLabel-root': {
-                color: 'text.secondary',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'divider',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'primary.main',
-              },
-            }}
-          />
+                    value={filterValue || ''}
+                    onChange={(e) => handleFilter(column.field, e.target.value, index)}
+                    placeholder={`${t('grid.filter')} ${column.headerName}`}
+                    fullWidth
+                    InputProps={{
+                      endAdornment: filters[column.field] && (
+                        <InputAdornment position="end">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleClearFilter(column.field, index)}
+                            edge="end"
+                          >
+                            <ClearIcon fontSize="small" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      minWidth: 200,
+                      '& .MuiInputBase-root': {
+                        color: 'text.primary',
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'text.secondary',
+                      },
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'divider',
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                    }}
+                  />
+                  {index > 0 && (
+                    <DeleteOutlineOutlinedIcon
+                      sx={{ fontSize: 24, cursor: 'pointer', color: 'red.500' }}
+                      onClick={() => handleDeleteFilter(index)}
+                    />
+                  )}
+                </Box>
+              );
+            })}
+
+            <Button
+              disabled={!filters[column.field]?.[filters[column.field].length - 1]?.length}
+              variant="contained"
+              color="primary"
+              onClick={handleAddFilter}
+            >
+              {t('grid.add_filter')}
+            </Button>
+          </Box>
         </Popover>
       )}
     </>

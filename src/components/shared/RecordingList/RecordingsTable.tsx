@@ -31,7 +31,6 @@ const RecordingsTable = ({ recordings }: RecordingsTableProps) => {
 
   const tableData = useMemo(() => {
     if (!columns.length || !recordings.length) return [];
-    console.log(columns);
     return recordings.map((recording) => {
       const row = columns.reduce((acc, column) => {
         return {
@@ -45,8 +44,6 @@ const RecordingsTable = ({ recordings }: RecordingsTableProps) => {
       };
     });
   }, [recordings, columns]);
-
-  console.log(tableData);
 
   useEffect(() => {
     handleSetColumns();

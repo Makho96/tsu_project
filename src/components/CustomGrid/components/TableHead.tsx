@@ -22,15 +22,20 @@ type TableHeadProps = {
   order: 'asc' | 'desc';
   handleSort: (field: string) => void;
   filters: {
-    [key: string]: string;
+    [key: string]: string[];
   };
   handleFilterClick: (event: React.MouseEvent<HTMLElement>, field: string) => void;
   filterAnchorEl: {
     [key: string]: HTMLElement | null;
   };
   handleFilterClose: (field: string) => void;
-  handleFilter: (field: string, value: string) => void;
-  handleClearFilter: (field: string) => void;
+  handleFilter: (field: string, value: string, index: number) => void;
+  handleClearFilter: (field: string, index: number) => void;
+  setFilters: React.Dispatch<
+    React.SetStateAction<{
+      [key: string]: string[];
+    }>
+  >;
 };
 
 const DraggableHeader: React.FC<DraggableHeaderProps> = ({
@@ -193,6 +198,7 @@ const TableHead = ({
   handleFilterClose,
   handleFilter,
   handleClearFilter,
+  setFilters,
 }: TableHeadProps) => {
   return (
     <MuiTableHead>
@@ -241,6 +247,7 @@ const TableHead = ({
               handleClearFilter={handleClearFilter}
               filters={filters}
               filterAnchorEl={filterAnchorEl}
+              setFilters={setFilters}
             />
           </DraggableHeader>
         ))}

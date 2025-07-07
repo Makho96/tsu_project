@@ -105,7 +105,10 @@ const CustomGrid: React.FC<CustomGridProps> = ({
   const [orderBy, setOrderBy] = useState<string>('');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ [key: string]: string }>({});
+  const [filters, setFilters] = useState<{ [key: string]: string[] }>(() => {
+    return initialColumns.reduce((acc, col) => ({ ...acc, [col.field]: [''] }), {});
+  });
+
   const [filterAnchorEl, setFilterAnchorEl] = useState<{
     [key: string]: HTMLElement | null;
   }>({});
@@ -188,11 +191,15 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     [orderBy]
   );
 
-  const handleFilter = useCallback((field: string, value: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const handleFilter = useCallback((field: string, value: string, index: number) => {
+    setFilters((prev) => {
+      const newFilters = [...prev[field]];
+      newFilters[index] = value;
+      return {
+        ...prev,
+        [field]: newFilters,
+      };
+    });
   }, []);
 
   const handleSelectAllClick = useCallback(
@@ -244,7 +251,12 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     Object.entries(filters).forEach(([field, value]) => {
       if (value) {
         processedRows = processedRows.filter((row) =>
-          String(row[field]).toLowerCase().includes(value.toLowerCase())
+          value.some((v, index) => {
+            if (index === 0) {
+              return String(row[field]).toLowerCase().includes(v.toLowerCase());
+            }
+            return !!v.length && String(row[field]).toLowerCase().includes(v.toLowerCase());
+          })
         );
       }
     });
@@ -278,11 +290,15 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     setPage(0);
   }, []);
 
-  const handleClearFilter = useCallback((field: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: '',
-    }));
+  const handleClearFilter = useCallback((field: string, index: number) => {
+    setFilters((prev) => {
+      const newFilters = [...prev[field]];
+      newFilters[index] = '';
+      return {
+        ...prev,
+        [field]: newFilters,
+      };
+    });
   }, []);
 
   const handleColumnResize = useCallback((field: string, width: number) => {
@@ -578,6 +594,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
                 handleFilterClose={handleFilterClose}
                 handleFilter={handleFilter}
                 handleClearFilter={handleClearFilter}
+                setFilters={setFilters}
               />
               <TableBody
                 paginatedRows={paginatedRows}
