@@ -87,7 +87,8 @@
       "newRecord": "ახალი ჩანაწერი",
       "editRecord": "ჩანაწერის რედაქტირება",
       "deleteRecord": "ჩანაწერის წაშლა",
-      "deleteConfirmation": "ნამდვილად გსურთ ჩანაწერის წაშლა?"
+      "deleteConfirmation": "ნამდვილად გსურთ ჩანაწერის წაშლა?",
+      "createRecord": "შექმნა"
     },
     "recordings": {
       "deleteRecord": "ჩანაწერის წაშლა",

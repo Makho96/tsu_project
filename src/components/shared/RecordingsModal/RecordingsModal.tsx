@@ -11,6 +11,7 @@ import useEvent from '../../../hooks/useEvent';
 import { FormFieldTypes } from '../../../store/actionForm/actionsForm.types';
 import { useAppDispatch } from '../../../store/hooks/useTypedSelector';
 import { saveRecordings } from '../../../store/recordings/recordings.thunks';
+import { updateRecordings } from '../../../store/recordings/recordings.thunks';
 import FormInput from '../FormInput/FormInput';
 
 const getDefaultValue = (inputType: string | number | Date, inputValue: string) => {
@@ -27,7 +28,8 @@ const getDefaultValue = (inputType: string | number | Date, inputValue: string) 
   return '';
 };
 
-const RecordingsModal = ({ setIsOpen, formInputs }: RecordingsModalProps) => {
+const RecordingsModal = ({ setIsOpen, formInputs, isEdit = false }: RecordingsModalProps) => {
+  console.log(formInputs);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const params = useParams();
@@ -44,20 +46,41 @@ const RecordingsModal = ({ setIsOpen, formInputs }: RecordingsModalProps) => {
   }, [formInputs]);
 
   const handleSubmit = useEvent((values: Record<string, string>) => {
+    if (!isEdit) {
+      const recordings = formInputs.map((input) => ({
+        formKey: input.inputKey,
+        formName: input.inputName,
+        inputValue: values[input.inputKey],
+        inputType: input.inputType,
+      }));
+      return dispatch(saveRecordings({ department: departmentId, details: recordings })).then(
+        () => {
+          setIsOpen(false);
+        }
+      );
+    }
+
     const recordings = formInputs.map((input) => ({
       formKey: input.inputKey,
       formName: input.inputName,
       inputValue: values[input.inputKey],
       inputType: input.inputType,
+      id: input.id!,
     }));
-    return dispatch(saveRecordings({ department: departmentId, details: recordings })).then(() => {
+    return dispatch(
+      updateRecordings({
+        department: departmentId,
+        id: formInputs[0].formResultId!,
+        details: recordings,
+      })
+    ).then(() => {
       setIsOpen(false);
     });
   });
 
   return (
     <ConfirmModal
-      title={t('pages.department.newRecord')}
+      title={isEdit ? t('pages.department.editRecord') : t('pages.department.newRecord')}
       onClose={() => setIsOpen(false)}
       onConfirm={() => {}}
       onCancel={() => setIsOpen(false)}
@@ -95,7 +118,7 @@ const RecordingsModal = ({ setIsOpen, formInputs }: RecordingsModalProps) => {
                   }}
                   startIcon={<CheckOutlinedIcon sx={{ color: 'common.white' }} />}
                 >
-                  {t('pages.actions.create')}
+                  {isEdit ? t('pages.department.editRecord') : t('pages.department.createRecord')}
                 </Button>
               </Box>
             </Form>

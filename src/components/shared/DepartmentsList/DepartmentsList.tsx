@@ -1,13 +1,10 @@
-import { Box, CircularProgress } from "@mui/material";
-import { useEffect } from "react";
-import DepartmentCard from "./DepartmentCard";
-import { getDepartments } from "../../../store/departments/departments.thunks";
-import { Department } from "../../../store/departments/departments.types";
-import {
-  useAppSelector,
-  useAppDispatch,
-} from "../../../store/hooks/useTypedSelector";
-import { SliceStatuses } from "../../../store/types";
+import { Box, CircularProgress } from '@mui/material';
+import { useEffect } from 'react';
+import DepartmentCard from './DepartmentCard';
+import { getDepartments } from '../../../store/departments/departments.thunks';
+import { Department } from '../../../store/departments/departments.types';
+import { useAppSelector, useAppDispatch } from '../../../store/hooks/useTypedSelector';
+import { SliceStatuses } from '../../../store/types';
 
 type DepartmentsListProps = {
   departments: Department[];
@@ -25,11 +22,11 @@ const DepartmentsList = ({ departments }: DepartmentsListProps) => {
     return (
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          width: "100%",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
         }}
       >
         <CircularProgress />

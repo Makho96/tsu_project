@@ -26,4 +26,10 @@ type RecordingsInitialState = {
   error: string | null;
 };
 
-export type { SaveRecordingsParams, Recordings, RecordingsInitialState };
+type UpdateRecordingsParams = {
+  department: number;
+  id: number;
+  details: Recordings[];
+};
+
+export type { SaveRecordingsParams, Recordings, RecordingsInitialState, UpdateRecordingsParams };

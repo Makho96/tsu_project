@@ -37,7 +37,8 @@ const RecordingsTable = ({ recordings }: RecordingsTableProps) => {
       inputName: item.formName,
       inputType: item.inputType,
       inputValue: item.inputValue,
-      id: recording.id,
+      id: item.id,
+      formResultId: recording.id,
     }));
   }, [selectedItems, recordings]);
 
@@ -164,7 +165,11 @@ const RecordingsTable = ({ recordings }: RecordingsTableProps) => {
         />
       )}
       {isEditModalOpen && (
-        <RecordingsModal setIsOpen={setIsEditModalOpen} formInputs={editModalInputsData} />
+        <RecordingsModal
+          setIsOpen={setIsEditModalOpen}
+          formInputs={editModalInputsData}
+          isEdit={true}
+        />
       )}
     </>
   );

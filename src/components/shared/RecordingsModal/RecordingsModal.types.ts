@@ -6,11 +6,13 @@ export type ModalInputData = {
   inputType: FormFieldTypes;
   inputValue: string;
   id?: number;
+  formResultId?: number;
 };
 
 type RecordingsModalProps = {
   setIsOpen: (isOpen: boolean) => void;
   formInputs: ModalInputData[];
+  isEdit?: boolean;
 };
 
 export default RecordingsModalProps;

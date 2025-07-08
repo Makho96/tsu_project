@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import { Recordings, SaveRecordingsParams } from './recordings.types';
+import { Recordings, SaveRecordingsParams, UpdateRecordingsParams } from './recordings.types';
 import api from '../../api/axiosInstance';
 import showApiError from '../../utils/showApiError';
 
@@ -51,6 +51,19 @@ export const deleteRecording = createAsyncThunk(
     try {
       await api.delete(`/form-result/${id}`);
       await dispatch(getRecordings(departmentId));
+    } catch (error) {
+      showApiError(error as AxiosError);
+      throw error;
+    }
+  }
+);
+
+export const updateRecordings = createAsyncThunk(
+  'recordings/updateRecordings',
+  async (recordings: UpdateRecordingsParams, { dispatch }) => {
+    try {
+      await api.put('/form-result', recordings);
+      await dispatch(getRecordings(recordings.department));
     } catch (error) {
       showApiError(error as AxiosError);
       throw error;
