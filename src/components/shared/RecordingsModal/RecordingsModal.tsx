@@ -9,7 +9,7 @@ import { ConfirmModal } from '../Modals';
 import RecordingsModalProps from './RecordingsModal.types';
 import useEvent from '../../../hooks/useEvent';
 import { FormFieldTypes } from '../../../store/actionForm/actionsForm.types';
-import { useAppDispatch } from '../../../store/hooks/useTypedSelector';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks/useTypedSelector';
 import { saveRecordings } from '../../../store/recordings/recordings.thunks';
 import { updateRecordings } from '../../../store/recordings/recordings.thunks';
 import FormInput from '../FormInput/FormInput';
@@ -29,7 +29,8 @@ const getDefaultValue = (inputType: string | number | Date, inputValue: string) 
 };
 
 const RecordingsModal = ({ setIsOpen, formInputs, isEdit = false }: RecordingsModalProps) => {
-  console.log(formInputs);
+  const languages = useAppSelector((state) => state.languages.languages);
+  console.log(languages);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const params = useParams();

@@ -2,7 +2,7 @@ import { SliceStatuses } from '../types';
 
 enum Languages {
   English = 'en',
-  Georgian = 'ge',
+  Georgian = 'ka',
 }
 
 type Language = {
