@@ -4,6 +4,7 @@ import actionsReducer from './actions/actions.slice';
 import authReducer from './auth/auth.slice';
 import companiesReducer from './companies/companies.slice';
 import departmentsReducer from './departments/departments.slice';
+import languagesReducer from './languages/languages.slices';
 import recordingsReducer from './recordings/recordings.slice';
 
 export const store = configureStore({
@@ -14,5 +15,6 @@ export const store = configureStore({
     departments: departmentsReducer,
     actionsForm: actionsFormReducer,
     recordings: recordingsReducer,
+    languages: languagesReducer,
   },
 });

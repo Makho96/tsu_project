@@ -4,11 +4,7 @@ import { useAppSelector } from '../../../store/hooks/useTypedSelector';
 import { SliceStatuses } from '../../../store/types';
 import Loader from '../Loader/Loader';
 
-type RecordingListProps = {
-  departmentId: number;
-};
-
-const RecordingList = ({ departmentId }: RecordingListProps) => {
+const RecordingList = () => {
   const recordings = useAppSelector((state) => state.recordings.recordings);
 
   const isLoading = useAppSelector(

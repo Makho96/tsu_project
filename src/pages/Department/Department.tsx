@@ -66,7 +66,7 @@ const Department = () => {
           >
             {t('pages.department.newRecord')}
           </Button>
-          <RecordingList departmentId={departmentId} />
+          <RecordingList />
         </>
       )}
       {isModalOpen && (
