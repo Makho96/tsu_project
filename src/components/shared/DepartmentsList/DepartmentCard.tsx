@@ -129,12 +129,21 @@ const DepartmentCard = ({ department }: DepartmentCardProps) => {
         }}
       >
         <Tooltip title={t('pages.action.edit')}>
-          <EditOutlinedIcon sx={{ fontSize: 20, cursor: 'pointer' }} onClick={handleEditAction} />
+          <EditOutlinedIcon
+            sx={{ fontSize: 20, cursor: 'pointer' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditAction();
+            }}
+          />
         </Tooltip>
         <Tooltip title={t('pages.action.delete')}>
           <DeleteOutlineOutlinedIcon
             sx={{ fontSize: 20, cursor: 'pointer', color: 'red.500' }}
-            onClick={() => setIsDeleteModalOpen(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsDeleteModalOpen(true);
+            }}
           />
         </Tooltip>
       </Box>
