@@ -459,6 +459,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
             overflow: 'hidden',
             bgcolor: theme.palette.blue[900],
             backgroundImage: 'none',
+            height: '100%',
           }}
         >
           <Box
@@ -556,7 +557,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
           </Box>
           <TableContainer
             sx={{
-              maxHeight: 400,
+              height: `calc(100% - 104px)`,
               overflowX: 'auto',
               '&::-webkit-scrollbar': {
                 height: 8,

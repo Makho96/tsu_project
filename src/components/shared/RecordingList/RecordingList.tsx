@@ -16,7 +16,7 @@ const RecordingList = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <Box sx={{ marginTop: '20px' }}>
+    <Box sx={{ height: `calc(100% - 60px)` }}>
       {recordings.length > 0 ? (
         <RecordingsTable recordings={recordings} />
       ) : (
