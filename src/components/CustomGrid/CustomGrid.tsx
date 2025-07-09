@@ -353,7 +353,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     // Get the current view of the data (filtered and sorted)
     const dataToExport = filteredAndSortedRows.map((row) => {
       const rowData: { [key: string]: any } = {};
-      visibleColumnsWithResize.forEach((column) => {
+      columnsWithResize.forEach((column) => {
         let value;
         if (column.renderCell) {
           const renderedCell = column.renderCell({ row });
@@ -377,7 +377,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     const worksheet = workbook.addWorksheet('Data');
 
     // Add headers
-    const headers = visibleColumnsWithResize.map((col) => col.headerName);
+    const headers = columnsWithResize.map((col) => col.headerName);
     worksheet.addRow(headers);
 
     // Style the header row
@@ -403,7 +403,7 @@ const CustomGrid: React.FC<CustomGridProps> = ({
     });
 
     // Set column widths
-    visibleColumnsWithResize.forEach((col, index) => {
+    columnsWithResize.forEach((col, index) => {
       const maxLength = Math.max(
         col.headerName.length,
         ...dataToExport.map((row) => String(row[col.headerName] || '').length)
