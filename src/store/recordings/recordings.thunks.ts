@@ -47,9 +47,26 @@ export const getRecordings = createAsyncThunk(
 
 export const deleteRecording = createAsyncThunk(
   'recordings/deleteRecording',
-  async ({ id, departmentId }: { id: number; departmentId: number }, { dispatch }) => {
+  async ({ ids, departmentId }: { ids: number[]; departmentId: number }, { dispatch }) => {
     try {
-      await api.delete(`/form-result/${id}`);
+      await api.delete(`/form-result`, {
+        data: ids,
+      });
+      await dispatch(getRecordings(departmentId));
+    } catch (error) {
+      showApiError(error as AxiosError);
+      throw error;
+    }
+  }
+);
+
+export const copyRecordings = createAsyncThunk(
+  'recordings/copyRecordings',
+  async ({ ids, departmentId }: { ids: number[]; departmentId: number }, { dispatch }) => {
+    try {
+      await api.post(`/form-result/copy`, {
+        data: ids,
+      });
       await dispatch(getRecordings(departmentId));
     } catch (error) {
       showApiError(error as AxiosError);

@@ -1,5 +1,6 @@
 import { Box, CircularProgress } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import DepartmentCard from './DepartmentCard';
 import { getDepartments } from '../../../store/departments/departments.thunks';
 import { Department } from '../../../store/departments/departments.types';
@@ -13,10 +14,12 @@ type DepartmentsListProps = {
 const DepartmentsList = ({ departments }: DepartmentsListProps) => {
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.departments);
+  const params = useParams();
+  const actionId = useMemo(() => Number(params.actionId), [params.actionId]);
 
   useEffect(() => {
-    dispatch(getDepartments());
-  }, [dispatch]);
+    dispatch(getDepartments(actionId));
+  }, [dispatch, actionId]);
 
   if (status === SliceStatuses.LOADING) {
     return (

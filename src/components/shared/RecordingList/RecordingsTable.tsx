@@ -4,7 +4,10 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import useEvent from '../../../hooks/useEvent';
+import { useAppDispatch } from '../../../store/hooks/useTypedSelector';
+import { copyRecordings, deleteRecording } from '../../../store/recordings/recordings.thunks';
 import { Recordings } from '../../../store/recordings/recordings.types';
 import CustomGrid from '../../CustomGrid/CustomGrid';
 import { ColumnDef } from '../../CustomGrid/Customgrid.types';
@@ -20,12 +23,15 @@ type RecordingsTableProps = {
 };
 
 const RecordingsTable = ({ recordings }: RecordingsTableProps) => {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [columns, setColumns] = useState<ColumnDef[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
+  const params = useParams();
+  const departmentId = useMemo(() => Number(params.departmentId), [params.departmentId]);
 
   const editModalInputsData = useMemo(() => {
     if (!selectedItems.length) return [];
@@ -43,11 +49,13 @@ const RecordingsTable = ({ recordings }: RecordingsTableProps) => {
   }, [selectedItems, recordings]);
 
   const handleCopy = useEvent(() => {
-    console.log('copy');
+    const selectedIds = selectedItems.map((item) => item.id);
+    dispatch(copyRecordings({ ids: selectedIds, departmentId }));
   });
 
   const handleDelete = useEvent(() => {
-    console.log('delete');
+    const selectedIds = selectedItems.map((item) => item.id);
+    dispatch(deleteRecording({ ids: selectedIds, departmentId }));
   });
 
   const handleSetColumns = useEvent(() => {
