@@ -64,9 +64,7 @@ export const copyRecordings = createAsyncThunk(
   'recordings/copyRecordings',
   async ({ ids, departmentId }: { ids: number[]; departmentId: number }, { dispatch }) => {
     try {
-      await api.post(`/form-result/copy`, {
-        data: ids,
-      });
+      await api.post(`/form-result/copy`, { ids });
       await dispatch(getRecordings(departmentId));
     } catch (error) {
       showApiError(error as AxiosError);
