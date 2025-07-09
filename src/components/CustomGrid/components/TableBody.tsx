@@ -66,6 +66,7 @@ const TableBody = ({
                   padding: '16px 8px',
                   bgcolor: 'background.paper',
                   color: 'text.primary',
+                  height: '75px',
                 }}
               >
                 <Checkbox
@@ -97,6 +98,7 @@ const TableBody = ({
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   fontSize: '16px',
+                  height: '75px',
                 }}
               >
                 {column.renderCell ? column.renderCell({ row }) : row[column.field]}

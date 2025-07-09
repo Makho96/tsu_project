@@ -48,7 +48,16 @@ const Department = () => {
   }, [fetchFormData]);
 
   return (
-    <Box>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        gap: '20px',
+      }}
+    >
       {isFormInputsLoading ? (
         <Loader />
       ) : (
@@ -60,6 +69,7 @@ const Department = () => {
               bgcolor: 'green.1000',
               padding: '8px 16px',
               fontSize: '12px',
+              flexShrink: 0,
             }}
             startIcon={<AddOutlinedIcon />}
             onClick={() => setIsModalOpen(true)}
