@@ -29,7 +29,7 @@ const RecordingItem = ({ recording, departmentId }: RecordingItemProps) => {
   const [modalData, setModalData] = useState<ModalInputData[] | null>(null);
 
   const handleDeleteRecording = useCallback(async () => {
-    await dispatch(deleteRecording({ id: recording.id, departmentId }));
+    await dispatch(deleteRecording({ ids: [recording.id], departmentId }));
     setModalType(null);
   }, [recording.id, departmentId, dispatch]);
 
