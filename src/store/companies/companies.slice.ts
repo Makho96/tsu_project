@@ -1,19 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initialState } from "./companies.consts";
-import {
-  createCompany,
-  getCompanies,
-  getCompany,
-  updateCompany,
-} from "./companies.thunks";
-import { SliceStatuses } from "../types";
-import { Company } from "./companies.types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { initialState } from './companies.consts';
+import { createCompany, getCompanies, getCompany, updateCompany } from './companies.thunks';
+import { SliceStatuses } from '../types';
+import { CompanyData } from './companies.types';
 
 const companiesSlice = createSlice({
-  name: "companies",
+  name: 'companies',
   initialState: initialState,
   reducers: {
-    setSelectedCompany: (state, action: PayloadAction<Company>) => {
+    setSelectedCompany: (state, action: PayloadAction<CompanyData>) => {
       state.currentCompany = action.payload;
     },
   },
@@ -28,7 +23,7 @@ const companiesSlice = createSlice({
       })
       .addCase(getCompanies.rejected, (state, action) => {
         state.status = SliceStatuses.FAILED;
-        state.error = action.error.message ?? "Failed to get companies";
+        state.error = action.error.message ?? 'Failed to get companies';
       });
     builder
       .addCase(getCompany.pending, (state) => {
@@ -39,7 +34,7 @@ const companiesSlice = createSlice({
       })
       .addCase(getCompany.rejected, (state, action) => {
         state.status = SliceStatuses.FAILED;
-        state.error = action.error.message ?? "Failed to get company";
+        state.error = action.error.message ?? 'Failed to get company';
       });
     builder
       .addCase(createCompany.pending, (state) => {
@@ -50,7 +45,7 @@ const companiesSlice = createSlice({
       })
       .addCase(createCompany.rejected, (state, action) => {
         state.status = SliceStatuses.FAILED;
-        state.error = action.error.message ?? "Failed to create company";
+        state.error = action.error.message ?? 'Failed to create company';
       });
     builder
       .addCase(updateCompany.pending, (state) => {
@@ -61,7 +56,7 @@ const companiesSlice = createSlice({
       })
       .addCase(updateCompany.rejected, (state, action) => {
         state.status = SliceStatuses.FAILED;
-        state.error = action.error.message ?? "Failed to update company";
+        state.error = action.error.message ?? 'Failed to update company';
       });
   },
 });

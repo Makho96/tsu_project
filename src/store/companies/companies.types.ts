@@ -1,20 +1,67 @@
-import { User } from "../auth/auth.types";
-import { SliceStatuses } from "../types";
+import { User } from '../auth/auth.types';
+import { SliceStatuses } from '../types';
 
 type Company = {
   id: number;
   title: string;
   user: User;
-  eMail: string;
+  email: string;
   tell: string;
   address?: string;
 };
 
 type CompaniesInitialState = {
-  currentCompany: Company | null;
-  companies: Company[];
+  currentCompany: CompanyData | null;
+  companies: CompanyData[];
   status: SliceStatuses;
   error: string | null;
 };
 
-export type { Company, CompaniesInitialState };
+type CreateCompanyParams = (Omit<Company, 'id' | 'user'> & {
+  code: string;
+})[];
+
+type UpdateCompanyParams = {
+  id: number;
+  translate: Array<{
+    code: string;
+    title: string;
+    email: string;
+    tell: string;
+    address: string;
+  }>;
+};
+
+type CompanyData = {
+  id: number;
+  user: User;
+  fields: {
+    [code: string]: {
+      title: string;
+      email: string;
+      tell: string;
+      address: string;
+    };
+  };
+};
+
+type RemoteCompany = {
+  id: number;
+  user: User;
+  translationCompanies: Array<{
+    title: string;
+    address: string;
+    code: string;
+    tell: string;
+    email: string;
+  }>;
+};
+
+export type {
+  Company,
+  CompaniesInitialState,
+  CreateCompanyParams,
+  CompanyData,
+  RemoteCompany,
+  UpdateCompanyParams,
+};

@@ -1,27 +1,27 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { AxiosError } from "axios";
-import { Company } from "./companies.types";
-import api from "../../api/axiosInstance";
-import showApiError from "../../utils/showApiError";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import type { AxiosError } from 'axios';
+import _keyBy from 'lodash/keyBy';
+import { toClientCompany } from './companies.dataContverters';
+import { CreateCompanyParams, RemoteCompany, UpdateCompanyParams } from './companies.types';
+import api from '../../api/axiosInstance';
+import showApiError from '../../utils/showApiError';
 
-export const getCompanies = createAsyncThunk(
-  "companies/getCompanies",
-  async () => {
-    try {
-      const { data } = await api.get("/company");
-      return data;
-    } catch (error) {
-      showApiError(error as AxiosError);
-      throw error;
-    }
+export const getCompanies = createAsyncThunk('companies/getCompanies', async () => {
+  try {
+    const { data } = await api.get<RemoteCompany[]>('/company');
+    const companiesWithTranslations = data.map(toClientCompany);
+    return companiesWithTranslations;
+  } catch (error) {
+    showApiError(error as AxiosError);
+    throw error;
   }
-);
+});
 
 export const createCompany = createAsyncThunk(
-  "companies/createCompany",
-  async (company: Omit<Company, "id" | "user">, { dispatch }) => {
+  'companies/createCompany',
+  async (company: CreateCompanyParams, { dispatch }) => {
     try {
-      const { data } = await api.post("/company", company);
+      const { data } = await api.post('/company', { translationCompanies: company });
       dispatch(getCompanies());
       return data;
     } catch (error) {
@@ -31,21 +31,18 @@ export const createCompany = createAsyncThunk(
   }
 );
 
-export const getCompany = createAsyncThunk(
-  "companies/getCompany",
-  async (id: number) => {
-    try {
-      const { data } = await api.get<Company>(`/company/${id}`);
-      return data;
-    } catch (error) {
-      showApiError(error as AxiosError);
-      throw error;
-    }
+export const getCompany = createAsyncThunk('companies/getCompany', async (id: number) => {
+  try {
+    const { data } = await api.get<RemoteCompany>(`/company/${id}`);
+    return toClientCompany(data);
+  } catch (error) {
+    showApiError(error as AxiosError);
+    throw error;
   }
-);
+});
 
 export const deleteCompany = createAsyncThunk(
-  "companies/deleteCompany",
+  'companies/deleteCompany',
   async (id: number, { dispatch }) => {
     try {
       await api.delete(`/company/${id}`);
@@ -58,12 +55,12 @@ export const deleteCompany = createAsyncThunk(
 );
 
 export const updateCompany = createAsyncThunk(
-  "companies/updateCompany",
-  async (company: Omit<Company, "user">, { dispatch }) => {
+  'companies/updateCompany',
+  async (company: UpdateCompanyParams, { dispatch }) => {
     try {
       const { data } = await api.put(`/company`, company);
-      dispatch(getCompanies());
-      return data;
+      await dispatch(getCompanies());
+      return toClientCompany(data);
     } catch (error) {
       showApiError(error as AxiosError);
       throw error;

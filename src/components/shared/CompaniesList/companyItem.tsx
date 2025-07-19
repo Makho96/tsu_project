@@ -1,35 +1,34 @@
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
-import { Box, Typography, IconButton } from "@mui/material";
-import { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
-import {
-  deleteCompany,
-  getCompany,
-} from "../../../store/companies/companies.thunks";
-import { Company } from "../../../store/companies/companies.types";
-import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
-import CompanyModal from "../CompanyModal";
-import { FullPageLoader } from "../Loader";
-import { ConfirmModal } from "../Modals";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
+import { Box, Typography, IconButton } from '@mui/material';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { deleteCompany, getCompany } from '../../../store/companies/companies.thunks';
+import { CompanyData } from '../../../store/companies/companies.types';
+import { useAppDispatch } from '../../../store/hooks/useTypedSelector';
+import CompanyModal from '../CompanyModal';
+import { FullPageLoader } from '../Loader';
+import { ConfirmModal } from '../Modals';
 
 type CompanyItemProps = {
-  companyData: Company;
+  companyData: CompanyData;
 };
 
 enum ModalTypes {
-  Edit = "edit",
-  Delete = "delete",
+  Edit = 'edit',
+  Delete = 'delete',
 }
 
 const CompanyItem = ({ companyData }: CompanyItemProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const fallbackLanguage = i18n.options.fallbackLng as string;
   const [modalType, setModalType] = useState<ModalTypes | null>(null);
   const [companyLoading, setCompanyLoading] = useState(false);
-  const [company, setCompany] = useState<Company | null>(null);
+  const [company, setCompany] = useState<CompanyData | null>(null);
   const dispatch = useAppDispatch();
 
   const handleEditCompany = useCallback(async () => {
@@ -50,6 +49,10 @@ const CompanyItem = ({ companyData }: CompanyItemProps) => {
     setModalType(null);
   }, [companyData.id, dispatch]);
 
+  const companyFields = useMemo(() => {
+    return companyData.fields[currentLanguage] || companyData.fields[fallbackLanguage];
+  }, [companyData.fields, currentLanguage, fallbackLanguage]);
+
   if (companyLoading) {
     return <FullPageLoader />;
   }
@@ -60,18 +63,16 @@ const CompanyItem = ({ companyData }: CompanyItemProps) => {
       justifyContent="space-between"
       alignItems="center"
       sx={{
-        backgroundColor: "white.100",
+        backgroundColor: 'white.100',
       }}
       borderRadius={1}
       padding={2}
     >
       <Box display="flex" alignItems="flex-start" gap={1}>
-        <MeetingRoomOutlinedIcon
-          sx={{ color: "rgb(26, 125, 120)", fontSize: 32 }}
-        />
+        <MeetingRoomOutlinedIcon sx={{ color: 'rgb(26, 125, 120)', fontSize: 32 }} />
         <Box>
           <Typography variant="h2" lineHeight={1} marginBottom={1}>
-            {companyData.title}
+            {companyFields?.title}
           </Typography>
           <Typography
             display="flex"
@@ -82,8 +83,8 @@ const CompanyItem = ({ companyData }: CompanyItemProps) => {
             color="text.secondary"
             marginBottom={0.5}
           >
-            <EmailOutlinedIcon sx={{ color: "text.secondary", fontSize: 16 }} />{" "}
-            {companyData.eMail}
+            <EmailOutlinedIcon sx={{ color: 'text.secondary', fontSize: 16 }} />{' '}
+            {companyFields?.email}
           </Typography>
           <Typography
             display="flex"
@@ -94,36 +95,31 @@ const CompanyItem = ({ companyData }: CompanyItemProps) => {
             color="text.secondary"
             marginBottom={0.5}
           >
-            <LocalPhoneOutlinedIcon
-              sx={{ color: "text.secondary", fontSize: 16 }}
-            />{" "}
-            {companyData.tell}
+            <LocalPhoneOutlinedIcon sx={{ color: 'text.secondary', fontSize: 16 }} />{' '}
+            {companyFields?.tell}
           </Typography>
         </Box>
       </Box>
       <Box>
         <IconButton onClick={handleEditCompany}>
-          <EditOutlinedIcon sx={{ color: "common.white" }} />
+          <EditOutlinedIcon sx={{ color: 'common.white' }} />
         </IconButton>
         <IconButton onClick={() => setModalType(ModalTypes.Delete)}>
-          <DeleteOutlineOutlinedIcon sx={{ color: "red.500" }} />
+          <DeleteOutlineOutlinedIcon sx={{ color: 'red.500' }} />
         </IconButton>
       </Box>
       {modalType === ModalTypes.Delete && (
         <ConfirmModal
-          title={t("pages.companies.deleteCompany")}
-          modalBody={t("pages.companies.deleteCompanyConfirmation")}
-          confirmButtonText={t("pages.companies.delete")}
-          cancelButtonText={t("pages.companies.cancel")}
+          title={t('pages.companies.deleteCompany')}
+          modalBody={t('pages.companies.deleteCompanyConfirmation')}
+          confirmButtonText={t('pages.companies.delete')}
+          cancelButtonText={t('pages.companies.cancel')}
           onClose={() => setModalType(null)}
           onConfirm={handleDeleteCompany}
         />
       )}
       {modalType === ModalTypes.Edit && company && (
-        <CompanyModal
-          setIsOpen={() => setModalType(null)}
-          initialData={company}
-        />
+        <CompanyModal setIsOpen={() => setModalType(null)} initialData={company} />
       )}
     </Box>
   );

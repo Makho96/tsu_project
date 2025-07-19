@@ -1,27 +1,24 @@
-import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import DialogTitle from "@mui/material/DialogTitle";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import useEvent from "../../../hooks/useEvent";
-import Routes from "../../../routing/Routing.types";
-import { setSelectedCompany } from "../../../store/companies/companies.slice";
-import {
-  useAppSelector,
-  useAppDispatch,
-} from "../../../store/hooks/useTypedSelector";
+import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import DialogTitle from '@mui/material/DialogTitle';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import useEvent from '../../../hooks/useEvent';
+import Routes from '../../../routing/Routing.types';
+import { setSelectedCompany } from '../../../store/companies/companies.slice';
+import { useAppSelector, useAppDispatch } from '../../../store/hooks/useTypedSelector';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -31,11 +28,9 @@ type CompanySelectionModalProps = {
 };
 
 const CompanySelectionModal = ({ handleClose }: CompanySelectionModalProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const companies = useAppSelector((state) => state.companies.companies);
-  const currentCompany = useAppSelector(
-    (state) => state.companies.currentCompany
-  );
+  const currentCompany = useAppSelector((state) => state.companies.currentCompany);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -70,17 +65,17 @@ const CompanySelectionModal = ({ handleClose }: CompanySelectionModalProps) => {
       <Box sx={style}>
         <DialogTitle
           sx={{
-            borderBottom: "1px solid",
-            borderColor: "white.100",
-            textAlign: "left",
+            borderBottom: '1px solid',
+            borderColor: 'white.100',
+            textAlign: 'left',
             padding: 2,
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
             gap: 1,
           }}
         >
-          <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />
-          {t("modals.companySelection.title")}
+          <MeetingRoomOutlinedIcon sx={{ color: 'common.white' }} />
+          {t('modals.companySelection.title')}
         </DialogTitle>
         <Box
           display="flex"
@@ -99,17 +94,17 @@ const CompanySelectionModal = ({ handleClose }: CompanySelectionModalProps) => {
               borderRadius={1}
               border="1px solid transparent"
               sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  bgcolor: "green.100",
-                  border: "1px solid",
-                  borderColor: "green.1000",
+                cursor: 'pointer',
+                '&:hover': {
+                  bgcolor: 'green.100',
+                  border: '1px solid',
+                  borderColor: 'green.1000',
                 },
               }}
               onClick={() => handleCompanySelection(company.id)}
             >
-              <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />
-              <Typography>{company.title}</Typography>
+              <MeetingRoomOutlinedIcon sx={{ color: 'common.white' }} />
+              <Typography>{company.fields[i18n.language]?.title}</Typography>
             </Box>
           ))}
         </Box>

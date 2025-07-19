@@ -1,23 +1,23 @@
-import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
-import { Box, Button } from "@mui/material";
-import { Form, Formik } from "formik";
-import { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import FormInput from "../FormInput/FormInput";
-import { ConfirmModal } from "../Modals";
-import { initialValues, validationSchema } from "./company.config";
-import { CompanyModalProps, FormFields, FormValues } from "./company.types";
-import {
-  createCompany,
-  updateCompany,
-} from "../../../store/companies/companies.thunks";
-import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
+import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlined';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
+import { Box, Button } from '@mui/material';
+import { Form, Formik } from 'formik';
+import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import FormInput from '../FormInput/FormInput';
+import { ConfirmModal } from '../Modals';
+import { initialValues, createValidationSchema } from './company.config';
+import { CompanyModalProps, FormFields, FormData } from './company.types';
+import { createCompany, updateCompany } from '../../../store/companies/companies.thunks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks/useTypedSelector';
+import Tabs from '../Tabs';
 
 const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
+  const languages = useAppSelector((state) => state.languages.languages);
   const { t } = useTranslation();
   const closeModal = useCallback(() => setIsOpen(false), [setIsOpen]);
   const isEdit = useMemo(() => !!initialData, [initialData]);
@@ -25,121 +25,137 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
 
   const initialFormValues = useMemo(() => {
     if (initialData) {
-      return {
-        [FormFields.Name]: initialData.title,
-        [FormFields.Email]: initialData.eMail,
-        [FormFields.Phone]: initialData.tell,
-      };
+      const initialFormValues: FormData = {};
+      languages.map((language) => {
+        initialFormValues[language.isoCode] = {
+          [FormFields.Name]: initialData.fields[language.isoCode]?.title,
+          [FormFields.Email]: initialData.fields[language.isoCode]?.email,
+          [FormFields.Phone]: initialData.fields[language.isoCode]?.tell,
+          [FormFields.Address]: initialData.fields[language.isoCode]?.address,
+        };
+      });
+      return initialFormValues;
     }
-    return initialValues;
-  }, [initialData]);
+    const initialFormValues: FormData = {};
+    languages.map((language) => {
+      initialFormValues[language.isoCode] = initialValues;
+    });
+
+    return initialFormValues;
+  }, [languages, initialData]);
 
   const handleSubmit = useCallback(
-    async (values: FormValues) => {
-      const companyData = {
-        title: values[FormFields.Name],
-        eMail: values[FormFields.Email],
-        tell: values[FormFields.Phone],
-      };
+    async (values: FormData) => {
+      const companyData = Object.entries(values).map(([key, value]) => {
+        return {
+          code: key,
+          title: value[FormFields.Name],
+          email: value[FormFields.Email],
+          tell: value[FormFields.Phone],
+          address: value[FormFields.Address],
+        };
+      });
 
-      const apiCall = initialData
-        ? updateCompany({
+      if (initialData) {
+        return await dispatch(
+          updateCompany({
             id: initialData.id,
-            ...companyData,
+            translate: companyData,
           })
-        : createCompany(companyData);
+        ).then(closeModal);
+      }
 
-      return await dispatch(apiCall).then(closeModal);
+      return await dispatch(createCompany(companyData)).then(closeModal);
     },
     [dispatch, closeModal, initialData]
   );
 
+  console.log(initialFormValues);
+
   return (
     <ConfirmModal
       onClose={closeModal}
-      title={
-        isEdit
-          ? t("pages.companies.editCompany")
-          : t("pages.companies.addCompany")
-      }
-      confirmButtonText={
-        isEdit ? t("pages.companies.edit") : t("pages.companies.create")
-      }
-      cancelButtonText={t("pages.companies.cancel")}
+      title={isEdit ? t('pages.companies.editCompany') : t('pages.companies.addCompany')}
+      confirmButtonText={isEdit ? t('pages.companies.edit') : t('pages.companies.create')}
+      cancelButtonText={t('pages.companies.cancel')}
       showButtons={false}
       modalBody={
         <Formik
           initialValues={initialFormValues}
-          validationSchema={validationSchema}
+          validationSchema={createValidationSchema(languages.map((language) => language.isoCode))}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form style={{ minWidth: "400px" }}>
-              <Box sx={{ marginBottom: 2 }}>
-                <FormInput
-                  name={FormFields.Name}
-                  label={t("pages.companies.name")}
-                  startIcon={
-                    <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />
-                  }
-                />
-              </Box>
-              <Box sx={{ marginBottom: 2 }}>
-                <FormInput
-                  name={FormFields.Email}
-                  label={t("pages.companies.email")}
-                  startIcon={
-                    <EmailOutlinedIcon sx={{ color: "common.white" }} />
-                  }
-                />
-              </Box>
-              <Box sx={{ marginBottom: 2 }}>
-                <FormInput
-                  name={FormFields.Phone}
-                  label={t("pages.companies.phone")}
-                  startIcon={
-                    <LocalPhoneOutlinedIcon sx={{ color: "common.white" }} />
-                  }
-                />
-              </Box>
-              <Box
-                display="flex"
-                gap={2}
-                justifyContent="flex-end"
-                marginTop={2}
-              >
-                <Button
-                  onClick={closeModal}
-                  disabled={isSubmitting}
-                  loading={isSubmitting}
-                  loadingPosition="start"
-                  sx={{ padding: "8px 12px", minWidth: "110px" }}
-                  variant="outlined"
-                  startIcon={
-                    <ClearOutlinedIcon sx={{ color: "common.white" }} />
-                  }
-                >
-                  {t("pages.companies.cancel")}
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  loading={isSubmitting}
-                  loadingPosition="start"
-                  sx={{
-                    bgcolor: "green.1000",
-                    padding: "8px 12px",
-                    minWidth: "110px",
-                  }}
-                  startIcon={
-                    <CheckOutlinedIcon sx={{ color: "common.white" }} />
-                  }
-                >
-                  {isEdit
-                    ? t("pages.companies.edit")
-                    : t("pages.companies.create")}
-                </Button>
-              </Box>
+            <Form style={{ minWidth: '400px' }}>
+              <Tabs
+                tabs={languages.map((language, index) => {
+                  return {
+                    id: index,
+                    label: t(`languages.${language.isoCode}`),
+                    element: (
+                      <>
+                        <Box sx={{ marginBottom: 2 }}>
+                          <FormInput
+                            name={`${language.isoCode}[${FormFields.Name}]`}
+                            label={t('pages.companies.name')}
+                            startIcon={<MeetingRoomOutlinedIcon sx={{ color: 'common.white' }} />}
+                          />
+                        </Box>
+                        <Box sx={{ marginBottom: 2 }}>
+                          <FormInput
+                            name={`${language.isoCode}[${FormFields.Email}]`}
+                            label={t('pages.companies.email')}
+                            startIcon={<EmailOutlinedIcon sx={{ color: 'common.white' }} />}
+                          />
+                        </Box>
+                        <Box sx={{ marginBottom: 2 }}>
+                          <FormInput
+                            name={`${language.isoCode}[${FormFields.Phone}]`}
+                            label={t('pages.companies.phone')}
+                            startIcon={<LocalPhoneOutlinedIcon sx={{ color: 'common.white' }} />}
+                          />
+                        </Box>
+                        <Box sx={{ marginBottom: 2 }}>
+                          <FormInput
+                            name={`${language.isoCode}[${FormFields.Address}]`}
+                            label={t('pages.companies.address')}
+                            startIcon={
+                              <AddLocationAltOutlinedIcon sx={{ color: 'common.white' }} />
+                            }
+                          />
+                        </Box>
+                        <Box display="flex" gap={2} justifyContent="flex-end" marginTop={2}>
+                          <Button
+                            onClick={closeModal}
+                            disabled={isSubmitting}
+                            loading={isSubmitting}
+                            loadingPosition="start"
+                            sx={{ padding: '8px 12px', minWidth: '110px' }}
+                            variant="outlined"
+                            startIcon={<ClearOutlinedIcon sx={{ color: 'common.white' }} />}
+                          >
+                            {t('pages.companies.cancel')}
+                          </Button>
+                          <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            loading={isSubmitting}
+                            loadingPosition="start"
+                            sx={{
+                              bgcolor: 'green.1000',
+                              padding: '8px 12px',
+                              minWidth: '110px',
+                            }}
+                            startIcon={<CheckOutlinedIcon sx={{ color: 'common.white' }} />}
+                          >
+                            {isEdit ? t('pages.companies.edit') : t('pages.companies.create')}
+                          </Button>
+                        </Box>
+                      </>
+                    ),
+                  };
+                })}
+              />
             </Form>
           )}
         </Formik>

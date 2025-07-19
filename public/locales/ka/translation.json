@@ -30,7 +30,8 @@
       "deleteCompanyConfirmation": "ნამდვილად გსურს თქვენი კომპანიის წაშლა?",
       "name": "კომპანიის სახელი",
       "phone": "ტელეფონის ნომერი",
-      "email": "ელ-ფოსტა"
+      "email": "ელ-ფოსტა",
+      "address": "მისამართი"
     },
     "actionFormModal": {
       "title": "ველების მართვა",
@@ -124,5 +125,9 @@
     "deleteRecordConfirmation": "ნამდვილად გსურთ ჩანაწერის წაშლა?",
     "editConfirmation": "ნამდვილად გსურთ ჩანაწერის რედაქტირება?",
     "cancel": "გაუქმება"
+  },
+  "languages": {
+    "en": "English",
+    "ka": "ქართული"
   }
 }

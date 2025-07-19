@@ -31,7 +31,8 @@
       "deleteCompanyConfirmation": "Are you sure you want to delete this company?",
       "name": "Company Name",
       "phone": "Phone Number",
-      "email": "Email Address"
+      "email": "Email Address",
+      "address": "Address"
     },
     "actions": {
       "addAction": "Add Action",
@@ -126,5 +127,9 @@
     "deleteRecordConfirmation": "Are you sure you want to delete this record?",
     "editConfirmation": "Are you sure you want to edit this record?",
     "cancel": "Cancel"
+  },
+  "languages": {
+    "en": "English",
+    "ka": "ქართული"
   }
 }
