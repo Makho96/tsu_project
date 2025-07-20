@@ -1,36 +1,37 @@
-import ContentPasteIcon from "@mui/icons-material/ContentPaste";
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import DvrOutlinedIcon from "@mui/icons-material/DvrOutlined";
-import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import { Box, Divider, Typography } from "@mui/material";
-import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import useEvent from "../../hooks/useEvent";
-import Routes from "../../routing/Routing.types";
-import { Statuses } from "../../store/actions/actions.types";
-import { Roles } from "../../store/auth/auth.types";
-import { useAppSelector } from "../../store/hooks/useTypedSelector";
-import NavigationItem from "../shared/NavigationItem/NavigationItem";
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import DvrOutlinedIcon from '@mui/icons-material/DvrOutlined';
+import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { Box, Divider, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import useEvent from '../../hooks/useEvent';
+import Routes from '../../routing/Routing.types';
+import { Statuses } from '../../store/actions/actions.types';
+import { Roles } from '../../store/auth/auth.types';
+import { useAppSelector } from '../../store/hooks/useTypedSelector';
+import NavigationItem from '../shared/NavigationItem/NavigationItem';
 
 enum NavigationItems {
-  Dashboard = "dashboard",
-  Companies = "companies",
-  Admin = "admin",
-  Settings = "settings",
-  Actions = "actions",
+  Dashboard = 'dashboard',
+  Companies = 'companies',
+  Admin = 'admin',
+  Settings = 'settings',
+  Actions = 'actions',
 }
 
 const Navigation = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const fallbackLanguage = i18n.options.fallbackLng as string;
   const user = useAppSelector((state) => state.auth.user!);
   const actions = useAppSelector((state) => state.actions.actions);
+  console.log(actions);
 
   const navigate = useNavigate();
-  const currentCompany = useAppSelector(
-    (state) => state.companies.currentCompany
-  );
+  const currentCompany = useAppSelector((state) => state.companies.currentCompany);
 
   const handleDashboardClick = useEvent((e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,25 +48,24 @@ const Navigation = () => {
     return actions
       .filter((action) => action.status === Statuses.ACTIVE)
       .map((item) => {
+        const actionFields = item.fields[currentLanguage] || item.fields[fallbackLanguage];
         return {
-          label: item.title,
+          label: actionFields?.title,
           path: `${Routes.Company}/${currentCompany?.id}${Routes.Actions}/${item.id}`,
           exact: false,
-          icon: <DvrOutlinedIcon sx={{ color: "common.white" }} />,
+          icon: <DvrOutlinedIcon sx={{ color: 'common.white' }} />,
           haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
         };
       });
-  }, [actions, currentCompany]);
+  }, [actions, currentCompany, currentLanguage, fallbackLanguage]);
 
   const navigation = useMemo(
     () => [
       {
         label: NavigationItems.Dashboard,
-        path: currentCompany
-          ? `${Routes.Company}/${currentCompany.id}`
-          : Routes.Company,
+        path: currentCompany ? `${Routes.Company}/${currentCompany.id}` : Routes.Company,
         haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
-        icon: <DashboardOutlinedIcon sx={{ color: "common.white" }} />,
+        icon: <DashboardOutlinedIcon sx={{ color: 'common.white' }} />,
         onClick: handleDashboardClick,
         exact: true,
       },
@@ -73,20 +73,20 @@ const Navigation = () => {
         label: NavigationItems.Actions,
         path: `${Routes.Company}/${currentCompany?.id}${Routes.Actions}`,
         haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
-        icon: <ContentPasteIcon sx={{ color: "common.white" }} />,
+        icon: <ContentPasteIcon sx={{ color: 'common.white' }} />,
         exact: true,
       },
       {
         label: NavigationItems.Companies,
         path: Routes.Companies,
         haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
-        icon: <MeetingRoomOutlinedIcon sx={{ color: "common.white" }} />,
+        icon: <MeetingRoomOutlinedIcon sx={{ color: 'common.white' }} />,
       },
       {
         label: NavigationItems.Settings,
         path: Routes.Settings,
         haveAccess: [Roles.SUPERADMIN, Roles.ADMIN],
-        icon: <SettingsOutlinedIcon sx={{ color: "common.white" }} />,
+        icon: <SettingsOutlinedIcon sx={{ color: 'common.white' }} />,
       },
     ],
     [handleDashboardClick, currentCompany]
@@ -97,11 +97,8 @@ const Navigation = () => {
       {!!topNavigation.length && (
         <>
           <nav>
-            <Typography
-              variant="h6"
-              sx={{ color: "gray.500", padding: "8px  20px" }}
-            >
-              {t("pages.actions.list")}
+            <Typography variant="h6" sx={{ color: 'gray.500', padding: '8px  20px' }}>
+              {t('pages.actions.list')}
             </Typography>
             <ul>
               {topNavigation.map((item) => {
@@ -112,10 +109,10 @@ const Navigation = () => {
               })}
             </ul>
           </nav>
-          <Divider sx={{ borderColor: "gray.500", borderWidth: "1px" }} />
+          <Divider sx={{ borderColor: 'gray.500', borderWidth: '1px' }} />
         </>
       )}
-      <nav style={{ marginTop: "20px" }}>
+      <nav style={{ marginTop: '20px' }}>
         {navigation.map((item) => {
           if (!item.haveAccess.includes(user?.role)) {
             return null;

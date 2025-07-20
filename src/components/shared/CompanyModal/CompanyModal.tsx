@@ -60,7 +60,7 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
         return await dispatch(
           updateCompany({
             id: initialData.id,
-            translate: companyData,
+            translationCompanies: companyData,
           })
         ).then(closeModal);
       }

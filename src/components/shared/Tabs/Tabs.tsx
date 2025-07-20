@@ -7,10 +7,11 @@ interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+  panelStyle?: React.CSSProperties;
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, panelStyle, ...other } = props;
   return (
     <div
       role="tabpanel"
@@ -19,7 +20,7 @@ function CustomTabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 3, ...panelStyle }}>{children}</Box>}
     </div>
   );
 }
@@ -37,9 +38,10 @@ type TabsProps = {
     label: string;
     element: React.ReactNode;
   }[];
+  panelStyle?: React.CSSProperties;
 };
 
-export default function BasicTabs({ tabs }: TabsProps) {
+export default function BasicTabs({ tabs, panelStyle }: TabsProps) {
   const [value, setValue] = React.useState(0);
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -55,7 +57,7 @@ export default function BasicTabs({ tabs }: TabsProps) {
         </Tabs>
       </Box>
       {tabs.map((tab) => (
-        <CustomTabPanel key={tab.id} value={value} index={tab.id}>
+        <CustomTabPanel key={tab.id} value={value} index={tab.id} panelStyle={panelStyle}>
           {tab.element}
         </CustomTabPanel>
       ))}

@@ -23,7 +23,7 @@ type CreateCompanyParams = (Omit<Company, 'id' | 'user'> & {
 
 type UpdateCompanyParams = {
   id: number;
-  translate: Array<{
+  translationCompanies: Array<{
     code: string;
     title: string;
     email: string;

@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks/useTypedSel
 import { saveRecordings } from '../../../store/recordings/recordings.thunks';
 import { updateRecordings } from '../../../store/recordings/recordings.thunks';
 import FormInput from '../FormInput/FormInput';
+import Tabs from '../Tabs';
 
 const getDefaultValue = (inputType: string | number | Date, inputValue: string) => {
   if (inputType === FormFieldTypes.TEXT) {
@@ -30,7 +31,6 @@ const getDefaultValue = (inputType: string | number | Date, inputValue: string) 
 
 const RecordingsModal = ({ setIsOpen, formInputs, isEdit = false }: RecordingsModalProps) => {
   const languages = useAppSelector((state) => state.languages.languages);
-  console.log(languages);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const params = useParams();
@@ -90,11 +90,27 @@ const RecordingsModal = ({ setIsOpen, formInputs, isEdit = false }: RecordingsMo
         <Formik initialValues={initialFormValues} onSubmit={handleSubmit}>
           {({ isSubmitting }) => (
             <Form style={{ minWidth: '400px' }}>
-              {formInputs.map((input) => (
-                <Box key={input.inputKey} sx={{ marginBottom: 2 }}>
-                  <FormInput name={input.inputKey} label={input.inputName} type={input.inputType} />
-                </Box>
-              ))}
+              <Tabs
+                tabs={languages.map((language, index) => {
+                  return {
+                    id: index,
+                    label: t(`languages.${language.isoCode}`),
+                    element: (
+                      <Box>
+                        {formInputs.map((input) => (
+                          <Box key={input.inputKey} sx={{ marginBottom: 2 }}>
+                            <FormInput
+                              name={`${input.inputKey}-${language.id}`}
+                              label={input.inputName}
+                              type={input.inputType}
+                            />
+                          </Box>
+                        ))}
+                      </Box>
+                    ),
+                  };
+                })}
+              />
               <Box display="flex" gap={2} justifyContent="flex-end" marginTop={2}>
                 <Button
                   onClick={() => setIsOpen(false)}

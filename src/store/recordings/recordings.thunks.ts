@@ -26,6 +26,8 @@ export const getRecordings = createAsyncThunk(
         `/form-result/department/${department}`
       );
 
+      console.log(data);
+
       const recordings = data.map((item) => {
         const inboObject: {
           id: number;

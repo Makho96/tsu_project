@@ -1,16 +1,16 @@
-import { Action } from "../actions/actions.types";
-import { Department } from "../departments/departments.types";
-import { SliceStatuses } from "../types";
+import { ClientAction } from '../actions/actions.types';
+import { Department } from '../departments/departments.types';
+import { SliceStatuses } from '../types';
 
 enum FormFieldTypes {
-  TEXT = "text",
-  NUMBER = "number",
-  DATE = "date",
+  TEXT = 'text',
+  NUMBER = 'number',
+  DATE = 'date',
 }
 
 type FormInputData = {
   id: number;
-  action: Action;
+  action: ClientAction;
   name: string;
   description: string;
   legalName: string;
@@ -45,9 +45,4 @@ type DeleteFormInputParams = {
 
 export { FormFieldTypes };
 
-export type {
-  ActionFormState,
-  FormInputData,
-  CreateFormInputParams,
-  DeleteFormInputParams,
-};
+export type { ActionFormState, FormInputData, CreateFormInputParams, DeleteFormInputParams };
