@@ -1,16 +1,36 @@
-import { Action } from "../actions/actions.types";
-import { Company } from "../companies/companies.types";
-import { SliceStatuses } from "../types";
+import { Action } from '../actions/actions.types';
+import { Company } from '../companies/companies.types';
+import { SliceStatuses } from '../types';
 
 type Department = {
   id: number;
-  title: string;
-  contactPerson: string;
-  tell: string;
-  eMail: string;
   action: Action;
   company: Company;
   user: { userId: number };
+  fields: {
+    [code: string]: {
+      id: number;
+      title: string;
+      contactPerson: string;
+      tell: string;
+      email: string;
+    };
+  };
+};
+
+type RemoteDepartment = {
+  id: number;
+  action: Action;
+  company: Company;
+  user: { userId: number };
+  translationDepartments: Array<{
+    id: number;
+    code: string;
+    title: string;
+    contactPerson: string;
+    tell: string;
+    email: string;
+  }>;
 };
 
 type DepartmentsState = {
@@ -20,11 +40,18 @@ type DepartmentsState = {
 };
 
 type CreateDepartmentParams = Omit<
-  Department,
-  "id" | "user" | "action" | "company"
+  RemoteDepartment,
+  'id' | 'user' | 'action' | 'company' | 'translationDepartments'
 > & {
   action: number;
   company: number;
+  translate: Array<{
+    code: string;
+    title: string;
+    contactPerson: string;
+    tell: string;
+    email: string;
+  }>;
 };
 
-export type { Department, DepartmentsState, CreateDepartmentParams };
+export type { Department, DepartmentsState, CreateDepartmentParams, RemoteDepartment };

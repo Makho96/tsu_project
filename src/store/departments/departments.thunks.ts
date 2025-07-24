@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import { CreateDepartmentParams, Department } from './departments.types';
+import { toClientDepartment } from './deparments.dataConverters';
+import { CreateDepartmentParams, Department, RemoteDepartment } from './departments.types';
 import api from '../../api/axiosInstance';
 import showApiError from '../../utils/showApiError';
 import { RootState } from '../hooks/useTypedSelector';
@@ -13,8 +14,10 @@ export const getDepartments = createAsyncThunk<Department[], number>(
     if (!currentCompany) return [];
 
     try {
-      const { data } = await api.get(`/department/company/${currentCompany.id}/${actionId}`);
-      return data;
+      const { data } = await api.get<RemoteDepartment[]>(
+        `/department/company/${currentCompany.id}/${actionId}`
+      );
+      return data.map(toClientDepartment);
     } catch (error) {
       showApiError(error as AxiosError);
       throw error;
@@ -26,8 +29,8 @@ export const getDepartment = createAsyncThunk<Department, number>(
   'departments/getDepartment',
   async (id: number) => {
     try {
-      const { data } = await api.get(`/department/${id}`);
-      return data;
+      const { data } = await api.get<RemoteDepartment>(`/department/${id}`);
+      return toClientDepartment(data);
     } catch (error) {
       showApiError(error as AxiosError);
       throw error;

@@ -1,18 +1,31 @@
-import { object, string } from "yup";
-import { FormFields, FormValues } from "./DepartmentsModal.types";
+import { object, string } from 'yup';
+import { FormFields, FormValues } from './DepartmentsModal.types';
 
 const initialValues: FormValues = {
-  [FormFields.title]: "",
-  [FormFields.contactPerson]: "",
-  [FormFields.tell]: "",
-  [FormFields.eMail]: "",
+  [FormFields.title]: '',
+  [FormFields.contactPerson]: '',
+  [FormFields.tell]: '',
+  [FormFields.eMail]: '',
 };
 
 const validationSchema = object({
-  [FormFields.title]: string().required("Title is required"),
-  [FormFields.contactPerson]: string().required("Contact person is required"),
-  [FormFields.tell]: string().required("Tell is required"),
-  [FormFields.eMail]: string().required("Email is required"),
+  [FormFields.title]: string().required('Title is required'),
+  [FormFields.contactPerson]: string().required('Contact person is required'),
+  [FormFields.tell]: string().required('Tell is required'),
+  [FormFields.eMail]: string().required('Email is required'),
 });
 
-export { initialValues, validationSchema };
+const createValidationSchema = (keys: string[]) => {
+  const schema: Record<string, any> = {};
+
+  keys.forEach((key) => {
+    schema[key] = object({
+      [FormFields.title]: string().required('Title is required'),
+      [FormFields.contactPerson]: string().required('Contact person is required'),
+      [FormFields.tell]: string().required('Tell is required'),
+      [FormFields.eMail]: string().required('Email is required'),
+    });
+  });
+};
+
+export { initialValues, createValidationSchema, validationSchema };

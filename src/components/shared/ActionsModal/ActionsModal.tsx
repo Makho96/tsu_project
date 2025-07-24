@@ -62,6 +62,7 @@ const ActionsModal = ({ initialData, setIsOpen }: ActionsModalProps) => {
       color: values[FormFields.color] as unknown as Colors,
       translate: languages.map((language) => {
         return {
+          id: initialData?.fields[language.isoCode]?.id,
           code: language.isoCode,
           title: values[language.isoCode][FormFields.title],
           description: values[language.isoCode][FormFields.description],

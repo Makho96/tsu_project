@@ -1,9 +1,10 @@
-import { Box } from "@mui/material";
-import CompanyItem from "./companyItem";
-import { useAppSelector } from "../../../store/hooks/useTypedSelector";
+import { Box } from '@mui/material';
+import CompanyItem from './companyItem';
+import { useAppSelector } from '../../../store/hooks/useTypedSelector';
 
 const CompaniesList = () => {
   const companies = useAppSelector((state) => state.companies.companies);
+  console.log(companies);
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>

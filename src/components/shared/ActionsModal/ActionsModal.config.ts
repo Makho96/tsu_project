@@ -10,21 +10,21 @@ const initialValues: FormValues = {
 };
 
 const createValidationSchema = (keys: string[]) => {
-  const schema: Record<string, any> = object({
+  const schemaShape: Record<string, any> = {
     [FormFields.status]: string()
       .required('Status is required')
       .oneOf(Object.values(Statuses), 'Invalid status value'),
     [FormFields.color]: string().required('Color is required'),
-  });
+  };
 
   keys.forEach((key) => {
-    schema[key] = object({
+    schemaShape[key] = object({
       [FormFields.title]: string().required('Title is required'),
       [FormFields.description]: string().optional(),
     });
   });
 
-  return object(schema);
+  return object(schemaShape);
 };
 
 const validationSchema = object({

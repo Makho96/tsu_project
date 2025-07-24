@@ -29,6 +29,7 @@ type Action = {
   user: { userId: number };
   status: Statuses;
   translationActions: Array<{
+    id: number;
     code: string;
     title: string;
     description: string;
@@ -62,6 +63,7 @@ type ClientAction = {
   status: Statuses;
   fields: {
     [code: string]: {
+      id: number;
       title: string;
       description: string;
     };

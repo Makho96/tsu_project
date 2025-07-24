@@ -46,8 +46,11 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
 
   const handleSubmit = useCallback(
     async (values: FormData) => {
+      console.log(values);
+      console.log(initialData);
       const companyData = Object.entries(values).map(([key, value]) => {
         return {
+          id: initialData?.fields[key]?.id,
           code: key,
           title: value[FormFields.Name],
           email: value[FormFields.Email],

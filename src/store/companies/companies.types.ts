@@ -37,6 +37,7 @@ type CompanyData = {
   user: User;
   fields: {
     [code: string]: {
+      id: number;
       title: string;
       email: string;
       tell: string;
@@ -49,6 +50,7 @@ type RemoteCompany = {
   id: number;
   user: User;
   translationCompanies: Array<{
+    id: number;
     title: string;
     address: string;
     code: string;

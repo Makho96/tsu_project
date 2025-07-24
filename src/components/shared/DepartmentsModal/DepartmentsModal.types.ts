@@ -1,4 +1,4 @@
-import { Department } from "../../../store/departments";
+import { Department } from '../../../store/departments';
 
 type DepartmentsModalProps = {
   initialData?: Department;
@@ -6,10 +6,10 @@ type DepartmentsModalProps = {
 };
 
 enum FormFields {
-  title = "title",
-  contactPerson = "contactPerson",
-  tell = "tell",
-  eMail = "eMail",
+  title = 'title',
+  contactPerson = 'contactPerson',
+  tell = 'tell',
+  eMail = 'eMail',
 }
 
 type FormValues = {
@@ -19,6 +19,10 @@ type FormValues = {
   [FormFields.eMail]: string;
 };
 
+type FormData = {
+  [key: string]: FormValues;
+};
+
 export { FormFields };
 
-export type { DepartmentsModalProps, FormValues };
+export type { DepartmentsModalProps, FormValues, FormData };
