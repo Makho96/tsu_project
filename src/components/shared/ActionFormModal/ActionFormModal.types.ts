@@ -1,7 +1,4 @@
-import {
-  FormInputData,
-  FormFieldTypes,
-} from "../../../store/actionForm/actionsForm.types";
+import { FormInputData, FormFieldTypes } from '../../../store/actionForm/actionsForm.types';
 
 type ActionFormModalProps = {
   onClose: () => void;
@@ -10,13 +7,13 @@ type ActionFormModalProps = {
 };
 
 enum FormFields {
-  name = "name",
-  description = "description",
-  legalName = "legalName",
-  type = "type",
-  requirement = "requirement",
-  hidden = "hidden",
-  key = "key",
+  name = 'name',
+  description = 'description',
+  legalName = 'legalName',
+  type = 'type',
+  requirement = 'requirement',
+  hidden = 'hidden',
+  key = 'key',
 }
 
 type FormValues = {
@@ -29,6 +26,19 @@ type FormValues = {
   [FormFields.key]: string;
 };
 
+type FormData = {
+  [FormFields.type]: FormFieldTypes;
+  [FormFields.requirement]: boolean;
+  [FormFields.hidden]: boolean;
+  [FormFields.key]: string;
+} & {
+  [code: string]: {
+    [FormFields.name]: string;
+    [FormFields.description]: string;
+    [FormFields.legalName]: string;
+  };
+};
+
 export { FormFields };
 
-export type { ActionFormModalProps, FormValues };
+export type { ActionFormModalProps, FormValues, FormData };

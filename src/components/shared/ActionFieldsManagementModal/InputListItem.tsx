@@ -1,15 +1,16 @@
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import TextFieldsOutlinedIcon from "@mui/icons-material/TextFieldsOutlined";
-import { Box, Chip, Tooltip, Typography } from "@mui/material";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import useEvent from "../../../hooks/useEvent";
-import { deleteFormInput } from "../../../store/actionForm/actionsForm.thunks";
-import { FormInputData } from "../../../store/actionForm/actionsForm.types";
-import { useAppDispatch } from "../../../store/hooks/useTypedSelector";
-import ActionFormModal from "../ActionFormModal/ActionFormModal";
-import ConfirmModal from "../Modals/Confirm/Confirm";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import TextFieldsOutlinedIcon from '@mui/icons-material/TextFieldsOutlined';
+import { Box, Chip, Tooltip, Typography } from '@mui/material';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import useEvent from '../../../hooks/useEvent';
+import { useTranslateFormInput } from '../../../hooks/useTranslateFormInput';
+import { deleteFormInput } from '../../../store/actionForm/actionsForm.thunks';
+import { FormInputData } from '../../../store/actionForm/actionsForm.types';
+import { useAppDispatch } from '../../../store/hooks/useTypedSelector';
+import ActionFormModal from '../ActionFormModal/ActionFormModal';
+import ConfirmModal from '../Modals/Confirm/Confirm';
 
 type InputListItemProps = {
   input: FormInputData;
@@ -20,12 +21,11 @@ const InputListItem = ({ input }: InputListItemProps) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const { inputFields } = useTranslateFormInput(input);
 
   const handleDeleteInput = useEvent(async () => {
     try {
-      return await dispatch(
-        deleteFormInput({ id: input.id, actionId: input.action.id })
-      ).unwrap();
+      return await dispatch(deleteFormInput({ id: input.id, actionId: input.action.id })).unwrap();
     } catch (error) {
       console.error(error);
     }
@@ -34,52 +34,52 @@ const InputListItem = ({ input }: InputListItemProps) => {
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         p: 3,
         borderRadius: 1,
-        backgroundColor: "blue.1000",
-        transition: "background-color 0.3s ease",
-        "&:hover": {
-          backgroundColor: "white.100",
+        backgroundColor: 'blue.1000',
+        transition: 'background-color 0.3s ease',
+        '&:hover': {
+          backgroundColor: 'white.100',
         },
-        cursor: "pointer",
+        cursor: 'pointer',
       }}
     >
       <Box display="flex" alignItems="center" gap={2}>
         <TextFieldsOutlinedIcon sx={{ fontSize: 48 }} />
         <Box display="flex" flexDirection="column" gap={1}>
-          <Typography variant="h4">{input.name}</Typography>
-          <Typography variant="h6">{input.description}</Typography>
+          <Typography variant="h4">{inputFields?.text}</Typography>
+          <Typography variant="h6">{inputFields?.description}</Typography>
           <Box display="flex" alignItems="center" gap={1}>
             <Chip
               label={t(`pages.actionFormModal.${input.type}`)}
               sx={{
                 minWidth: 75,
-                backgroundColor: "white.100",
-                padding: "0",
+                backgroundColor: 'white.100',
+                padding: '0',
               }}
             />
             {input.requirement && (
               <Chip
-                label={t("pages.actionFormModal.requirement")}
-                sx={{ backgroundColor: "red.200", color: "red.300" }}
+                label={t('pages.actionFormModal.requirement')}
+                sx={{ backgroundColor: 'red.200', color: 'red.300' }}
               />
             )}
           </Box>
         </Box>
       </Box>
       <Box display="flex" alignItems="center" gap={2} flexShrink={0}>
-        <Tooltip title={t("pages.actionFormModal.edit")}>
+        <Tooltip title={t('pages.actionFormModal.edit')}>
           <EditOutlinedIcon
-            sx={{ fontSize: 24, cursor: "pointer" }}
+            sx={{ fontSize: 24, cursor: 'pointer' }}
             onClick={() => setIsEditModalOpen(true)}
           />
         </Tooltip>
-        <Tooltip title={t("pages.actionFormModal.delete")}>
+        <Tooltip title={t('pages.actionFormModal.delete')}>
           <DeleteOutlineOutlinedIcon
-            sx={{ fontSize: 24, cursor: "pointer", color: "red.500" }}
+            sx={{ fontSize: 24, cursor: 'pointer', color: 'red.500' }}
             onClick={() => setIsDeleteModalOpen(true)}
           />
         </Tooltip>
@@ -93,16 +93,14 @@ const InputListItem = ({ input }: InputListItemProps) => {
       )}
       {isDeleteModalOpen && (
         <ConfirmModal
-          title={t("pages.actionFormModal.delete")}
+          title={t('pages.actionFormModal.delete')}
           onClose={() => setIsDeleteModalOpen(false)}
           onConfirm={handleDeleteInput}
           modalBody={
-            <Typography variant="body1">
-              {t("pages.actionFormModal.deleteConfirmation")}
-            </Typography>
+            <Typography variant="body1">{t('pages.actionFormModal.deleteConfirmation')}</Typography>
           }
-          confirmButtonText={t("pages.actionFormModal.delete")}
-          cancelButtonText={t("pages.actionFormModal.cancel")}
+          confirmButtonText={t('pages.actionFormModal.delete')}
+          cancelButtonText={t('pages.actionFormModal.cancel')}
         />
       )}
     </Box>

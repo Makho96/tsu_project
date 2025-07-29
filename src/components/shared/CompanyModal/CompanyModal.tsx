@@ -46,8 +46,6 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
 
   const handleSubmit = useCallback(
     async (values: FormData) => {
-      console.log(values);
-      console.log(initialData);
       const companyData = Object.entries(values).map(([key, value]) => {
         return {
           id: initialData?.fields[key]?.id,
@@ -72,8 +70,6 @@ const CompanyModal = ({ setIsOpen, initialData }: CompanyModalProps) => {
     },
     [dispatch, closeModal, initialData]
   );
-
-  console.log(initialFormValues);
 
   return (
     <ConfirmModal

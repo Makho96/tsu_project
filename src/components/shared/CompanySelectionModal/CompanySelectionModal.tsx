@@ -35,8 +35,6 @@ const CompanySelectionModal = ({ handleClose }: CompanySelectionModalProps) => {
   const dispatch = useAppDispatch();
 
   const handleCompanySelection = useEvent((companyId: number) => {
-    console.log(companyId, currentCompany?.id);
-
     if (!companyId || companyId === currentCompany?.id) {
       handleClose();
       return;

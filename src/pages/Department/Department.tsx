@@ -13,7 +13,9 @@ import { getRecordings } from '../../store/recordings/recordings.thunks';
 import { SliceStatuses } from '../../store/types';
 
 const Department = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const fallbackLanguage = i18n.options.fallbackLng as string;
   const params = useParams();
   const dispatch = useAppDispatch();
   const formInputs = useAppSelector((state) => state.actionsForm.formInputs);
@@ -22,11 +24,11 @@ const Department = () => {
   const transformedFormInputs = useMemo(() => {
     return formInputs.map((input) => ({
       inputKey: input.key,
-      inputName: input.name,
+      inputName: input.fields[currentLanguage]?.text || input.fields[fallbackLanguage]?.text,
       inputType: input.type,
       inputValue: '',
     }));
-  }, [formInputs]);
+  }, [formInputs, currentLanguage, fallbackLanguage]);
 
   const isFormInputsLoading = useAppSelector(
     (state) =>

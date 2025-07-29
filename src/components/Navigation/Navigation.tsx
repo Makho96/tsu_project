@@ -28,7 +28,6 @@ const Navigation = () => {
   const fallbackLanguage = i18n.options.fallbackLng as string;
   const user = useAppSelector((state) => state.auth.user!);
   const actions = useAppSelector((state) => state.actions.actions);
-  console.log(actions);
 
   const navigate = useNavigate();
   const currentCompany = useAppSelector((state) => state.companies.currentCompany);

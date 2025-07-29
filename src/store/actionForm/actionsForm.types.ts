@@ -8,17 +8,38 @@ enum FormFieldTypes {
   DATE = 'date',
 }
 
-type FormInputData = {
+type RemoteFormInput = {
   id: number;
   action: ClientAction;
-  name: string;
-  description: string;
-  legalName: string;
   type: FormFieldTypes;
   requirement: boolean;
   hidden: boolean;
   department: Department;
   key: string;
+  translation: Array<{
+    id: number;
+    text: string;
+    description: string;
+    legalText: string;
+  }>;
+};
+
+type FormInputData = {
+  id: number;
+  action: ClientAction;
+  type: FormFieldTypes;
+  requirement: boolean;
+  hidden: boolean;
+  department: Department;
+  key: string;
+  fields: {
+    [code: string]: {
+      id: number;
+      text: string;
+      description: string;
+      legalName: string;
+    };
+  };
 };
 
 type ActionFormState = {
@@ -29,13 +50,15 @@ type ActionFormState = {
 
 type CreateFormInputParams = {
   action: number;
-  description: string;
   key: string;
   type: FormFieldTypes;
-  name: string;
   requirement: boolean;
   hidden: boolean;
-  legalName: string;
+  translate: Array<{
+    text: string;
+    description: string;
+    legalText: string;
+  }>;
 };
 
 type DeleteFormInputParams = {
@@ -45,4 +68,10 @@ type DeleteFormInputParams = {
 
 export { FormFieldTypes };
 
-export type { ActionFormState, FormInputData, CreateFormInputParams, DeleteFormInputParams };
+export type {
+  ActionFormState,
+  FormInputData,
+  CreateFormInputParams,
+  DeleteFormInputParams,
+  RemoteFormInput,
+};
