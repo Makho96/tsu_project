@@ -6,12 +6,13 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ConfirmModal } from '../Modals';
-import RecordingsModalProps from './RecordingsModal.types';
+import RecordingsModalProps, { FormData, FormValues } from './RecordingsModal.types';
 import useEvent from '../../../hooks/useEvent';
 import { FormFieldTypes } from '../../../store/actionForm/actionsForm.types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks/useTypedSelector';
 import { saveRecordings } from '../../../store/recordings/recordings.thunks';
 import { updateRecordings } from '../../../store/recordings/recordings.thunks';
+import { RecrordingDetails } from '../../../store/recordings/recordings.types';
 import FormInput from '../FormInput/FormInput';
 import Tabs from '../Tabs';
 
@@ -38,22 +39,36 @@ const RecordingsModal = ({ setIsOpen, formInputs, isEdit = false }: RecordingsMo
   const departmentId = useMemo(() => Number(params.departmentId), [params.departmentId]);
 
   const initialFormValues = useMemo(() => {
-    const formValues: Record<string, any> = {};
-
-    formInputs.forEach((input) => {
-      formValues[input.inputKey] = getDefaultValue(input.inputType, input.inputValue);
+    const formValues: FormData = {};
+    languages.forEach((language) => {
+      const languageValues: FormValues = {};
+      formInputs.forEach((input) => {
+        languageValues[input.inputKey] = getDefaultValue(input.inputType, input.inputValue);
+      });
+      formValues[language.isoCode] = languageValues;
     });
+    console.log(formValues);
     return formValues;
-  }, [formInputs]);
+  }, [formInputs, languages]);
 
-  const handleSubmit = useEvent((values: Record<string, string>) => {
+  console.log(initialFormValues);
+
+  const handleSubmit = useEvent((values: FormData) => {
+    debugger;
     if (!isEdit) {
-      const recordings = formInputs.map((input) => ({
-        formKey: input.inputKey,
-        formName: input.inputName,
-        inputValue: values[input.inputKey],
-        inputType: input.inputType,
-      }));
+      const recordings: RecrordingDetails[] = [];
+      Object.entries(values).forEach(([key, value]) => {
+        formInputs.forEach((input) =>
+          recordings.push({
+            code: key,
+            formKey: input.inputKey,
+            formName: input.inputName,
+            inputValue: value[input.inputKey],
+            inputType: input.inputType,
+          })
+        );
+      });
+
       return dispatch(saveRecordings({ department: departmentId, details: recordings })).then(
         () => {
           setIsOpen(false);
@@ -100,7 +115,7 @@ const RecordingsModal = ({ setIsOpen, formInputs, isEdit = false }: RecordingsMo
                         {formInputs.map((input) => (
                           <Box key={input.inputKey} sx={{ marginBottom: 2 }}>
                             <FormInput
-                              name={`${input.inputKey}-${language.id}`}
+                              name={`${language.isoCode}[${input.inputKey}]`}
                               label={input.inputName}
                               type={input.inputType}
                             />

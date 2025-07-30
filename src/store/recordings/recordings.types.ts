@@ -7,6 +7,7 @@ type SaveRecordingsParams = {
 };
 
 type RecrordingDetails = {
+  code: string;
   formKey: string;
   formName: string;
   inputValue: string;

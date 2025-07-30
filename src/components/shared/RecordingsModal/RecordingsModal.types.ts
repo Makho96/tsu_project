@@ -15,4 +15,12 @@ type RecordingsModalProps = {
   isEdit?: boolean;
 };
 
+type FormValues = {
+  [key: string]: any;
+};
+
+type FormData = Record<string, FormValues>;
+
 export default RecordingsModalProps;
+
+export type { FormData, FormValues };
